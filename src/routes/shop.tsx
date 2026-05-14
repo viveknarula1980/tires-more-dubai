@@ -1,23 +1,21 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { createServerFn, useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
-import { zodValidator, fallback } from "@tanstack/zod-adapter";
-import { z } from "zod";
 import { useMemo } from "react";
 import { ShoppingCart, X } from "lucide-react";
 import { getBrands, searchTires } from "@/lib/catalog.functions";
 import { TireCard } from "@/components/TireCard";
 import { useCart } from "@/lib/cart";
 
-const searchSchema = z.object({
-  brand: fallback(z.string(), "").default(""),
-  vehicle_type: fallback(z.enum(["", "passenger", "suv"]), "").default(""),
-  season: fallback(z.enum(["", "summer", "all-season", "winter"]), "").default(""),
-  width: fallback(z.number().int(), 0).default(0),
-  profile: fallback(z.number().int(), 0).default(0),
-  rim: fallback(z.number().int(), 0).default(0),
-  sort: fallback(z.enum(["featured", "price_asc", "price_desc", "name"]), "featured").default("featured"),
-});
+type ShopSearch = {
+  brand: string;
+  vehicle_type: "" | "passenger" | "suv";
+  season: "" | "summer" | "all-season" | "winter";
+  width: number;
+  profile: number;
+  rim: number;
+  sort: "featured" | "price_asc" | "price_desc" | "name";
+};
 
 const fetchFilterMeta = createServerFn({ method: "GET" }).handler(async () => {
   const all = await searchTires({ data: { limit: 100 } as any });
