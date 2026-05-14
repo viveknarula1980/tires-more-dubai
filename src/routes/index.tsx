@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Wrench, ShieldCheck, Truck, Clock, Star, ChevronRight, MessageCircle, Phone } from "lucide-react";
 import { SearchWidget } from "@/components/SearchWidget";
 import { TireCard } from "@/components/TireCard";
+import { BrandLogo } from "@/components/BrandLogo";
 import { getBrands, getFeaturedTires } from "@/lib/catalog.functions";
 import hero from "@/assets/hero-dubai.jpg";
 
