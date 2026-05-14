@@ -25,7 +25,7 @@ const fetchFilterMeta = createServerFn({ method: "GET" }).handler(async () => {
   return { widths, profiles, rims };
 });
 
-export const Route = createFileRoute("/shop")({
+export const Route = createFileRoute("/shop/")({
   validateSearch: (s: Record<string, unknown>): ShopSearch => ({
     brand: typeof s.brand === "string" ? s.brand : "",
     vehicle_type: (s.vehicle_type === "passenger" || s.vehicle_type === "suv") ? s.vehicle_type : "",
