@@ -1,10 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   ShoppingCart, Check, Truck, ShieldCheck, Wrench, MessageCircle,
   Phone, Star, Calendar, Globe, Gauge, Snowflake, Sun, CloudSun,
+  ZoomIn, X, ChevronLeft, ChevronRight,
 } from "lucide-react";
 import { getTireBySlug, searchTires } from "@/lib/catalog.functions";
 import { useCart } from "@/lib/cart";
