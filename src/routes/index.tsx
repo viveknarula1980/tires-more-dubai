@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Wrench, ShieldCheck, Truck, Clock, Star, ChevronRight, MessageCircle, Phone } from "lucide-react";
 import { SearchWidget } from "@/components/SearchWidget";
 import { TireCard } from "@/components/TireCard";
+import { BrandLogo } from "@/components/BrandLogo";
 import { getBrands, getFeaturedTires } from "@/lib/catalog.functions";
 import hero from "@/assets/hero-dubai.jpg";
 
@@ -115,11 +116,12 @@ function Home() {
                 search={{ brand: b.slug, vehicle_type: "", season: "", width: 0, profile: 0, rim: 0, sort: "featured" }}
                 className="aspect-square bg-background rounded-lg border border-border flex items-center justify-center p-4 hover:border-brand hover:shadow-md transition-all"
               >
-                {b.logo_url ? (
-                  <img src={b.logo_url} alt={b.name} className="max-h-full max-w-full object-contain" />
-                ) : (
-                  <span className="text-xs font-bold text-center">{b.name}</span>
-                )}
+                <BrandLogo
+                  name={b.name}
+                  logoUrl={b.logo_url}
+                  className="h-full w-full"
+                  textClassName="text-sm md:text-base"
+                />
               </Link>
             ))}
           </div>

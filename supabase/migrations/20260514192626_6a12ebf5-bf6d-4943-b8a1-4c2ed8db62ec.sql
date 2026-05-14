@@ -1,0 +1,1 @@
+UPDATE public.brands SET logo_url = NULL;

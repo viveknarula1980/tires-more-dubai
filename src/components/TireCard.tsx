@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { BrandLogo } from "@/components/BrandLogo";
 
 type Tire = {
   id: string; slug: string; name: string;
@@ -20,9 +21,14 @@ export function TireCard({ t }: { t: Tire }) {
         {discount > 0 && (
           <span className="absolute top-2 left-2 bg-brand text-brand-foreground text-xs font-bold px-2 py-1 rounded">-{discount}%</span>
         )}
-        {t.brand?.logo_url && (
-          <div className="absolute top-2 right-2 bg-white rounded p-1 h-8 w-14 flex items-center justify-center">
-            <img src={t.brand.logo_url} alt={t.brand.name} className="max-h-full max-w-full object-contain" onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }} />
+        {t.brand?.name && (
+          <div className="absolute top-2 right-2 bg-white/95 rounded px-2 h-7 min-w-[3.5rem] flex items-center justify-center shadow-sm">
+            <BrandLogo
+              name={t.brand.name}
+              logoUrl={t.brand.logo_url}
+              className="h-full w-full"
+              textClassName="text-[10px]"
+            />
           </div>
         )}
       </div>
