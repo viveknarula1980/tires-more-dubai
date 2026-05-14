@@ -10,6 +10,7 @@ import {
 import { getTireBySlug, searchTires } from "@/lib/catalog.functions";
 import { useCart } from "@/lib/cart";
 import { TireCard } from "@/components/TireCard";
+import { BrandLogo } from "@/components/BrandLogo";
 
 export const Route = createFileRoute("/shop/$slug")({
   head: ({ params }) => ({
