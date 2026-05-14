@@ -108,11 +108,21 @@ function TireDetail() {
                   <img src={brand.logo_url} alt={brand.name} className="max-h-full max-w-full object-contain" />
                 </div>
               )}
-              <img
-                src={gallery[activeImg]}
-                alt={t.name}
-                className="w-full aspect-square object-contain"
-              />
+              <button
+                type="button"
+                onClick={() => setLightboxOpen(true)}
+                className="group block w-full cursor-zoom-in"
+                aria-label="Open full-size image"
+              >
+                <img
+                  src={gallery[activeImg]}
+                  alt={t.name}
+                  className="w-full aspect-square object-contain transition-transform group-hover:scale-[1.02]"
+                />
+              </button>
+              <span className="absolute bottom-4 right-4 inline-flex items-center gap-1.5 rounded-full bg-foreground/80 text-background px-3 py-1.5 text-xs font-semibold backdrop-blur pointer-events-none">
+                <ZoomIn className="h-3.5 w-3.5" /> Click to enlarge
+              </span>
             </div>
             {gallery.length > 1 && (
               <div className="mt-4 grid grid-cols-5 gap-3">
