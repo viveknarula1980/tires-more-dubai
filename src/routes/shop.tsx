@@ -69,7 +69,7 @@ function ShopPage() {
   const metaQ = useQuery({ queryKey: ["filter-meta"], queryFn: () => fetchMeta() });
 
   function update(patch: Partial<typeof search>) {
-    navigate({ search: (prev) => ({ ...prev, ...patch }) as any });
+    navigate({ search: (prev: ShopSearch) => ({ ...prev, ...patch }) });
   }
 
   const activeCount =
