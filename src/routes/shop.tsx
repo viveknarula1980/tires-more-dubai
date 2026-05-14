@@ -26,7 +26,15 @@ const fetchFilterMeta = createServerFn({ method: "GET" }).handler(async () => {
 });
 
 export const Route = createFileRoute("/shop")({
-  validateSearch: zodValidator(searchSchema),
+  validateSearch: (s: Record<string, unknown>): ShopSearch => ({
+    brand: typeof s.brand === "string" ? s.brand : "",
+    vehicle_type: (s.vehicle_type === "passenger" || s.vehicle_type === "suv") ? s.vehicle_type : "",
+    season: (s.season === "summer" || s.season === "all-season" || s.season === "winter") ? s.season : "",
+    width: Number(s.width) || 0,
+    profile: Number(s.profile) || 0,
+    rim: Number(s.rim) || 0,
+    sort: (s.sort === "price_asc" || s.sort === "price_desc" || s.sort === "name") ? s.sort : "featured",
+  }),
   head: () => ({
     meta: [
       { title: "Shop Tyres in Dubai — Tires & More UAE" },
