@@ -48,7 +48,7 @@ export const Route = createFileRoute("/shop/")({
 
 function ShopPage() {
   const search = Route.useSearch();
-  const navigate = useNavigate({ from: "/shop" });
+  const navigate = useNavigate({ from: "/shop/" });
   const fetchTires = useServerFn(searchTires);
   const fetchBrands = useServerFn(getBrands);
   const fetchMeta = useServerFn(fetchFilterMeta);
