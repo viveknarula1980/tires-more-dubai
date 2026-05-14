@@ -29,6 +29,7 @@ function TireDetail() {
   const [qty, setQty] = useState(4);
   const [tab, setTab] = useState<"description" | "specs" | "shipping">("description");
   const [activeImg, setActiveImg] = useState(0);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
 
   const { data: t, isLoading } = useQuery({
     queryKey: ["tire", slug],
