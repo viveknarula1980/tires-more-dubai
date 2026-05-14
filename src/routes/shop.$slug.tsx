@@ -103,9 +103,14 @@ function TireDetail() {
                   Save {discount}%
                 </span>
               )}
-              {brand?.logo_url && (
-                <div className="absolute top-4 right-4 bg-background border border-border rounded-md px-3 py-2 h-12 w-24 flex items-center justify-center">
-                  <img src={brand.logo_url} alt={brand.name} className="max-h-full max-w-full object-contain" />
+              {brand?.name && (
+                <div className="absolute top-4 right-4 bg-background border border-border rounded-md px-3 py-2 h-12 w-28 flex items-center justify-center">
+                  <BrandLogo
+                    name={brand.name}
+                    logoUrl={brand.logo_url}
+                    className="h-full w-full"
+                    textClassName="text-sm"
+                  />
                 </div>
               )}
               <button
