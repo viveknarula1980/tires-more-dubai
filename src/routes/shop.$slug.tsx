@@ -1,10 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   ShoppingCart, Check, Truck, ShieldCheck, Wrench, MessageCircle,
   Phone, Star, Calendar, Globe, Gauge, Snowflake, Sun, CloudSun,
+  ZoomIn, X, ChevronLeft, ChevronRight,
 } from "lucide-react";
 import { getTireBySlug, searchTires } from "@/lib/catalog.functions";
 import { useCart } from "@/lib/cart";
@@ -28,6 +29,7 @@ function TireDetail() {
   const [qty, setQty] = useState(4);
   const [tab, setTab] = useState<"description" | "specs" | "shipping">("description");
   const [activeImg, setActiveImg] = useState(0);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
 
   const { data: t, isLoading } = useQuery({
     queryKey: ["tire", slug],
@@ -106,11 +108,21 @@ function TireDetail() {
                   <img src={brand.logo_url} alt={brand.name} className="max-h-full max-w-full object-contain" />
                 </div>
               )}
-              <img
-                src={gallery[activeImg]}
-                alt={t.name}
-                className="w-full aspect-square object-contain"
-              />
+              <button
+                type="button"
+                onClick={() => setLightboxOpen(true)}
+                className="group block w-full cursor-zoom-in"
+                aria-label="Open full-size image"
+              >
+                <img
+                  src={gallery[activeImg]}
+                  alt={t.name}
+                  className="w-full aspect-square object-contain transition-transform group-hover:scale-[1.02]"
+                />
+              </button>
+              <span className="absolute bottom-4 right-4 inline-flex items-center gap-1.5 rounded-full bg-foreground/80 text-background px-3 py-1.5 text-xs font-semibold backdrop-blur pointer-events-none">
+                <ZoomIn className="h-3.5 w-3.5" /> Click to enlarge
+              </span>
             </div>
             {gallery.length > 1 && (
               <div className="mt-4 grid grid-cols-5 gap-3">
@@ -301,6 +313,103 @@ function TireDetail() {
           </section>
         )}
       </div>
+
+      <Lightbox
+        open={lightboxOpen}
+        onClose={() => setLightboxOpen(false)}
+        images={gallery}
+        index={activeImg}
+        setIndex={setActiveImg}
+        alt={t.name}
+      />
+    </div>
+  );
+}
+
+function Lightbox({
+  open, onClose, images, index, setIndex, alt,
+}: {
+  open: boolean; onClose: () => void; images: string[];
+  index: number; setIndex: (i: number) => void; alt: string;
+}) {
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+      if (e.key === "ArrowRight") setIndex((index + 1) % images.length);
+      if (e.key === "ArrowLeft") setIndex((index - 1 + images.length) % images.length);
+    };
+    window.addEventListener("keydown", onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prev;
+    };
+  }, [open, index, images.length, onClose, setIndex]);
+
+  if (!open) return null;
+  const multi = images.length > 1;
+
+  return (
+    <div
+      className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center animate-in fade-in duration-200"
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+    >
+      <button
+        onClick={onClose}
+        className="absolute top-5 right-5 text-white/80 hover:text-white p-2 rounded-full bg-white/10 hover:bg-white/20 transition"
+        aria-label="Close"
+      >
+        <X className="h-6 w-6" />
+      </button>
+
+      {multi && (
+        <>
+          <button
+            onClick={(e) => { e.stopPropagation(); setIndex((index - 1 + images.length) % images.length); }}
+            className="absolute left-4 md:left-8 text-white/80 hover:text-white p-3 rounded-full bg-white/10 hover:bg-white/20 transition"
+            aria-label="Previous"
+          >
+            <ChevronLeft className="h-7 w-7" />
+          </button>
+          <button
+            onClick={(e) => { e.stopPropagation(); setIndex((index + 1) % images.length); }}
+            className="absolute right-4 md:right-8 text-white/80 hover:text-white p-3 rounded-full bg-white/10 hover:bg-white/20 transition"
+            aria-label="Next"
+          >
+            <ChevronRight className="h-7 w-7" />
+          </button>
+        </>
+      )}
+
+      <img
+        src={images[index]}
+        alt={alt}
+        onClick={(e) => e.stopPropagation()}
+        className="max-h-[85vh] max-w-[90vw] object-contain select-none"
+      />
+
+      {multi && (
+        <div
+          className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 bg-white/10 backdrop-blur rounded-full p-2"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {images.map((g, i) => (
+            <button
+              key={i}
+              onClick={() => setIndex(i)}
+              className={`h-12 w-12 rounded-md overflow-hidden border-2 transition ${
+                i === index ? "border-white" : "border-transparent opacity-60 hover:opacity-100"
+              }`}
+            >
+              <img src={g} alt="" className="h-full w-full object-contain bg-white/90 p-1" />
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
