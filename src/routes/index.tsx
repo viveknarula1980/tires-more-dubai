@@ -131,31 +131,58 @@ function Home() {
       </section>
 
       {/* Brands */}
-      <section className="bg-muted/40 py-14">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-8">
-            <p className="text-xs uppercase tracking-widest text-brand font-bold">14 premium brands</p>
-            <h2 className="mt-1 text-3xl font-bold">Shop by brand</h2>
+      <section className="relative bg-[#0b0d10] text-white py-16">
+        {/* ribbon */}
+        <div className="absolute left-1/2 -top-px -translate-x-1/2 z-10">
+          <div className="relative bg-navy text-white px-8 py-3 text-center shadow-lg"
+               style={{ clipPath: "polygon(0 0, 100% 0, calc(100% - 16px) 100%, 16px 100%)" }}>
+            <p className="text-[10px] uppercase tracking-widest text-white/60">Exclusivity</p>
+            <p className="text-sm font-bold uppercase tracking-wider">Tires &amp; More UAE</p>
           </div>
-          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-4">
-            {brandsQ.data?.slice(0, 14).map((b: any) => (
-              <Link
-                key={b.slug}
-                to="/shop"
-                search={{ brand: b.slug, vehicle_type: "", season: "", width: 0, profile: 0, rim: 0, sort: "featured" }}
-                className="aspect-square bg-background rounded-lg border border-border flex items-center justify-center p-4 hover:border-brand hover:shadow-md transition-all"
-              >
-                <BrandLogo
-                  name={b.name}
-                  logoUrl={b.logo_url}
-                  className="h-full w-full"
-                  textClassName="text-sm md:text-base"
-                />
+        </div>
+
+        <div className="container mx-auto px-4 pt-8">
+          <div className="grid lg:grid-cols-[320px_1fr] gap-10 items-center">
+            {/* Left: Free protection panel */}
+            <div>
+              <h2 className="font-display text-5xl md:text-6xl font-extrabold text-amber-400 leading-none">FREE!</h2>
+              <p className="mt-3 text-lg font-bold tracking-wide uppercase">Road Hazard Protection</p>
+              <div className="mt-5 flex items-start gap-4">
+                <div className="border border-amber-400/60 rounded-md px-3 py-2 text-center shrink-0">
+                  <p className="text-[10px] uppercase tracking-widest text-amber-400">Value of</p>
+                  <p className="text-xl font-extrabold text-amber-400">AED 400</p>
+                </div>
+                <p className="text-sm text-white/70 leading-relaxed">
+                  Applicable to the purchase of 4 tyres from the eligible brands listed.
+                </p>
+              </div>
+              <Link to="/services" className="mt-4 inline-block text-amber-400 text-sm font-semibold underline underline-offset-4 hover:text-amber-300">
+                More details →
               </Link>
-            ))}
+            </div>
+
+            {/* Right: brands grid */}
+            <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
+              {brandsQ.data?.slice(0, 14).map((b: any) => (
+                <Link
+                  key={b.slug}
+                  to="/shop"
+                  search={{ brand: b.slug, vehicle_type: "", season: "", width: 0, profile: 0, rim: 0, sort: "featured" }}
+                  className="aspect-[3/2] bg-white rounded-md flex items-center justify-center p-3 hover:scale-[1.04] transition-transform shadow-md"
+                >
+                  <BrandLogo
+                    name={b.name}
+                    logoUrl={b.logo_url}
+                    className="h-full w-full bg-transparent"
+                    textClassName="text-xs md:text-sm text-navy"
+                  />
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
       </section>
+
 
       {/* Services */}
       <section className="container mx-auto px-4 py-14">
