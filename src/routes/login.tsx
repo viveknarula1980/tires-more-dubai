@@ -93,13 +93,20 @@ function LoginPage() {
           </Button>
         </form>
 
-        <button
-          type="button"
-          onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
-          className="mt-4 text-sm text-muted-foreground underline"
-        >
-          {mode === "signin" ? "Need an account? Sign up" : "Have an account? Sign in"}
-        </button>
+        <div className="mt-4 flex items-center justify-between gap-3 text-sm">
+          <button
+            type="button"
+            onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
+            className="text-muted-foreground underline"
+          >
+            {mode === "signin" ? "Need an account? Sign up" : "Have an account? Sign in"}
+          </button>
+          {mode === "signin" && (
+            <Link to="/forgot-password" className="text-muted-foreground underline">
+              Forgot password?
+            </Link>
+          )}
+        </div>
 
         <div className="mt-6 text-xs text-muted-foreground">
           <Link to="/" className="underline">
