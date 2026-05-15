@@ -146,7 +146,7 @@ export function StickyBottomSearch() {
             )}
           </div>
           {err && mode === "vehicle" && (
-            <p className="hidden lg:block text-xs text-destructive pb-2 pl-[88px]">{err}</p>
+            <p className="hidden lg:block text-xs text-destructive pb-2 pl-[124px]">{err}</p>
           )}
         </div>
       </div>
