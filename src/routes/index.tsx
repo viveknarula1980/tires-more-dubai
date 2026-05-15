@@ -35,46 +35,45 @@ function Home() {
         <div className="absolute inset-0 bg-gradient-to-r from-[#0b0d10] via-[#0b0d10]/85 to-[#0b0d10]/30" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0b0d10] via-transparent to-transparent" />
 
-        <div className="relative container mx-auto px-4 pt-10 pb-12 md:pt-14 md:pb-20">
-          <div className="grid lg:grid-cols-2 gap-10 items-center">
+        <div className="relative container mx-auto px-4 pt-8 pb-10 md:pt-10 md:pb-14">
+          <div className="grid lg:grid-cols-[minmax(0,520px)_1fr] gap-8 items-center">
+            {/* Left: search panel */}
             <div className="relative z-10">
-              <span className="inline-block bg-brand/15 text-brand text-[11px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full mb-4">
-                Dubai's Tyre Specialists Since 2008
-              </span>
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-6">
-                The right tyres. <span className="text-brand">Right now.</span>
-              </h1>
-              <div className="bg-black/70 backdrop-blur-sm border border-white/10 rounded-2xl p-5 md:p-6 shadow-2xl">
-                <div className="flex gap-6 border-b border-white/10 pb-3 mb-4 text-[11px] font-bold uppercase tracking-widest leading-tight">
-                  <span className="text-white border-b-2 border-brand pb-3 -mb-3">Search<br/>Tyres</span>
-                  <span className="text-white/40">Package<br/>Tyres / Wheels</span>
-                  <span className="text-white/40">UTV &<br/>Trailer Tyres</span>
-                </div>
+              {/* tabs OUTSIDE the panel */}
+              <div className="flex items-end gap-8 px-2 mb-0 text-[11px] font-bold uppercase tracking-widest leading-tight">
+                <span className="text-white pb-3 border-b-[3px] border-white">Search<br/>Tyres</span>
+                <span className="text-white/45 pb-3 border-b-[3px] border-transparent cursor-default">Package<br/>Tyres / Wheels</span>
+                <span className="text-white/45 pb-3 border-b-[3px] border-transparent cursor-default">UTV &<br/>Trailer Tyres</span>
+              </div>
+              <div className="bg-black/80 backdrop-blur-sm border border-white/10 rounded-tr-2xl rounded-b-2xl p-5 md:p-6 shadow-2xl">
                 <SearchWidget />
               </div>
-              <div className="mt-4 flex flex-wrap gap-3 text-sm">
-                <Link to="/shop" className="inline-flex items-center gap-1 text-brand font-semibold hover:underline">
+              <div className="mt-4 flex flex-wrap gap-3 text-sm px-2">
+                <Link to="/shop" className="inline-flex items-center gap-1 text-amber-400 font-semibold hover:underline">
                   Browse all tyres <ChevronRight className="h-4 w-4" />
                 </Link>
                 <span className="text-white/30">·</span>
-                <a href="https://wa.me/97142326666" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-white/80 hover:text-brand">
+                <a href="https://wa.me/97142326666" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-white/80 hover:text-amber-400">
                   <MessageCircle className="h-4 w-4" /> Chat on WhatsApp
                 </a>
               </div>
             </div>
 
-            <div className="relative hidden lg:flex items-center justify-center min-h-[460px]">
+            {/* Right: tyre + promo */}
+            <div className="relative hidden lg:block min-h-[460px]">
               <img
                 src={heroTyre}
                 alt="Premium tyre"
                 width={1024}
                 height={1024}
-                className="relative z-10 h-[440px] w-auto object-contain drop-shadow-[0_30px_40px_rgba(0,0,0,0.6)]"
+                className="absolute left-0 top-1/2 -translate-y-1/2 h-[420px] w-auto object-contain drop-shadow-[0_30px_40px_rgba(0,0,0,0.6)]"
               />
-              <div className="absolute right-2 top-1/2 -translate-y-1/2 z-0 text-right">
-                <div className="font-display leading-[0.85]">
-                  <span className="block text-[7rem] xl:text-[9rem] font-extrabold text-white tracking-tighter">10<span className="text-emerald-400">%</span></span>
-                  <span className="block text-5xl xl:text-6xl font-extrabold text-white">OFF</span>
+              <div className="absolute right-0 top-1/2 -translate-y-1/2 text-right">
+                <div className="font-display leading-[0.82]">
+                  <span className="block text-[7rem] xl:text-[10rem] font-extrabold text-white tracking-tighter">
+                    10<span className="text-emerald-400 align-top text-[3rem] xl:text-[4rem]">%</span>
+                  </span>
+                  <span className="block text-5xl xl:text-7xl font-extrabold text-white -mt-2">OFF</span>
                 </div>
                 <div className="mt-3 inline-flex items-center gap-2 bg-emerald-500 text-emerald-950 px-3 py-2 rounded-md border-2 border-dashed border-emerald-900/40 font-bold text-sm">
                   <span className="text-[10px] uppercase tracking-widest opacity-80 leading-tight text-left">Promo<br/>Code</span>
@@ -84,6 +83,11 @@ function Home() {
               </div>
             </div>
           </div>
+
+          {/* Headline below — like reference fineprint */}
+          <p className="mt-6 max-w-3xl text-xs text-white/55 leading-relaxed">
+            Minimum AED 1,500 before VAT, valid on new purchases of 4 selected tyres or wheels for a limited time. Cannot be combined with other promotions.
+          </p>
         </div>
 
         {/* Trust strip */}
