@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ServicesRouteImport } from './routes/services'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as ContactRouteImport } from './routes/contact'
@@ -24,6 +25,11 @@ import { Route as AdminImportRouteImport } from './routes/admin.import'
 const ServicesRoute = ServicesRouteImport.update({
   id: '/services',
   path: '/services',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -85,6 +91,7 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/services': typeof ServicesRoute
   '/admin/import': typeof AdminImportRoute
   '/shop/$slug': typeof ShopSlugRoute
@@ -98,6 +105,7 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/services': typeof ServicesRoute
   '/admin/import': typeof AdminImportRoute
   '/shop/$slug': typeof ShopSlugRoute
@@ -112,6 +120,7 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/services': typeof ServicesRoute
   '/admin/import': typeof AdminImportRoute
   '/shop/$slug': typeof ShopSlugRoute
@@ -127,6 +136,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/forgot-password'
     | '/login'
+    | '/reset-password'
     | '/services'
     | '/admin/import'
     | '/shop/$slug'
@@ -140,6 +150,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/forgot-password'
     | '/login'
+    | '/reset-password'
     | '/services'
     | '/admin/import'
     | '/shop/$slug'
@@ -153,6 +164,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/forgot-password'
     | '/login'
+    | '/reset-password'
     | '/services'
     | '/admin/import'
     | '/shop/$slug'
@@ -167,6 +179,7 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   LoginRoute: typeof LoginRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   ServicesRoute: typeof ServicesRoute
   AdminImportRoute: typeof AdminImportRoute
   ShopSlugRoute: typeof ShopSlugRoute
@@ -180,6 +193,13 @@ declare module '@tanstack/react-router' {
       path: '/services'
       fullPath: '/services'
       preLoaderRoute: typeof ServicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -263,6 +283,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
   LoginRoute: LoginRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   ServicesRoute: ServicesRoute,
   AdminImportRoute: AdminImportRoute,
   ShopSlugRoute: ShopSlugRoute,
