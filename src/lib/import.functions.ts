@@ -62,6 +62,7 @@ const variantSchema = {
 };
 
 export const discoverBrandModelUrls = createServerFn({ method: "POST" })
+  .middleware([requireAdmin])
   .inputValidator((d: { brandSlug: string }) =>
     z.object({ brandSlug: z.string().min(1).max(60).regex(/^[a-z0-9-]+$/) }).parse(d)
   )
