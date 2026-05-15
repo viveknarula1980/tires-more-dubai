@@ -1,0 +1,2 @@
+UPDATE public.tires SET main_image = '/tires/michelin-pilot-sport.webp' WHERE brand_id = (SELECT id FROM public.brands WHERE slug='michelin');
+UPDATE public.tires SET main_image = '/tires/continental-ultracontact.webp' WHERE brand_id = (SELECT id FROM public.brands WHERE slug='continental');
