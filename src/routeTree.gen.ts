@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CartRouteImport } from './routes/cart'
 import { Route as BrandsRouteImport } from './routes/brands'
@@ -28,6 +29,11 @@ const ServicesRoute = ServicesRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -77,6 +83,7 @@ export interface FileRoutesByFullPath {
   '/brands': typeof BrandsRoute
   '/cart': typeof CartRoute
   '/contact': typeof ContactRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/services': typeof ServicesRoute
   '/admin/import': typeof AdminImportRoute
@@ -89,6 +96,7 @@ export interface FileRoutesByTo {
   '/brands': typeof BrandsRoute
   '/cart': typeof CartRoute
   '/contact': typeof ContactRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/services': typeof ServicesRoute
   '/admin/import': typeof AdminImportRoute
@@ -102,6 +110,7 @@ export interface FileRoutesById {
   '/brands': typeof BrandsRoute
   '/cart': typeof CartRoute
   '/contact': typeof ContactRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/services': typeof ServicesRoute
   '/admin/import': typeof AdminImportRoute
@@ -116,6 +125,7 @@ export interface FileRouteTypes {
     | '/brands'
     | '/cart'
     | '/contact'
+    | '/forgot-password'
     | '/login'
     | '/services'
     | '/admin/import'
@@ -128,6 +138,7 @@ export interface FileRouteTypes {
     | '/brands'
     | '/cart'
     | '/contact'
+    | '/forgot-password'
     | '/login'
     | '/services'
     | '/admin/import'
@@ -140,6 +151,7 @@ export interface FileRouteTypes {
     | '/brands'
     | '/cart'
     | '/contact'
+    | '/forgot-password'
     | '/login'
     | '/services'
     | '/admin/import'
@@ -153,6 +165,7 @@ export interface RootRouteChildren {
   BrandsRoute: typeof BrandsRoute
   CartRoute: typeof CartRoute
   ContactRoute: typeof ContactRoute
+  ForgotPasswordRoute: typeof ForgotPasswordRoute
   LoginRoute: typeof LoginRoute
   ServicesRoute: typeof ServicesRoute
   AdminImportRoute: typeof AdminImportRoute
@@ -174,6 +187,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -241,6 +261,7 @@ const rootRouteChildren: RootRouteChildren = {
   BrandsRoute: BrandsRoute,
   CartRoute: CartRoute,
   ContactRoute: ContactRoute,
+  ForgotPasswordRoute: ForgotPasswordRoute,
   LoginRoute: LoginRoute,
   ServicesRoute: ServicesRoute,
   AdminImportRoute: AdminImportRoute,
@@ -250,3 +271,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
