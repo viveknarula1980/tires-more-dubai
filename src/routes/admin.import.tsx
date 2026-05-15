@@ -66,6 +66,12 @@ const BRANDS: BrandEntry[] = [
 function AdminImportPage() {
   const discover = useServerFn(discoverBrandModelUrls);
   const importBatch = useServerFn(importBrandBatch);
+  const fetchReport = useServerFn(getSyncReport);
+
+  const reportQ = useQuery({
+    queryKey: ["sync-report"],
+    queryFn: () => fetchReport(),
+  });
 
   const [activeBrand, setActiveBrand] = useState<string | null>(null);
   const [log, setLog] = useState<LogEntry[]>([]);
