@@ -209,24 +209,23 @@ function TireGridItem({ t }: { t: any }) {
   const { add } = useCart();
   const size = `${t.width}/${t.profile} R${t.rim}`;
   return (
-    <div className="group flex flex-col rounded-3xl border border-border bg-card overflow-hidden shadow-[0_10px_40px_-15px_rgba(0,0,0,0.08)] hover:shadow-[0_20px_50px_-15px_rgba(0,0,0,0.15)] hover:-translate-y-1 transition-all duration-300">
-      <div className="flex-1">
+    <div className="group flex flex-col rounded-xl border border-border bg-card overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_50px_-15px_rgba(0,0,0,0.15)] hover:-translate-y-1 transition-all duration-300">
+      <div className="flex-1 flex flex-col">
         <TireCard t={t} />
       </div>
-      <div className="px-6 pb-6">
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            add({
-              tire_id: t.id, slug: t.slug, name: t.name, price_aed: Number(t.price_aed),
-              image: t.main_image ?? "/tire-default.jpg", size,
-            });
-          }}
-          className="w-full bg-navy hover:bg-brand text-navy-foreground font-semibold py-3.5 rounded-xl flex items-center justify-center gap-2.5 transition-all active:scale-[0.98] shadow-lg shadow-navy/10"
-        >
-          <ShoppingCart className="h-5 w-5 opacity-80" /> Add to quote
-        </button>
-      </div>
+      <button
+        onClick={(e) => {
+          e.preventDefault();
+          add({
+            tire_id: t.id, slug: t.slug, name: t.name, price_aed: Number(t.price_aed),
+            image: t.main_image ?? "/tire-default.jpg", size,
+          });
+        }}
+        className="w-full bg-navy hover:bg-navy/90 text-navy-foreground font-semibold py-4 flex items-center justify-center gap-2 transition-colors active:scale-[0.99]"
+      >
+        <ShoppingCart className="h-4 w-4" />
+        <span className="text-sm tracking-wide">Add to quote</span>
+      </button>
     </div>
   );
 }
