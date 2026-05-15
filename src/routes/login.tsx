@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,7 @@ export const Route = createFileRoute("/login")({
   component: LoginPage,
   validateSearch: (s: Record<string, unknown>) => ({
     redirect: typeof s.redirect === "string" ? s.redirect : "/admin/import",
+    message: typeof s.message === "string" ? s.message : "",
   }),
   head: () => ({
     meta: [
@@ -19,9 +20,29 @@ export const Route = createFileRoute("/login")({
   }),
 });
 
+function normalizeRedirect(rawRedirect?: string) {
+  try {
+    const url = new URL(rawRedirect || "/admin/import", window.location.origin);
+    if (url.origin !== window.location.origin) return "/admin/import";
+    return `${url.pathname}${url.search}${url.hash}` || "/admin/import";
+  } catch {
+    const dest = rawRedirect || "/admin/import";
+    if (!dest.startsWith("/") || dest.startsWith("//")) return "/admin/import";
+    return dest;
+  }
+}
+
+async function waitForStoredSession() {
+  for (let attempt = 0; attempt < 10; attempt++) {
+    const { data } = await supabase.auth.getSession();
+    if (data.session) return data.session;
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
+  throw new Error("Signed in, but the browser session was not stored. Please try again.");
+}
+
 function LoginPage() {
-  const navigate = useNavigate();
-  const { redirect } = Route.useSearch();
+  const { redirect, message } = Route.useSearch();
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -33,14 +54,7 @@ function LoginPage() {
     setError(null);
     setBusy(true);
     try {
-      // Normalize redirect to a path (it may arrive as a full URL from beforeLoad).
-      let dest = redirect || "/admin/import";
-      try {
-        if (dest.startsWith("http")) dest = new URL(dest).pathname + new URL(dest).search;
-      } catch {
-        dest = "/admin/import";
-      }
-      if (!dest.startsWith("/")) dest = "/" + dest;
+      const dest = normalizeRedirect(redirect);
 
       if (mode === "signup") {
         const { error } = await supabase.auth.signUp({
@@ -54,8 +68,9 @@ function LoginPage() {
         const { error, data } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
         if (!data.session) throw new Error("No session returned. Try again.");
-        // Hard-navigate so route guards re-evaluate with the fresh session.
-        window.location.assign(dest);
+        await waitForStoredSession();
+        // Hard-navigate so route guards re-evaluate with the fresh stored session.
+        window.location.replace(dest);
         return;
       }
     } catch (e) {
@@ -100,7 +115,7 @@ function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          {error && <p className="text-sm text-destructive">{error}</p>}
+          {(error || message) && <p className="text-sm text-destructive">{error || message}</p>}
           <Button type="submit" className="w-full" disabled={busy}>
             {busy ? "Working…" : mode === "signin" ? "Sign in" : "Sign up"}
           </Button>
