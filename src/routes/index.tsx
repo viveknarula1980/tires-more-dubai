@@ -40,6 +40,12 @@ function Home() {
   const brandsQ = useQuery({ queryKey: ["brands"], queryFn: () => fetchBrands() });
   const featuredQ = useQuery({ queryKey: ["featured"], queryFn: () => fetchFeatured() });
 
+  const [slide, setSlide] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setSlide((s) => (s + 1) % heroSlides.length), 3500);
+    return () => clearInterval(id);
+  }, []);
+
   return (
     <>
       {/* Hero */}
@@ -72,34 +78,45 @@ function Home() {
               </div>
             </div>
 
-            {/* Right: tyre + promo */}
+            {/* Right: brand tyre slider */}
             <div className="relative hidden lg:block min-h-[460px]">
-              <img
-                src={heroTyre}
-                alt="Premium tyre"
-                width={1024}
-                height={1024}
-                className="absolute left-0 top-1/2 -translate-y-1/2 h-[420px] w-auto object-contain drop-shadow-[0_30px_40px_rgba(0,0,0,0.6)]"
-              />
-              <div className="absolute right-0 top-1/2 -translate-y-1/2 text-right">
-                <div className="font-display leading-[0.82]">
-                  <span className="block text-[7rem] xl:text-[10rem] font-extrabold text-white tracking-tighter">
-                    10<span className="text-emerald-400 align-top text-[3rem] xl:text-[4rem]">%</span>
-                  </span>
-                  <span className="block text-5xl xl:text-7xl font-extrabold text-white -mt-2">OFF</span>
+              <div className="absolute inset-0 flex items-center justify-center">
+                {heroSlides.map((s, i) => (
+                  <img
+                    key={s.brand}
+                    src={s.img}
+                    alt={`${s.brand} tyre`}
+                    width={1024}
+                    height={1024}
+                    className={`absolute h-[440px] w-auto object-contain drop-shadow-[0_30px_50px_rgba(0,0,0,0.7)] transition-all duration-700 ease-out ${
+                      i === slide ? "opacity-100 scale-100" : "opacity-0 scale-95"
+                    }`}
+                  />
+                ))}
+              </div>
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3">
+                <p className="text-xs uppercase tracking-[0.3em] text-white/70 font-semibold">
+                  {heroSlides[slide].brand}
+                </p>
+                <div className="flex gap-2">
+                  {heroSlides.map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setSlide(i)}
+                      aria-label={`Slide ${i + 1}`}
+                      className={`h-1.5 rounded-full transition-all ${
+                        i === slide ? "w-6 bg-amber-400" : "w-1.5 bg-white/30 hover:bg-white/60"
+                      }`}
+                    />
+                  ))}
                 </div>
-                <div className="mt-3 inline-flex items-center gap-2 bg-emerald-500 text-emerald-950 px-3 py-2 rounded-md border-2 border-dashed border-emerald-900/40 font-bold text-sm">
-                  <span className="text-[10px] uppercase tracking-widest opacity-80 leading-tight text-left">Promo<br/>Code</span>
-                  <span className="text-lg">REBATE10</span>
-                </div>
-                <p className="mt-2 text-[10px] text-white/70 uppercase tracking-wider">On purchases of AED 1,500+</p>
               </div>
             </div>
           </div>
 
-          {/* Headline below — like reference fineprint */}
+          {/* Headline below */}
           <p className="mt-6 max-w-3xl text-xs text-white/55 leading-relaxed">
-            Minimum AED 1,500 before VAT, valid on new purchases of 4 selected tyres or wheels for a limited time. Cannot be combined with other promotions.
+            Premium tyres from the world's leading brands. Free fitting at our Al Quoz workshop, open 7 days a week.
           </p>
         </div>
 
