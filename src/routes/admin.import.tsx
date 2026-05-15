@@ -1,7 +1,8 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { discoverBrandModelUrls, importBrandBatch } from "@/lib/import.functions";
+import { discoverBrandModelUrls, importBrandBatch, getSyncReport } from "@/lib/import.functions";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
@@ -65,6 +66,12 @@ const BRANDS: BrandEntry[] = [
 function AdminImportPage() {
   const discover = useServerFn(discoverBrandModelUrls);
   const importBatch = useServerFn(importBrandBatch);
+  const fetchReport = useServerFn(getSyncReport);
+
+  const reportQ = useQuery({
+    queryKey: ["sync-report"],
+    queryFn: () => fetchReport(),
+  });
 
   const [activeBrand, setActiveBrand] = useState<string | null>(null);
   const [log, setLog] = useState<LogEntry[]>([]);
@@ -124,18 +131,74 @@ function AdminImportPage() {
       push(e instanceof Error ? e.message : String(e), "err");
     } finally {
       setActiveBrand(null);
+      reportQ.refetch();
     }
   }
 
   const running = activeBrand !== null;
 
   return (
-    <div className="container mx-auto max-w-4xl px-4 py-12">
+    <div className="container mx-auto max-w-5xl px-4 py-12">
       <h1 className="text-3xl font-semibold tracking-tight">Tire price import</h1>
       <p className="mt-2 text-sm text-muted-foreground">
         Pulls live pricing from pitstoparabia.com, applies a 15% discount, and upserts into your
         catalog. Existing tires (matched by slug) get price + spec updates; new sizes are inserted.
       </p>
+
+      {/* SYNC REPORT */}
+      <Card className="mt-6 p-6">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h2 className="font-medium">Sync report</h2>
+            <p className="text-xs text-muted-foreground">
+              Last sync derived from the most recent tire added per brand.
+            </p>
+          </div>
+          <Button size="sm" variant="outline" onClick={() => reportQ.refetch()} disabled={reportQ.isFetching}>
+            {reportQ.isFetching ? "Refreshing…" : "Refresh"}
+          </Button>
+        </div>
+        {reportQ.isLoading ? (
+          <p className="text-sm text-muted-foreground">Loading…</p>
+        ) : reportQ.error ? (
+          <p className="text-sm text-destructive">{(reportQ.error as Error).message}</p>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-left text-xs uppercase tracking-wider text-muted-foreground border-b">
+                  <th className="py-2 pr-3">Brand</th>
+                  <th className="py-2 pr-3 text-right">Tires</th>
+                  <th className="py-2 pr-3 text-right">In stock</th>
+                  <th className="py-2 pr-3 text-right">Price range (AED)</th>
+                  <th className="py-2 pr-3 text-right">Avg</th>
+                  <th className="py-2 pr-3">Last sync</th>
+                </tr>
+              </thead>
+              <tbody>
+                {reportQ.data?.rows.map((r) => (
+                  <tr key={r.slug} className="border-b last:border-0">
+                    <td className="py-2 pr-3 font-medium">{r.name}</td>
+                    <td className="py-2 pr-3 text-right">{r.count}</td>
+                    <td className="py-2 pr-3 text-right">{r.inStock}</td>
+                    <td className="py-2 pr-3 text-right tabular-nums">
+                      {r.minPrice != null
+                        ? `${r.minPrice.toFixed(0)} – ${r.maxPrice!.toFixed(0)}`
+                        : "—"}
+                    </td>
+                    <td className="py-2 pr-3 text-right tabular-nums">
+                      {r.avgPrice != null ? r.avgPrice.toFixed(0) : "—"}
+                    </td>
+                    <td className="py-2 pr-3 text-muted-foreground">
+                      {r.lastSync ? new Date(r.lastSync).toLocaleString() : "Never"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </Card>
 
       <Card className="mt-6 p-6">
         <h2 className="font-medium mb-4">Brands</h2>

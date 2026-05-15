@@ -214,3 +214,51 @@ export const importBrandBatch = createServerFn({ method: "POST" })
 
     return { results };
   });
+
+export const getSyncReport = createServerFn({ method: "GET" })
+  .middleware([requireAdmin])
+  .handler(async () => {
+    const { data: brands, error: bErr } = await supabaseAdmin
+      .from("brands")
+      .select("id, slug, name")
+      .order("name", { ascending: true });
+    if (bErr) throw new Error(bErr.message);
+
+    const rows = await Promise.all(
+      (brands ?? []).map(async (b) => {
+        const { data: tires, error } = await supabaseAdmin
+          .from("tires")
+          .select("price_aed, created_at, in_stock")
+          .eq("brand_id", b.id);
+        if (error) throw new Error(error.message);
+
+        const count = tires?.length ?? 0;
+        if (count === 0) {
+          return {
+            slug: b.slug,
+            name: b.name,
+            count: 0,
+            inStock: 0,
+            lastSync: null as string | null,
+            minPrice: null as number | null,
+            maxPrice: null as number | null,
+            avgPrice: null as number | null,
+          };
+        }
+        const prices = tires!.map((t) => Number(t.price_aed)).filter((n) => !isNaN(n));
+        const dates = tires!.map((t) => new Date(t.created_at).getTime());
+        return {
+          slug: b.slug,
+          name: b.name,
+          count,
+          inStock: tires!.filter((t) => t.in_stock).length,
+          lastSync: new Date(Math.max(...dates)).toISOString(),
+          minPrice: prices.length ? Math.min(...prices) : null,
+          maxPrice: prices.length ? Math.max(...prices) : null,
+          avgPrice: prices.length ? prices.reduce((a, b) => a + b, 0) / prices.length : null,
+        };
+      })
+    );
+
+    return { rows: rows.sort((a, b) => (b.lastSync ?? "").localeCompare(a.lastSync ?? "")) };
+  });
