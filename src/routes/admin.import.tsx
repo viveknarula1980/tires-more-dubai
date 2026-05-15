@@ -43,25 +43,45 @@ export const Route = createFileRoute("/admin/import")({
 });
 
 type LogEntry = { ts: string; msg: string; tone?: "info" | "ok" | "err" };
+type BrandEntry = { slug: string; name: string; sourceSlug?: string };
+
+const BRANDS: BrandEntry[] = [
+  { slug: "continental", name: "Continental" },
+  { slug: "bridgestone", name: "Bridgestone" },
+  { slug: "michelin", name: "Michelin" },
+  { slug: "nexen", name: "Nexen" },
+  { slug: "pirelli", name: "Pirelli" },
+  { slug: "falken", name: "Falken" },
+  { slug: "goodyear", name: "Goodyear" },
+  { slug: "hankook", name: "Hankook" },
+  { slug: "maxxis", name: "Maxxis" },
+  { slug: "roadstone", name: "Roadstone" },
+  { slug: "zeetex", name: "Zeetex" },
+  { slug: "dunlop", name: "Dunlop" },
+  { slug: "jumbo", name: "Jumbo" },
+  { slug: "cooper", name: "Cooper Tires", sourceSlug: "cooper-tires" },
+];
 
 function AdminImportPage() {
   const discover = useServerFn(discoverBrandModelUrls);
   const importBatch = useServerFn(importBrandBatch);
 
-  const [running, setRunning] = useState(false);
+  const [activeBrand, setActiveBrand] = useState<string | null>(null);
   const [log, setLog] = useState<LogEntry[]>([]);
   const [totals, setTotals] = useState({ inserted: 0, updated: 0, failed: 0, models: 0 });
 
   const push = (msg: string, tone: LogEntry["tone"] = "info") =>
     setLog((l) => [...l, { ts: new Date().toLocaleTimeString(), msg, tone }]);
 
-  async function runSync(brandSlug: string) {
-    setRunning(true);
+  async function runSync(brand: BrandEntry) {
+    setActiveBrand(brand.slug);
     setLog([]);
     setTotals({ inserted: 0, updated: 0, failed: 0, models: 0 });
     try {
-      push(`Discovering ${brandSlug} model pages on pitstoparabia.com…`);
-      const { urls } = await discover({ data: { brandSlug } });
+      push(`Discovering ${brand.name} model pages on pitstoparabia.com…`);
+      const { urls } = await discover({
+        data: { brandSlug: brand.slug, sourceSlug: brand.sourceSlug },
+      });
       push(`Found ${urls.length} model pages. Scraping in batches of 5…`, "ok");
 
       const chunkSize = 5;
@@ -74,7 +94,9 @@ function AdminImportPage() {
         const chunk = urls.slice(i, i + chunkSize);
         push(`Batch ${Math.floor(i / chunkSize) + 1}: ${chunk.length} models…`);
         try {
-          const { results } = await importBatch({ data: { brandSlug, urls: chunk } });
+          const { results } = await importBatch({
+            data: { brandSlug: brand.slug, urls: chunk },
+          });
           for (const r of results) {
             models++;
             if (r.ok) {
@@ -101,9 +123,11 @@ function AdminImportPage() {
     } catch (e) {
       push(e instanceof Error ? e.message : String(e), "err");
     } finally {
-      setRunning(false);
+      setActiveBrand(null);
     }
   }
+
+  const running = activeBrand !== null;
 
   return (
     <div className="container mx-auto max-w-4xl px-4 py-12">
@@ -114,16 +138,24 @@ function AdminImportPage() {
       </p>
 
       <Card className="mt-6 p-6">
-        <div className="flex items-center justify-between gap-4 flex-wrap">
-          <div>
-            <h2 className="font-medium">Continental</h2>
-            <p className="text-sm text-muted-foreground">
-              Source: pitstoparabia.com/en/tyres/brands/continental
-            </p>
-          </div>
-          <Button onClick={() => runSync("continental")} disabled={running}>
-            {running ? "Syncing…" : "Sync Continental"}
-          </Button>
+        <h2 className="font-medium mb-4">Brands</h2>
+        <div className="grid gap-2 sm:grid-cols-2">
+          {BRANDS.map((b) => (
+            <div
+              key={b.slug}
+              className="flex items-center justify-between gap-3 rounded-md border p-3"
+            >
+              <div className="min-w-0">
+                <div className="font-medium">{b.name}</div>
+                <div className="text-xs text-muted-foreground truncate">
+                  /tyres/brands/{b.sourceSlug ?? b.slug}
+                </div>
+              </div>
+              <Button size="sm" onClick={() => runSync(b)} disabled={running}>
+                {activeBrand === b.slug ? "Syncing…" : "Sync"}
+              </Button>
+            </div>
+          ))}
         </div>
 
         {(totals.models > 0 || running) && (

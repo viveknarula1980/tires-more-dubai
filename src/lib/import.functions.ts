@@ -63,11 +63,14 @@ const variantSchema = {
 
 export const discoverBrandModelUrls = createServerFn({ method: "POST" })
   .middleware([requireAdmin])
-  .inputValidator((d: { brandSlug: string }) =>
-    z.object({ brandSlug: z.string().min(1).max(60).regex(/^[a-z0-9-]+$/) }).parse(d)
+  .inputValidator((d: { brandSlug: string; sourceSlug?: string }) =>
+    z.object({
+      brandSlug: z.string().min(1).max(60).regex(/^[a-z0-9-]+$/),
+      sourceSlug: z.string().min(1).max(60).regex(/^[a-z0-9-]+$/).optional(),
+    }).parse(d)
   )
   .handler(async ({ data }) => {
-    const url = `${PITSTOP_BRAND_BASE}/${data.brandSlug}`;
+    const url = `${PITSTOP_BRAND_BASE}/${data.sourceSlug ?? data.brandSlug}`;
     const res = await fetch(`${FIRECRAWL}/map`, {
       method: "POST",
       headers: { Authorization: `Bearer ${fcKey()}`, "Content-Type": "application/json" },
@@ -152,7 +155,9 @@ export const importBrandBatch = createServerFn({ method: "POST" })
           if (!width || !profile || !rim || !scrapedPrice) continue;
 
           const finalPrice = Math.round(scrapedPrice * (1 - DISCOUNT) * 100) / 100;
-          const modelClean = (model || "").replace(/^continental\s+/i, "").trim();
+          const escapedBrand = brand.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+          const brandPrefix = new RegExp(`^${escapedBrand}\\s+`, "i");
+          const modelClean = (model || "").replace(brandPrefix, "").trim();
           const baseName =
             (v.name as string | undefined)?.trim() ||
             `${brand.name} ${modelClean} ${width}/${profile} R${rim}`.trim();
