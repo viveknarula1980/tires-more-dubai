@@ -3,6 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { getBrands } from "@/lib/catalog.functions";
 import { BrandLogo } from "@/components/BrandLogo";
+import { StickyBottomSearch } from "@/components/StickyBottomSearch";
 
 export const Route = createFileRoute("/brands/")({
   head: () => ({
@@ -50,6 +51,7 @@ function BrandsPage() {
           ))}
         </div>
       )}
+      <StickyBottomSearch />
     </div>
   );
 }

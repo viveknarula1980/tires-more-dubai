@@ -12,6 +12,7 @@ import { getTireBySlug, searchTires } from "@/lib/catalog.functions";
 import { useCart } from "@/lib/cart";
 import { TireCard } from "@/components/TireCard";
 import { BrandLogo } from "@/components/BrandLogo";
+import { StickyBottomSearch } from "@/components/StickyBottomSearch";
 
 export const Route = createFileRoute("/shop/$slug")({
   head: ({ params }) => ({
@@ -417,6 +418,7 @@ function TireDetail() {
         setIndex={setActiveImg}
         alt={t.name}
       />
+      <StickyBottomSearch />
     </div>
   );
 }
