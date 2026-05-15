@@ -4,8 +4,9 @@ import { useQuery } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import {
   ShoppingCart, Check, Truck, ShieldCheck, Wrench, MessageCircle,
-  Phone, Star, Calendar, Globe, Gauge, Snowflake, Sun, CloudSun,
-  ZoomIn, X, ChevronLeft, ChevronRight,
+  Phone, Star, Snowflake, Sun, CloudSun, Heart, RotateCcw, Lock,
+  Droplet, Volume2, Route as RouteIcon, Zap,
+  ZoomIn, X, ChevronLeft, ChevronRight, Plus, Minus,
 } from "lucide-react";
 import { getTireBySlug, searchTires } from "@/lib/catalog.functions";
 import { useCart } from "@/lib/cart";
@@ -88,31 +89,41 @@ function TireDetail() {
         <div className="container mx-auto px-4 py-3 text-sm text-muted-foreground">
           <Link to="/" className="hover:text-brand">Home</Link>
           <span className="mx-2">/</span>
-          <Link to="/shop" className="hover:text-brand">Shop</Link>
+          <Link to="/shop" className="hover:text-brand">Tires</Link>
           <span className="mx-2">/</span>
-          <span className="text-foreground">{brand?.name}</span>
+          <span className="text-muted-foreground">{size}</span>
+          <span className="mx-2">/</span>
+          <span className="text-foreground font-medium">{t.name}</span>
         </div>
       </div>
 
       <div className="container mx-auto px-4 py-8">
-        <div className="grid lg:grid-cols-[1.1fr_1fr] gap-10">
-          {/* Gallery */}
-          <div>
-            <div className="bg-background rounded-xl border border-border p-6 relative">
+        <div className="grid lg:grid-cols-[80px_1fr_360px] gap-6 lg:gap-8 items-start">
+          {/* Vertical thumbnails */}
+          {gallery.length > 1 && (
+            <div className="hidden lg:flex flex-col gap-3 order-1">
+              {gallery.slice(0, 5).map((g, i) => (
+                <button
+                  key={i}
+                  onClick={() => setActiveImg(i)}
+                  className={`aspect-square rounded-md border-2 bg-background overflow-hidden ${
+                    activeImg === i ? "border-brand" : "border-border hover:border-brand/50"
+                  }`}
+                >
+                  <img src={g} alt="" className="h-full w-full object-contain p-1.5" />
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Main image + middle info: span 2 cols on smaller, custom layout */}
+          <div className="order-2 lg:contents">
+            {/* Image */}
+            <div className="relative bg-background rounded-xl border border-border p-6 order-1">
               {discount > 0 && (
-                <span className="absolute top-4 left-4 bg-brand text-brand-foreground text-sm font-bold px-3 py-1.5 rounded-full z-10">
+                <span className="absolute top-4 left-4 z-10 bg-brand text-brand-foreground text-xs font-bold px-3 py-1.5 rounded-md">
                   Save {discount}%
                 </span>
-              )}
-              {brand?.name && (
-                <div className="absolute top-4 right-4 bg-background border border-border rounded-md px-3 py-2 h-12 w-28 flex items-center justify-center">
-                  <BrandLogo
-                    name={brand.name}
-                    logoUrl={brand.logo_url}
-                    className="h-full w-full"
-                    textClassName="text-sm"
-                  />
-                </div>
               )}
               <button
                 type="button"
@@ -130,111 +141,179 @@ function TireDetail() {
                 <ZoomIn className="h-3.5 w-3.5" /> Click to enlarge
               </span>
             </div>
-            {gallery.length > 1 && (
-              <div className="mt-4 grid grid-cols-5 gap-3">
-                {gallery.map((g, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setActiveImg(i)}
-                    className={`aspect-square rounded-lg border-2 bg-background overflow-hidden ${
-                      activeImg === i ? "border-brand" : "border-border hover:border-brand/50"
-                    }`}
-                  >
-                    <img src={g} alt="" className="h-full w-full object-contain p-2" />
-                  </button>
-                ))}
+
+            {/* Middle column: title, price, size, chips */}
+            <div className="order-2 lg:px-2">
+              {brand?.name && (
+                <div className="h-10 w-36 mb-3">
+                  <BrandLogo
+                    name={brand.name}
+                    logoUrl={brand.logo_url}
+                    className="h-full w-full bg-transparent justify-start"
+                    textClassName="text-lg"
+                  />
+                </div>
+              )}
+
+              <h1 className="text-3xl md:text-4xl font-bold tracking-tight uppercase text-navy">
+                {t.name}
+              </h1>
+
+              <div className="mt-3 flex items-center gap-3 text-sm">
+                <div className="flex items-center gap-0.5 text-amber-400">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <Star key={i} className={`h-4 w-4 ${i < 4 ? "fill-current" : "fill-current opacity-40"}`} />
+                  ))}
+                </div>
+                <span className="text-muted-foreground">4.6 (128 reviews)</span>
+                <span className="text-border">|</span>
+                <a href="#reviews" className="text-brand font-semibold hover:underline">Write a review</a>
               </div>
-            )}
-          </div>
 
-          {/* Info */}
-          <div>
-            <p className="text-xs uppercase tracking-widest text-brand font-bold">{brand?.name}</p>
-            <h1 className="mt-1 text-2xl md:text-3xl font-bold tracking-tight">{t.name}</h1>
-
-            <div className="mt-3 flex items-center gap-4 text-sm">
-              <div className="flex items-center gap-1 text-amber-500">
-                {Array.from({ length: 5 }).map((_, i) => <Star key={i} className="h-4 w-4 fill-current" />)}
-              </div>
-              <span className="text-muted-foreground">In stock · Ready to fit</span>
-            </div>
-
-            <div className="mt-5 inline-flex items-center gap-2 bg-navy text-navy-foreground px-4 py-2 rounded-md font-mono font-bold">
-              {size}
-              {t.load_index && <span className="opacity-80">· {t.load_index}</span>}
-              {t.speed_rating && <span className="opacity-80">{t.speed_rating}</span>}
-            </div>
-
-            {/* Quick specs */}
-            <div className="mt-5 grid grid-cols-2 sm:grid-cols-4 gap-3">
-              <Spec icon={Calendar} label="Year" value={t.year_of_production?.toString() ?? "—"} />
-              <Spec icon={Globe} label="Origin" value={t.country_of_origin ?? "—"} />
-              <Spec icon={SeasonIcon} label="Season" value={t.season} cap />
-              <Spec icon={Gauge} label="Type" value={t.vehicle_type} cap />
-            </div>
-
-            {/* Price */}
-            <div className="mt-6 rounded-xl border border-border bg-background p-5">
-              <div className="flex items-end gap-3">
+              <div className="mt-4 flex items-baseline gap-3">
                 <span className="text-4xl font-bold text-brand">AED {Number(t.price_aed).toFixed(0)}</span>
                 {discount > 0 && (
-                  <span className="text-lg line-through text-muted-foreground pb-1">
+                  <span className="text-xl line-through text-muted-foreground">
                     AED {Number(t.original_price_aed).toFixed(0)}
                   </span>
                 )}
-                <span className="text-sm text-muted-foreground pb-1">/ tyre incl. VAT</span>
               </div>
-              <p className="mt-1 text-sm font-semibold text-foreground">
-                Set of 4: <span className="text-brand">AED {(Number(t.price_aed) * 4).toFixed(0)}</span>
-              </p>
+              <p className="text-xs text-muted-foreground mt-1">Per Tire <span className="opacity-70">(VAT included)</span></p>
 
-              <div className="mt-4 flex items-stretch gap-3">
-                <div className="inline-flex items-center border border-border rounded-md">
-                  <button onClick={() => setQty(Math.max(1, qty - 1))} className="px-3 py-2 hover:bg-muted">−</button>
-                  <span className="px-4 font-bold">{qty}</span>
-                  <button onClick={() => setQty(Math.min(20, qty + 1))} className="px-3 py-2 hover:bg-muted">+</button>
+              <div className="mt-4 flex items-center gap-4 text-sm">
+                <span className="inline-flex items-center gap-1.5 font-semibold text-emerald-600">
+                  <Check className="h-4 w-4" /> In Stock
+                </span>
+                <span className="text-muted-foreground">SKU: {t.id.slice(0, 6).toUpperCase()}</span>
+              </div>
+
+              {/* Size box */}
+              <div className="mt-5 flex items-center gap-4 rounded-xl border border-border bg-background p-4">
+                <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center shrink-0">
+                  <RouteIcon className="h-6 w-6 text-navy" />
                 </div>
-                <button
-                  onClick={() => add(
-                    {
-                      tire_id: t.id, slug: t.slug, name: t.name,
-                      price_aed: Number(t.price_aed),
-                      image: t.main_image ?? "/tire-default.jpg", size,
-                    },
-                    qty
-                  )}
-                  className="flex-1 inline-flex items-center justify-center gap-2 rounded-md bg-brand text-brand-foreground font-bold py-3 hover:opacity-90"
-                >
-                  <ShoppingCart className="h-5 w-5" /> Add to quote
-                </button>
+                <div className="flex-1 min-w-0">
+                  <p className="font-mono font-bold text-base text-navy">
+                    {size}{t.load_index ? ` ${t.load_index}` : ""}{t.speed_rating ?? ""}
+                  </p>
+                  <div className="mt-1 grid grid-cols-2 gap-x-4 gap-y-0.5 text-xs text-muted-foreground">
+                    <span>Width: <span className="text-foreground font-semibold">{t.width}</span></span>
+                    <span>Aspect: <span className="text-foreground font-semibold">{t.profile}</span></span>
+                    <span>Rim: <span className="text-foreground font-semibold">{t.rim}</span></span>
+                    {t.load_index && <span>Load: <span className="text-foreground font-semibold">{t.load_index}</span></span>}
+                    {t.speed_rating && <span>Speed: <span className="text-foreground font-semibold">{t.speed_rating}</span></span>}
+                  </div>
+                </div>
               </div>
 
-              <div className="mt-3 grid grid-cols-2 gap-2">
-                <a href="tel:+97142326666" className="inline-flex items-center justify-center gap-2 rounded-md border border-border py-2.5 text-sm font-semibold hover:border-brand">
-                  <Phone className="h-4 w-4" /> Call
-                </a>
-                <a
-                  href={`https://wa.me/97142326666?text=${encodeURIComponent(`Hi, I'm interested in ${t.name} (${size})`)}`}
-                  target="_blank" rel="noreferrer"
-                  className="inline-flex items-center justify-center gap-2 rounded-md bg-[#25D366] text-white py-2.5 text-sm font-semibold hover:opacity-90"
-                >
-                  <MessageCircle className="h-4 w-4" /> WhatsApp
-                </a>
+              {/* Feature chips */}
+              <div className="mt-5 grid grid-cols-5 gap-2">
+                <FeatureChip icon={SeasonIcon} top={t.season ?? "All"} bottom="Season" />
+                <FeatureChip icon={Zap} top="High" bottom="Performance" />
+                <FeatureChip icon={Droplet} top="Wet" bottom="Traction" badge="A" badgeColor="bg-emerald-500" />
+                <FeatureChip icon={Volume2} top="Low" bottom="Noise" badge="B" badgeColor="bg-amber-500" />
+                <FeatureChip icon={ShieldCheck} top={t.warranty ?? "60K"} bottom="Warranty" />
               </div>
-            </div>
-
-            {/* Trust badges */}
-            <div className="mt-5 grid grid-cols-3 gap-3">
-              <Trust icon={Wrench} title="Free fitting" sub="& balancing" />
-              <Trust icon={ShieldCheck} title={t.warranty ?? "Full warranty"} sub="manufacturer" />
-              <Trust icon={Truck} title="Delivery" sub="across UAE" />
             </div>
           </div>
+
+          {/* Right: Sticky checkout card */}
+          <aside className="order-3 lg:sticky lg:top-6">
+            <div className="rounded-xl border border-border bg-background p-5 space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-semibold">Quantity</span>
+                <div className="inline-flex items-center border border-border rounded-md">
+                  <button
+                    onClick={() => setQty(Math.max(1, qty - 1))}
+                    className="px-3 py-2 hover:bg-muted"
+                    aria-label="Decrease"
+                  >
+                    <Minus className="h-4 w-4" />
+                  </button>
+                  <span className="px-4 font-bold text-base min-w-[3rem] text-center">{qty}</span>
+                  <button
+                    onClick={() => setQty(Math.min(20, qty + 1))}
+                    className="px-3 py-2 hover:bg-muted"
+                    aria-label="Increase"
+                  >
+                    <Plus className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+
+              <button
+                onClick={() => add(
+                  {
+                    tire_id: t.id, slug: t.slug, name: t.name,
+                    price_aed: Number(t.price_aed),
+                    image: t.main_image ?? "/tire-default.jpg", size,
+                  },
+                  qty,
+                )}
+                className="w-full inline-flex items-center justify-center gap-2 rounded-md bg-brand text-brand-foreground font-bold py-3.5 hover:opacity-90 uppercase tracking-wide"
+              >
+                <ShoppingCart className="h-5 w-5" /> Add to Cart
+              </button>
+
+              <Link
+                to="/cart"
+                onClick={() => add(
+                  {
+                    tire_id: t.id, slug: t.slug, name: t.name,
+                    price_aed: Number(t.price_aed),
+                    image: t.main_image ?? "/tire-default.jpg", size,
+                  },
+                  qty,
+                )}
+                className="w-full inline-flex items-center justify-center gap-2 rounded-md border-2 border-border bg-background text-foreground font-bold py-3 hover:border-brand uppercase tracking-wide"
+              >
+                Buy Now
+              </Link>
+
+              <div className="flex items-start gap-3 rounded-lg bg-emerald-50 border border-emerald-200 p-3">
+                <div className="h-9 w-9 rounded-full bg-emerald-500 text-white flex items-center justify-center shrink-0">
+                  <Wrench className="h-4 w-4" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-xs font-bold text-emerald-700 uppercase tracking-wide">Fitting Included</p>
+                  <p className="text-[11px] text-emerald-700/80 mt-0.5 leading-snug">
+                    Free fitting, balancing, and valve installation.
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-3 pt-2">
+                <BenefitRow icon={Truck} title="Fast Delivery" sub="1–2 Days" />
+                <BenefitRow icon={Lock} title="Secure Payment" sub="100% Secure Checkout" />
+                <BenefitRow icon={RotateCcw} title="Easy Returns" sub="14-Day Return Policy" />
+              </div>
+
+              <button
+                type="button"
+                className="w-full inline-flex items-center justify-center gap-2 rounded-md border border-border py-2.5 text-sm font-semibold hover:border-brand transition-colors"
+              >
+                <Heart className="h-4 w-4" /> Save for Later
+              </button>
+            </div>
+
+            <div className="mt-3 grid grid-cols-2 gap-2">
+              <a href="tel:+97142326666" className="inline-flex items-center justify-center gap-2 rounded-md border border-border bg-background py-2.5 text-sm font-semibold hover:border-brand">
+                <Phone className="h-4 w-4" /> Call
+              </a>
+              <a
+                href={`https://wa.me/97142326666?text=${encodeURIComponent(`Hi, I'm interested in ${t.name} (${size})`)}`}
+                target="_blank" rel="noreferrer"
+                className="inline-flex items-center justify-center gap-2 rounded-md bg-[#25D366] text-white py-2.5 text-sm font-semibold hover:opacity-90"
+              >
+                <MessageCircle className="h-4 w-4" /> WhatsApp
+              </a>
+            </div>
+          </aside>
         </div>
 
         {/* Tabs */}
         <div className="mt-12 bg-background rounded-xl border border-border overflow-hidden">
-          <div className="flex border-b border-border">
+          <div className="flex border-b border-border overflow-x-auto">
             {[
               { id: "description", label: "Description" },
               { id: "specs", label: "Specifications" },
@@ -243,7 +322,7 @@ function TireDetail() {
               <button
                 key={x.id}
                 onClick={() => setTab(x.id as any)}
-                className={`px-5 py-4 text-sm font-semibold border-b-2 transition-colors ${
+                className={`px-5 py-4 text-sm font-bold uppercase tracking-wide border-b-2 transition-colors whitespace-nowrap ${
                   tab === x.id ? "border-brand text-brand" : "border-transparent text-muted-foreground hover:text-foreground"
                 }`}
               >
@@ -253,22 +332,36 @@ function TireDetail() {
           </div>
           <div className="p-6 md:p-8">
             {tab === "description" && (
-              <div className="prose-sm max-w-3xl">
-                <p className="text-foreground/90 leading-relaxed">
-                  {t.description ?? `The ${brand?.name} ${t.name} is engineered for UAE roads — combining grip, durability and a refined ride. Sourced direct, fitted free at our Al Quoz workshop.`}
-                </p>
-                {t.features && t.features.length > 0 && (
-                  <>
-                    <h3 className="mt-6 text-base font-bold">Key features</h3>
-                    <ul className="mt-3 grid sm:grid-cols-2 gap-2">
+              <div className="grid md:grid-cols-[1fr_280px] gap-8">
+                <div className="max-w-3xl">
+                  <h3 className="text-lg font-bold uppercase tracking-tight">Built for Excitement. Made to Last.</h3>
+                  <p className="mt-3 text-foreground/90 leading-relaxed text-sm">
+                    {t.description ?? `The ${brand?.name} ${t.name} is engineered for UAE roads — combining grip, durability and a refined ride. Sourced direct, fitted free at our Al Quoz workshop.`}
+                  </p>
+                  {t.features && t.features.length > 0 && (
+                    <ul className="mt-5 space-y-2">
                       {t.features.map((f: string, i: number) => (
                         <li key={i} className="flex items-start gap-2 text-sm">
                           <Check className="h-4 w-4 text-brand mt-0.5 shrink-0" /> {f}
                         </li>
                       ))}
                     </ul>
-                  </>
-                )}
+                  )}
+                </div>
+                <aside className="rounded-xl border border-border bg-muted/30 p-5">
+                  <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Need help choosing?</p>
+                  <p className="mt-2 text-sm text-foreground/80">
+                    Our tyre experts are here to help you find the perfect fit for your vehicle.
+                  </p>
+                  <div className="mt-4 space-y-2 text-sm">
+                    <a href="https://wa.me/97142326666" target="_blank" rel="noreferrer" className="flex items-center gap-2 hover:text-brand">
+                      <MessageCircle className="h-4 w-4 text-emerald-600" /> Chat on WhatsApp
+                    </a>
+                    <a href="tel:+97142326666" className="flex items-center gap-2 hover:text-brand">
+                      <Phone className="h-4 w-4 text-brand" /> Call Us: +971 4 232 6666
+                    </a>
+                  </div>
+                </aside>
               </div>
             )}
             {tab === "specs" && (
@@ -310,7 +403,7 @@ function TireDetail() {
         {relatedFiltered.length > 0 && (
           <section className="mt-14">
             <div className="flex items-end justify-between mb-5">
-              <h2 className="text-2xl font-bold">More tyres in R{t.rim}</h2>
+              <h2 className="text-2xl font-bold uppercase tracking-tight">Customers Also Bought</h2>
               <Link to="/shop" className="text-sm font-semibold text-brand hover:underline">View all →</Link>
             </div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -420,13 +513,35 @@ function Lightbox({
   );
 }
 
-function Spec({ icon: Icon, label, value, cap }: { icon: any; label: string; value: string; cap?: boolean }) {
+function FeatureChip({
+  icon: Icon, top, bottom, badge, badgeColor,
+}: { icon: any; top: string; bottom: string; badge?: string; badgeColor?: string }) {
   return (
-    <div className="rounded-lg border border-border bg-background p-3">
-      <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-        <Icon className="h-3.5 w-3.5" /> {label}
+    <div className="relative flex flex-col items-center justify-center gap-1 rounded-lg border border-border bg-background px-1 py-3">
+      <Icon className="h-5 w-5 text-navy" strokeWidth={1.5} />
+      <div className="text-center leading-tight">
+        <p className="text-[11px] font-bold text-foreground capitalize">{top}</p>
+        <p className="text-[10px] text-muted-foreground">{bottom}</p>
       </div>
-      <p className={`mt-1 text-sm font-bold ${cap ? "capitalize" : ""}`}>{value}</p>
+      {badge && (
+        <span className={`absolute top-1.5 right-1.5 h-4 w-4 rounded-full ${badgeColor} text-white text-[9px] font-bold flex items-center justify-center`}>
+          {badge}
+        </span>
+      )}
+    </div>
+  );
+}
+
+function BenefitRow({ icon: Icon, title, sub }: { icon: any; title: string; sub: string }) {
+  return (
+    <div className="flex items-center gap-3">
+      <div className="h-9 w-9 rounded-full bg-muted flex items-center justify-center shrink-0">
+        <Icon className="h-4 w-4 text-navy" />
+      </div>
+      <div className="min-w-0">
+        <p className="text-sm font-bold leading-tight">{title}</p>
+        <p className="text-xs text-muted-foreground">{sub}</p>
+      </div>
     </div>
   );
 }
