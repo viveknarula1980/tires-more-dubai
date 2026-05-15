@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ServicesRouteImport } from './routes/services'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CartRouteImport } from './routes/cart'
 import { Route as BrandsRouteImport } from './routes/brands'
@@ -22,6 +23,11 @@ import { Route as AdminImportRouteImport } from './routes/admin.import'
 const ServicesRoute = ServicesRouteImport.update({
   id: '/services',
   path: '/services',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -71,6 +77,7 @@ export interface FileRoutesByFullPath {
   '/brands': typeof BrandsRoute
   '/cart': typeof CartRoute
   '/contact': typeof ContactRoute
+  '/login': typeof LoginRoute
   '/services': typeof ServicesRoute
   '/admin/import': typeof AdminImportRoute
   '/shop/$slug': typeof ShopSlugRoute
@@ -82,6 +89,7 @@ export interface FileRoutesByTo {
   '/brands': typeof BrandsRoute
   '/cart': typeof CartRoute
   '/contact': typeof ContactRoute
+  '/login': typeof LoginRoute
   '/services': typeof ServicesRoute
   '/admin/import': typeof AdminImportRoute
   '/shop/$slug': typeof ShopSlugRoute
@@ -94,6 +102,7 @@ export interface FileRoutesById {
   '/brands': typeof BrandsRoute
   '/cart': typeof CartRoute
   '/contact': typeof ContactRoute
+  '/login': typeof LoginRoute
   '/services': typeof ServicesRoute
   '/admin/import': typeof AdminImportRoute
   '/shop/$slug': typeof ShopSlugRoute
@@ -107,6 +116,7 @@ export interface FileRouteTypes {
     | '/brands'
     | '/cart'
     | '/contact'
+    | '/login'
     | '/services'
     | '/admin/import'
     | '/shop/$slug'
@@ -118,6 +128,7 @@ export interface FileRouteTypes {
     | '/brands'
     | '/cart'
     | '/contact'
+    | '/login'
     | '/services'
     | '/admin/import'
     | '/shop/$slug'
@@ -129,6 +140,7 @@ export interface FileRouteTypes {
     | '/brands'
     | '/cart'
     | '/contact'
+    | '/login'
     | '/services'
     | '/admin/import'
     | '/shop/$slug'
@@ -141,6 +153,7 @@ export interface RootRouteChildren {
   BrandsRoute: typeof BrandsRoute
   CartRoute: typeof CartRoute
   ContactRoute: typeof ContactRoute
+  LoginRoute: typeof LoginRoute
   ServicesRoute: typeof ServicesRoute
   AdminImportRoute: typeof AdminImportRoute
   ShopSlugRoute: typeof ShopSlugRoute
@@ -154,6 +167,13 @@ declare module '@tanstack/react-router' {
       path: '/services'
       fullPath: '/services'
       preLoaderRoute: typeof ServicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -221,6 +241,7 @@ const rootRouteChildren: RootRouteChildren = {
   BrandsRoute: BrandsRoute,
   CartRoute: CartRoute,
   ContactRoute: ContactRoute,
+  LoginRoute: LoginRoute,
   ServicesRoute: ServicesRoute,
   AdminImportRoute: AdminImportRoute,
   ShopSlugRoute: ShopSlugRoute,

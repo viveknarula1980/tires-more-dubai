@@ -1,11 +1,28 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { discoverBrandModelUrls, importBrandBatch } from "@/lib/import.functions";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/admin/import")({
+  beforeLoad: async ({ location }) => {
+    const { data: userData } = await supabase.auth.getUser();
+    const user = userData.user;
+    if (!user) {
+      throw redirect({ to: "/login", search: { redirect: location.href } });
+    }
+    const { data: role } = await supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", user.id)
+      .eq("role", "admin")
+      .maybeSingle();
+    if (!role) {
+      throw redirect({ to: "/login", search: { redirect: location.href } });
+    }
+  },
   component: AdminImportPage,
   head: () => ({
     meta: [
