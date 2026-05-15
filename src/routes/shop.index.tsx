@@ -123,30 +123,30 @@ function ShopPage() {
       </section>
 
       {/* STICKY BOTTOM FILTER BAR */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 bg-card/95 backdrop-blur-md border-t border-border shadow-[0_-8px_30px_-10px_rgba(0,0,0,0.15)]">
+      <div className="fixed bottom-0 left-0 right-0 z-40 bg-brand text-brand-foreground border-t-2 border-brand shadow-[0_-12px_40px_-10px_rgba(220,38,38,0.45)]">
         <div className="container mx-auto px-4 py-3">
           <div className="flex items-center gap-3 flex-wrap lg:flex-nowrap">
-            <div className="hidden md:flex items-center gap-2 shrink-0 pr-3 border-r border-border">
-              <SlidersHorizontal className="h-4 w-4 text-brand" />
-              <span className="text-xs font-bold uppercase tracking-wider text-navy">
-                Filters {activeCount > 0 && <span className="text-brand">({activeCount})</span>}
+            <div className="hidden md:flex items-center gap-2 shrink-0 pr-3 border-r border-white/25">
+              <SlidersHorizontal className="h-4 w-4" />
+              <span className="text-xs font-bold uppercase tracking-wider">
+                Filters {activeCount > 0 && <span className="bg-white/20 px-1.5 py-0.5 rounded">({activeCount})</span>}
               </span>
             </div>
 
-            <select value={search.brand} onChange={(e) => update({ brand: e.target.value })} className="filter-select py-2 flex-1 min-w-[140px]">
+            <select value={search.brand} onChange={(e) => update({ brand: e.target.value })} className="bg-white text-navy text-sm font-semibold rounded-md border-0 py-2 px-3 flex-1 min-w-[140px] focus:outline-none focus:ring-2 focus:ring-white/60">
               <option value="">All brands</option>
               {brandsQ.data?.map((b: any) => (
                 <option key={b.slug} value={b.slug}>{b.name}</option>
               ))}
             </select>
 
-            <select value={search.vehicle_type} onChange={(e) => update({ vehicle_type: e.target.value as any })} className="filter-select py-2 flex-1 min-w-[130px]">
+            <select value={search.vehicle_type} onChange={(e) => update({ vehicle_type: e.target.value as any })} className="bg-white text-navy text-sm font-semibold rounded-md border-0 py-2 px-3 flex-1 min-w-[130px] focus:outline-none focus:ring-2 focus:ring-white/60">
               <option value="">All vehicles</option>
               <option value="passenger">Passenger</option>
               <option value="suv">SUV / 4x4</option>
             </select>
 
-            <select value={search.season} onChange={(e) => update({ season: e.target.value as any })} className="filter-select py-2 flex-1 min-w-[130px]">
+            <select value={search.season} onChange={(e) => update({ season: e.target.value as any })} className="bg-white text-navy text-sm font-semibold rounded-md border-0 py-2 px-3 flex-1 min-w-[130px] focus:outline-none focus:ring-2 focus:ring-white/60">
               <option value="">All seasons</option>
               <option value="summer">Summer</option>
               <option value="all-season">All-season</option>
@@ -154,17 +154,17 @@ function ShopPage() {
             </select>
 
             <div className="flex items-center gap-1.5 flex-1 min-w-[260px]">
-              <select value={search.width || ""} onChange={(e) => update({ width: Number(e.target.value) || 0 })} className="filter-select py-2 flex-1" aria-label="Width">
+              <select value={search.width || ""} onChange={(e) => update({ width: Number(e.target.value) || 0 })} className="bg-white text-navy text-sm font-semibold rounded-md border-0 py-2 px-2 flex-1 focus:outline-none focus:ring-2 focus:ring-white/60" aria-label="Width">
                 <option value="">Width</option>
                 {metaQ.data?.widths.map((w) => <option key={w} value={w}>{w}</option>)}
               </select>
-              <span className="text-muted-foreground text-xs">/</span>
-              <select value={search.profile || ""} onChange={(e) => update({ profile: Number(e.target.value) || 0 })} className="filter-select py-2 flex-1" aria-label="Profile">
+              <span className="text-white/80 text-xs font-bold">/</span>
+              <select value={search.profile || ""} onChange={(e) => update({ profile: Number(e.target.value) || 0 })} className="bg-white text-navy text-sm font-semibold rounded-md border-0 py-2 px-2 flex-1 focus:outline-none focus:ring-2 focus:ring-white/60" aria-label="Profile">
                 <option value="">Profile</option>
                 {metaQ.data?.profiles.map((p) => <option key={p} value={p}>{p}</option>)}
               </select>
-              <span className="text-muted-foreground text-xs">R</span>
-              <select value={search.rim || ""} onChange={(e) => update({ rim: Number(e.target.value) || 0 })} className="filter-select py-2 flex-1" aria-label="Rim">
+              <span className="text-white/80 text-xs font-bold">R</span>
+              <select value={search.rim || ""} onChange={(e) => update({ rim: Number(e.target.value) || 0 })} className="bg-white text-navy text-sm font-semibold rounded-md border-0 py-2 px-2 flex-1 focus:outline-none focus:ring-2 focus:ring-white/60" aria-label="Rim">
                 <option value="">Rim</option>
                 {metaQ.data?.rims.map((r) => <option key={r} value={r}>{r}</option>)}
               </select>
@@ -173,7 +173,7 @@ function ShopPage() {
             {activeCount > 0 && (
               <button
                 onClick={() => navigate({ search: { sort: search.sort } as any })}
-                className="shrink-0 inline-flex items-center gap-1 text-xs font-semibold text-muted-foreground hover:text-brand px-2 py-2"
+                className="shrink-0 inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wide text-white/90 hover:text-white hover:bg-white/15 rounded-md px-3 py-2 transition-colors"
               >
                 <X className="h-3.5 w-3.5" /> Clear
               </button>
