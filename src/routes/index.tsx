@@ -1,12 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
-import { Wrench, ShieldCheck, Truck, Clock, Star, ChevronRight, MessageCircle, Phone } from "lucide-react";
+import { Wrench, ShieldCheck, Truck, Clock, Star, ChevronRight, MessageCircle, Phone, BadgeCheck, Tag, Truck as TruckIcon } from "lucide-react";
 import { SearchWidget } from "@/components/SearchWidget";
 import { TireCard } from "@/components/TireCard";
 import { BrandLogo } from "@/components/BrandLogo";
 import { getBrands, getFeaturedTires } from "@/lib/catalog.functions";
-import hero from "@/assets/hero-dubai.jpg";
+import hero from "@/assets/hero-forest-road.jpg";
+import heroTyre from "@/assets/hero-tyre.png";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -29,55 +30,83 @@ function Home() {
   return (
     <>
       {/* Hero */}
-      <section className="relative bg-navy text-navy-foreground overflow-hidden">
-        <img src={hero} alt="" className="absolute inset-0 h-full w-full object-cover opacity-25" />
-        <div className="absolute inset-0 bg-gradient-to-b from-navy/40 via-navy/70 to-navy" />
-        <div className="relative container mx-auto px-4 py-16 md:py-24">
-          <div className="max-w-3xl mx-auto text-center">
-            <span className="inline-block bg-brand/15 text-brand text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-full">
-              Dubai's Tyre Specialists Since 2008
-            </span>
-            <h1 className="mt-5 text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
-              The right tyres. <span className="text-brand">Right now.</span>
-            </h1>
-            <p className="mt-4 text-lg text-navy-foreground/80">
-              Premium tyres from 14 leading brands. Free fitting, balancing & disposal at our Al Quoz workshop.
-            </p>
+      <section className="relative bg-[#0b0d10] text-white overflow-hidden">
+        <img src={hero} alt="" className="absolute inset-0 h-full w-full object-cover opacity-70" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0b0d10] via-[#0b0d10]/85 to-[#0b0d10]/30" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0b0d10] via-transparent to-transparent" />
+
+        <div className="relative container mx-auto px-4 pt-10 pb-12 md:pt-14 md:pb-20">
+          <div className="grid lg:grid-cols-2 gap-10 items-center">
+            <div className="relative z-10">
+              <span className="inline-block bg-brand/15 text-brand text-[11px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full mb-4">
+                Dubai's Tyre Specialists Since 2008
+              </span>
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-6">
+                The right tyres. <span className="text-brand">Right now.</span>
+              </h1>
+              <div className="bg-black/70 backdrop-blur-sm border border-white/10 rounded-2xl p-5 md:p-6 shadow-2xl">
+                <div className="flex gap-6 border-b border-white/10 pb-3 mb-4 text-[11px] font-bold uppercase tracking-widest leading-tight">
+                  <span className="text-white border-b-2 border-brand pb-3 -mb-3">Search<br/>Tyres</span>
+                  <span className="text-white/40">Package<br/>Tyres / Wheels</span>
+                  <span className="text-white/40">UTV &<br/>Trailer Tyres</span>
+                </div>
+                <SearchWidget />
+              </div>
+              <div className="mt-4 flex flex-wrap gap-3 text-sm">
+                <Link to="/shop" className="inline-flex items-center gap-1 text-brand font-semibold hover:underline">
+                  Browse all tyres <ChevronRight className="h-4 w-4" />
+                </Link>
+                <span className="text-white/30">·</span>
+                <a href="https://wa.me/97142326666" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-white/80 hover:text-brand">
+                  <MessageCircle className="h-4 w-4" /> Chat on WhatsApp
+                </a>
+              </div>
+            </div>
+
+            <div className="relative hidden lg:flex items-center justify-center min-h-[460px]">
+              <img
+                src={heroTyre}
+                alt="Premium tyre"
+                width={1024}
+                height={1024}
+                className="relative z-10 h-[440px] w-auto object-contain drop-shadow-[0_30px_40px_rgba(0,0,0,0.6)]"
+              />
+              <div className="absolute right-2 top-1/2 -translate-y-1/2 z-0 text-right">
+                <div className="font-display leading-[0.85]">
+                  <span className="block text-[7rem] xl:text-[9rem] font-extrabold text-white tracking-tighter">10<span className="text-emerald-400">%</span></span>
+                  <span className="block text-5xl xl:text-6xl font-extrabold text-white">OFF</span>
+                </div>
+                <div className="mt-3 inline-flex items-center gap-2 bg-emerald-500 text-emerald-950 px-3 py-2 rounded-md border-2 border-dashed border-emerald-900/40 font-bold text-sm">
+                  <span className="text-[10px] uppercase tracking-widest opacity-80 leading-tight text-left">Promo<br/>Code</span>
+                  <span className="text-lg">REBATE10</span>
+                </div>
+                <p className="mt-2 text-[10px] text-white/70 uppercase tracking-wider">On purchases of AED 1,500+</p>
+              </div>
+            </div>
           </div>
-          <div className="mt-10 max-w-3xl mx-auto">
-            <SearchWidget />
-          </div>
-          <div className="mt-6 flex flex-wrap justify-center gap-2 text-sm">
-            <Link to="/shop" className="inline-flex items-center gap-1 text-brand font-semibold hover:underline">
-              Browse all tyres <ChevronRight className="h-4 w-4" />
-            </Link>
-            <span className="text-navy-foreground/40">·</span>
-            <a href="https://wa.me/97142326666" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 hover:text-brand">
-              <MessageCircle className="h-4 w-4" /> Chat on WhatsApp
-            </a>
+        </div>
+
+        {/* Trust strip */}
+        <div className="relative border-t border-white/10 bg-black/60 backdrop-blur">
+          <div className="container mx-auto px-4 py-5 grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[
+              { icon: ShieldCheck, t: "FREE PROTECTION", s: "Against road hazards" },
+              { icon: Tag, t: "BEST PRICE GUARANTEE", s: "We beat the competition" },
+              { icon: TruckIcon, t: "FREE DELIVERY", s: "Or at the best price" },
+              { icon: Star, t: "4.9 / 5 ON GOOGLE", s: "Over 2,000 reviews" },
+            ].map((x) => (
+              <div key={x.t} className="flex items-center gap-3 text-white">
+                <x.icon className="h-7 w-7 text-brand shrink-0" />
+                <div>
+                  <p className="font-bold text-xs tracking-wide">{x.t}</p>
+                  <p className="text-[11px] text-white/60 uppercase tracking-wider">{x.s}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Trust strip */}
-      <section className="border-b border-border bg-background">
-        <div className="container mx-auto px-4 py-6 grid grid-cols-2 md:grid-cols-4 gap-4">
-          {[
-            { icon: Wrench, t: "Free fitting", s: "balancing & disposal" },
-            { icon: ShieldCheck, t: "Genuine tyres", s: "manufacturer warranty" },
-            { icon: Clock, t: "30-min service", s: "while you wait" },
-            { icon: Truck, t: "UAE-wide delivery", s: "same-day in Dubai" },
-          ].map((x) => (
-            <div key={x.t} className="flex items-center gap-3">
-              <x.icon className="h-8 w-8 text-brand shrink-0" />
-              <div>
-                <p className="font-bold text-sm">{x.t}</p>
-                <p className="text-xs text-muted-foreground">{x.s}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
 
       {/* Featured */}
       <section className="container mx-auto px-4 py-14">
@@ -102,31 +131,58 @@ function Home() {
       </section>
 
       {/* Brands */}
-      <section className="bg-muted/40 py-14">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-8">
-            <p className="text-xs uppercase tracking-widest text-brand font-bold">14 premium brands</p>
-            <h2 className="mt-1 text-3xl font-bold">Shop by brand</h2>
+      <section className="relative bg-[#0b0d10] text-white py-16">
+        {/* ribbon */}
+        <div className="absolute left-1/2 -top-px -translate-x-1/2 z-10">
+          <div className="relative bg-navy text-white px-8 py-3 text-center shadow-lg"
+               style={{ clipPath: "polygon(0 0, 100% 0, calc(100% - 16px) 100%, 16px 100%)" }}>
+            <p className="text-[10px] uppercase tracking-widest text-white/60">Exclusivity</p>
+            <p className="text-sm font-bold uppercase tracking-wider">Tires &amp; More UAE</p>
           </div>
-          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-4">
-            {brandsQ.data?.slice(0, 14).map((b: any) => (
-              <Link
-                key={b.slug}
-                to="/shop"
-                search={{ brand: b.slug, vehicle_type: "", season: "", width: 0, profile: 0, rim: 0, sort: "featured" }}
-                className="aspect-square bg-background rounded-lg border border-border flex items-center justify-center p-4 hover:border-brand hover:shadow-md transition-all"
-              >
-                <BrandLogo
-                  name={b.name}
-                  logoUrl={b.logo_url}
-                  className="h-full w-full"
-                  textClassName="text-sm md:text-base"
-                />
+        </div>
+
+        <div className="container mx-auto px-4 pt-8">
+          <div className="grid lg:grid-cols-[320px_1fr] gap-10 items-center">
+            {/* Left: Free protection panel */}
+            <div>
+              <h2 className="font-display text-5xl md:text-6xl font-extrabold text-amber-400 leading-none">FREE!</h2>
+              <p className="mt-3 text-lg font-bold tracking-wide uppercase">Road Hazard Protection</p>
+              <div className="mt-5 flex items-start gap-4">
+                <div className="border border-amber-400/60 rounded-md px-3 py-2 text-center shrink-0">
+                  <p className="text-[10px] uppercase tracking-widest text-amber-400">Value of</p>
+                  <p className="text-xl font-extrabold text-amber-400">AED 400</p>
+                </div>
+                <p className="text-sm text-white/70 leading-relaxed">
+                  Applicable to the purchase of 4 tyres from the eligible brands listed.
+                </p>
+              </div>
+              <Link to="/services" className="mt-4 inline-block text-amber-400 text-sm font-semibold underline underline-offset-4 hover:text-amber-300">
+                More details →
               </Link>
-            ))}
+            </div>
+
+            {/* Right: brands grid */}
+            <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
+              {brandsQ.data?.slice(0, 14).map((b: any) => (
+                <Link
+                  key={b.slug}
+                  to="/shop"
+                  search={{ brand: b.slug, vehicle_type: "", season: "", width: 0, profile: 0, rim: 0, sort: "featured" }}
+                  className="aspect-[3/2] bg-white rounded-md flex items-center justify-center p-3 hover:scale-[1.04] transition-transform shadow-md"
+                >
+                  <BrandLogo
+                    name={b.name}
+                    logoUrl={b.logo_url}
+                    className="h-full w-full bg-transparent"
+                    textClassName="text-xs md:text-sm text-navy"
+                  />
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
       </section>
+
 
       {/* Services */}
       <section className="container mx-auto px-4 py-14">
