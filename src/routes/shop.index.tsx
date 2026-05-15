@@ -172,13 +172,13 @@ function ShopPage() {
           </div>
 
           {tiresQ.isLoading ? (
-            <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
               {Array.from({ length: 6 }).map((_, i) => (
                 <div key={i} className="aspect-[3/4] rounded-lg bg-muted animate-pulse" />
               ))}
             </div>
           ) : tiresQ.data && tiresQ.data.length > 0 ? (
-            <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
               {tiresQ.data.map((t: any) => (
                 <TireGridItem key={t.id} t={t} />
               ))}
