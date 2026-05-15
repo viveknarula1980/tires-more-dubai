@@ -8,6 +8,9 @@ import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/admin/import")({
   beforeLoad: async ({ location }) => {
+    // Skip on SSR — the browser client has no session storage on the server,
+    // so it would always redirect. The check re-runs on the client.
+    if (typeof window === "undefined") return;
     const { data: userData } = await supabase.auth.getUser();
     const user = userData.user;
     if (!user) {
