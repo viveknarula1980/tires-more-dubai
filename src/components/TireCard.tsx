@@ -57,7 +57,7 @@ export function TireCard({ t }: { t: Tire }) {
           src={t.main_image ?? "/tire-default.jpg"}
           alt={t.name}
           loading="lazy"
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[110%] w-auto max-w-none object-contain transition-transform duration-700 group-hover:scale-[1.04] drop-shadow-2xl"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[88%] w-auto max-w-none object-contain transition-transform duration-700 group-hover:scale-[1.04] drop-shadow-2xl"
         />
 
         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 inline-flex items-center gap-1.5 rounded-full bg-white/95 backdrop-blur px-4 py-2 text-xs font-semibold text-navy shadow-lg border border-border/50">
