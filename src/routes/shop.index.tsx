@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { createServerFn, useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
-import { ShoppingCart, X } from "lucide-react";
+import { SlidersHorizontal, X } from "lucide-react";
 import { getBrands, searchTires } from "@/lib/catalog.functions";
 import { TireCard } from "@/components/TireCard";
 import { useCart } from "@/lib/cart";
