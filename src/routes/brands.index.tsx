@@ -51,6 +51,7 @@ function BrandsPage() {
           ))}
         </div>
       )}
+      <StickyBottomSearch />
     </div>
   );
 }
