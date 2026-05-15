@@ -33,20 +33,33 @@ function LoginPage() {
     setError(null);
     setBusy(true);
     try {
+      // Normalize redirect to a path (it may arrive as a full URL from beforeLoad).
+      let dest = redirect || "/admin/import";
+      try {
+        if (dest.startsWith("http")) dest = new URL(dest).pathname + new URL(dest).search;
+      } catch {
+        dest = "/admin/import";
+      }
+      if (!dest.startsWith("/")) dest = "/" + dest;
+
       if (mode === "signup") {
         const { error } = await supabase.auth.signUp({
           email,
           password,
-          options: { emailRedirectTo: window.location.origin + redirect },
+          options: { emailRedirectTo: window.location.origin + dest },
         });
         if (error) throw error;
         setError("Check your email to confirm your account.");
       } else {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        const { error, data } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
-        navigate({ to: redirect });
+        if (!data.session) throw new Error("No session returned. Try again.");
+        // Hard-navigate so route guards re-evaluate with the fresh session.
+        window.location.assign(dest);
+        return;
       }
     } catch (e) {
+      console.error("Login error:", e);
       setError(e instanceof Error ? e.message : String(e));
     } finally {
       setBusy(false);
