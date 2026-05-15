@@ -50,7 +50,7 @@ export function TireCard({ t }: { t: Tire }) {
             src={t.main_image ?? "/tire-default.jpg"}
             alt={t.name}
             loading="lazy"
-            className="absolute left-[-30%] top-1/2 -translate-y-1/2 h-[150%] w-auto max-w-none object-contain transition-transform duration-500 group-hover:scale-105 group-hover:rotate-3 drop-shadow-2xl"
+            className="absolute inset-0 h-full w-full object-cover object-center scale-[1.6] transition-transform duration-500 group-hover:scale-[1.7] drop-shadow-2xl"
           />
         </div>
       </Link>
