@@ -12,6 +12,7 @@ const years = Array.from({ length: 12 }, (_, i) => 2026 - i);
 export function StickyBottomSearch() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const [mode, setMode] = useState<"size" | "vehicle">("size");
 
   // Size search
   const [w, setW] = useState<number | "">("");
@@ -67,7 +68,7 @@ export function StickyBottomSearch() {
 
   return (
     <>
-      <div className="h-32 lg:h-32" aria-hidden />
+      <div className="h-20 lg:h-20" aria-hidden />
       <div className="fixed bottom-0 inset-x-0 z-40 border-t border-border bg-background/95 backdrop-blur shadow-[0_-8px_24px_-12px_rgba(0,0,0,0.18)]">
         <div className="container mx-auto px-3 lg:px-4">
           {/* Mobile collapsed trigger */}
@@ -82,51 +83,71 @@ export function StickyBottomSearch() {
             <ChevronUp className="h-4 w-4 text-muted-foreground" />
           </button>
 
-          {/* Desktop: two rows */}
-          <div className="hidden lg:block py-2.5 space-y-2">
-            {/* Row 1: by size */}
-            <form onSubmit={submitSize} className="flex items-center gap-3">
-              <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-navy shrink-0 w-44">
-                <Ruler className="h-4 w-4 text-brand" /> Search by Size
-              </span>
-              <select className="sb-select" value={w} onChange={(e) => setW(e.target.value ? Number(e.target.value) : "")}>
-                <option value="">Width</option>
-                {widths.map((x) => <option key={x} value={x}>{x}</option>)}
-              </select>
-              <select className="sb-select" value={p} onChange={(e) => setP(e.target.value ? Number(e.target.value) : "")}>
-                <option value="">Profile</option>
-                {profiles.map((x) => <option key={x} value={x}>{x}</option>)}
-              </select>
-              <select className="sb-select" value={r} onChange={(e) => setR(e.target.value ? Number(e.target.value) : "")}>
-                <option value="">Rim</option>
-                {rims.map((x) => <option key={x} value={x}>R{x}</option>)}
-              </select>
-              <button className="sb-btn ml-auto"><Search className="h-4 w-4" /> Find Tyres</button>
-            </form>
-
-            {/* Row 2: by vehicle */}
-            <form onSubmit={submitVehicle} className="flex items-center gap-3">
-              <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-navy shrink-0 w-44">
-                <Car className="h-4 w-4 text-brand" /> Search by Vehicle
-              </span>
-              <select className="sb-select" value={make} onChange={(e) => setMake(e.target.value)}>
-                <option value="">Make</option>
-                {makes.map((x) => <option key={x} value={x}>{x}</option>)}
-              </select>
-              <select className="sb-select" value={model} onChange={(e) => setModel(e.target.value)} disabled={!make}>
-                <option value="">Model</option>
-                {models.map((x) => <option key={x} value={x}>{x}</option>)}
-              </select>
-              <select className="sb-select" value={year} onChange={(e) => setYear(e.target.value ? Number(e.target.value) : "")}>
-                <option value="">Year</option>
-                {years.map((x) => <option key={x} value={x}>{x}</option>)}
-              </select>
-              <button className="sb-btn sb-btn-outline ml-auto" disabled={!make || !model || !year}>
-                <Search className="h-4 w-4" /> Find Tyres
+          {/* Desktop: single row with mode toggle */}
+          <div className="hidden lg:flex items-center gap-4 py-3">
+            {/* Mode tabs */}
+            <div className="flex flex-col gap-1.5 shrink-0">
+              <button
+                type="button"
+                onClick={() => setMode("size")}
+                className={`sb-mode ${mode === "size" ? "sb-mode-active" : ""}`}
+                title="Search by Size"
+              >
+                <Ruler className="h-4 w-4" />
+                <span className="text-[10px] font-bold uppercase tracking-wider">Size</span>
               </button>
-            </form>
-            {err && <p className="text-xs text-destructive pl-44">{err}</p>}
+              <button
+                type="button"
+                onClick={() => setMode("vehicle")}
+                className={`sb-mode ${mode === "vehicle" ? "sb-mode-active" : ""}`}
+                title="Search by Vehicle"
+              >
+                <Car className="h-4 w-4" />
+                <span className="text-[10px] font-bold uppercase tracking-wider">Vehicle</span>
+              </button>
+            </div>
+
+            <div className="w-px h-10 bg-border shrink-0" />
+
+            {mode === "size" ? (
+              <form onSubmit={submitSize} className="flex items-center gap-3 flex-1 min-w-0">
+                <select className="sb-select" value={w} onChange={(e) => setW(e.target.value ? Number(e.target.value) : "")}>
+                  <option value="">Width</option>
+                  {widths.map((x) => <option key={x} value={x}>{x}</option>)}
+                </select>
+                <select className="sb-select" value={p} onChange={(e) => setP(e.target.value ? Number(e.target.value) : "")}>
+                  <option value="">Profile</option>
+                  {profiles.map((x) => <option key={x} value={x}>{x}</option>)}
+                </select>
+                <select className="sb-select" value={r} onChange={(e) => setR(e.target.value ? Number(e.target.value) : "")}>
+                  <option value="">Rim</option>
+                  {rims.map((x) => <option key={x} value={x}>R{x}</option>)}
+                </select>
+                <button className="sb-btn ml-auto"><Search className="h-4 w-4" /> Find Tyres</button>
+              </form>
+            ) : (
+              <form onSubmit={submitVehicle} className="flex items-center gap-3 flex-1 min-w-0">
+                <select className="sb-select" value={make} onChange={(e) => setMake(e.target.value)}>
+                  <option value="">Make</option>
+                  {makes.map((x) => <option key={x} value={x}>{x}</option>)}
+                </select>
+                <select className="sb-select" value={model} onChange={(e) => setModel(e.target.value)} disabled={!make}>
+                  <option value="">Model</option>
+                  {models.map((x) => <option key={x} value={x}>{x}</option>)}
+                </select>
+                <select className="sb-select" value={year} onChange={(e) => setYear(e.target.value ? Number(e.target.value) : "")}>
+                  <option value="">Year</option>
+                  {years.map((x) => <option key={x} value={x}>{x}</option>)}
+                </select>
+                <button className="sb-btn sb-btn-outline ml-auto" disabled={!make || !model || !year}>
+                  <Search className="h-4 w-4" /> Find Tyres
+                </button>
+              </form>
+            )}
           </div>
+          {err && mode === "vehicle" && (
+            <p className="hidden lg:block text-xs text-destructive pb-2 pl-[88px]">{err}</p>
+          )}
         </div>
       </div>
 
@@ -141,46 +162,64 @@ export function StickyBottomSearch() {
               </button>
             </div>
 
-            <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-2 inline-flex items-center gap-1.5">
-              <Ruler className="h-3.5 w-3.5 text-brand" /> By Size
-            </p>
-            <form onSubmit={submitSize} className="grid grid-cols-3 gap-2 mb-5">
-              <select className="sb-select" value={w} onChange={(e) => setW(e.target.value ? Number(e.target.value) : "")}>
-                <option value="">Width</option>
-                {widths.map((x) => <option key={x} value={x}>{x}</option>)}
-              </select>
-              <select className="sb-select" value={p} onChange={(e) => setP(e.target.value ? Number(e.target.value) : "")}>
-                <option value="">Profile</option>
-                {profiles.map((x) => <option key={x} value={x}>{x}</option>)}
-              </select>
-              <select className="sb-select" value={r} onChange={(e) => setR(e.target.value ? Number(e.target.value) : "")}>
-                <option value="">Rim</option>
-                {rims.map((x) => <option key={x} value={x}>R{x}</option>)}
-              </select>
-              <button className="sb-btn col-span-3"><Search className="h-4 w-4" /> Find by Size</button>
-            </form>
-
-            <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-2 inline-flex items-center gap-1.5">
-              <Car className="h-3.5 w-3.5 text-brand" /> By Vehicle
-            </p>
-            <form onSubmit={submitVehicle} className="grid grid-cols-3 gap-2">
-              <select className="sb-select" value={make} onChange={(e) => setMake(e.target.value)}>
-                <option value="">Make</option>
-                {makes.map((x) => <option key={x} value={x}>{x}</option>)}
-              </select>
-              <select className="sb-select" value={model} onChange={(e) => setModel(e.target.value)} disabled={!make}>
-                <option value="">Model</option>
-                {models.map((x) => <option key={x} value={x}>{x}</option>)}
-              </select>
-              <select className="sb-select" value={year} onChange={(e) => setYear(e.target.value ? Number(e.target.value) : "")}>
-                <option value="">Year</option>
-                {years.map((x) => <option key={x} value={x}>{x}</option>)}
-              </select>
-              <button className="sb-btn sb-btn-outline col-span-3" disabled={!make || !model || !year}>
-                <Search className="h-4 w-4" /> Find by Vehicle
+            {/* Mobile mode tabs */}
+            <div className="flex gap-2 mb-4">
+              <button
+                type="button"
+                onClick={() => setMode("size")}
+                className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors ${
+                  mode === "size" ? "bg-brand text-brand-foreground" : "bg-muted text-muted-foreground"
+                }`}
+              >
+                <Ruler className="h-4 w-4" /> By Size
               </button>
-              {err && <p className="col-span-3 text-xs text-destructive">{err}</p>}
-            </form>
+              <button
+                type="button"
+                onClick={() => setMode("vehicle")}
+                className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors ${
+                  mode === "vehicle" ? "bg-brand text-brand-foreground" : "bg-muted text-muted-foreground"
+                }`}
+              >
+                <Car className="h-4 w-4" /> By Vehicle
+              </button>
+            </div>
+
+            {mode === "size" ? (
+              <form onSubmit={submitSize} className="grid grid-cols-3 gap-2">
+                <select className="sb-select" value={w} onChange={(e) => setW(e.target.value ? Number(e.target.value) : "")}>
+                  <option value="">Width</option>
+                  {widths.map((x) => <option key={x} value={x}>{x}</option>)}
+                </select>
+                <select className="sb-select" value={p} onChange={(e) => setP(e.target.value ? Number(e.target.value) : "")}>
+                  <option value="">Profile</option>
+                  {profiles.map((x) => <option key={x} value={x}>{x}</option>)}
+                </select>
+                <select className="sb-select" value={r} onChange={(e) => setR(e.target.value ? Number(e.target.value) : "")}>
+                  <option value="">Rim</option>
+                  {rims.map((x) => <option key={x} value={x}>R{x}</option>)}
+                </select>
+                <button className="sb-btn col-span-3"><Search className="h-4 w-4" /> Find by Size</button>
+              </form>
+            ) : (
+              <form onSubmit={submitVehicle} className="grid grid-cols-3 gap-2">
+                <select className="sb-select" value={make} onChange={(e) => setMake(e.target.value)}>
+                  <option value="">Make</option>
+                  {makes.map((x) => <option key={x} value={x}>{x}</option>)}
+                </select>
+                <select className="sb-select" value={model} onChange={(e) => setModel(e.target.value)} disabled={!make}>
+                  <option value="">Model</option>
+                  {models.map((x) => <option key={x} value={x}>{x}</option>)}
+                </select>
+                <select className="sb-select" value={year} onChange={(e) => setYear(e.target.value ? Number(e.target.value) : "")}>
+                  <option value="">Year</option>
+                  {years.map((x) => <option key={x} value={x}>{x}</option>)}
+                </select>
+                <button className="sb-btn sb-btn-outline col-span-3" disabled={!make || !model || !year}>
+                  <Search className="h-4 w-4" /> Find by Vehicle
+                </button>
+                {err && <p className="col-span-3 text-xs text-destructive">{err}</p>}
+              </form>
+            )}
           </div>
         </div>
       )}
@@ -194,6 +233,10 @@ export function StickyBottomSearch() {
         .sb-btn:disabled { opacity: .5; cursor: not-allowed; }
         .sb-btn-outline { background: transparent; color: var(--navy, var(--foreground)); border: 2px solid var(--brand); }
         .sb-btn-outline:hover { background: var(--brand); color: var(--brand-foreground); opacity: 1; }
+        .sb-mode { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; width: 52px; height: 46px; border-radius: 8px; border: 1px solid var(--border); background: var(--muted); color: var(--muted-foreground); transition: all .15s; cursor: pointer; }
+        .sb-mode:hover { border-color: var(--brand); color: var(--brand); }
+        .sb-mode-active { background: var(--brand); color: var(--brand-foreground); border-color: var(--brand); }
+        .sb-mode-active:hover { color: var(--brand-foreground); }
       `}</style>
     </>
   );
