@@ -5,6 +5,7 @@ import { Wrench, ShieldCheck, Truck, Clock, Star, ChevronRight, MessageCircle, P
 import { SearchWidget } from "@/components/SearchWidget";
 import { TireCard } from "@/components/TireCard";
 import { BrandLogo } from "@/components/BrandLogo";
+import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "@/components/ui/carousel";
 import { getBrands, getFeaturedTires } from "@/lib/catalog.functions";
 import hero from "@/assets/hero-dubai.jpg";
 
