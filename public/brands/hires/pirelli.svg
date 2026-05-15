@@ -1,0 +1,125 @@
+
+<html lang="en">
+<head>
+<title>404 | Page not found</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width initial-scale=1.0">
+</head>
+
+<style>
+
+.logoPirelli {    
+	width: 250px;
+    text-indent: 99999px;
+    display: block;
+    margin: 0 auto;
+    margin-top: 50px;
+    margin-bottom: 100px;
+	}
+.errorImg {
+	background: url(https://www.pirelli.com/asset/index.php?idelement=47373) no-repeat scroll 0 0 transparent;
+    height: 160px;
+    width: 502px;
+    text-indent: 99999px;
+    display: block;
+    margin: 50px auto;
+}
+.errotTxt {
+	width: 100%;
+	font-weight:bold!important;
+  	padding: 0!important;
+	text-align:center!important;
+	font-family:"Gotham 5r","Gotham A","Gotham B","Gotham-Medium",Arial,Helvetica,sans-serif;
+}
+.errotTxt span {
+	font-size:13px!important;
+}
+.errorMenu {
+	width:inherit;
+	float:right;
+	margin:50px 0 30px 0;
+	font-size:13px!important;
+	color:#000000;
+	line-height:20px;
+	font-family:"Gotham 4r","Gotham A","Gotham B","Gotham-Book",Arial,Helvetica,sans-serif;
+}
+.errorMenu strong {
+	font-family:"Gotham 5r","Gotham A","Gotham B","Gotham-Medium",Arial,Helvetica,sans-serif;
+}
+.errorMenu a{
+	color:#000000;
+	text-decoration:none;
+}
+.errorMenu a:hover{
+	text-decoration:underline;
+}
+.errorMenu .section {
+	float:left;
+	margin-right:25px;
+}
+.errorMenu .last {
+	margin:0;
+}
+.errorMenu .strong {
+	font-weight:bold!important;
+}
+
+@media only screen and (max-width: 947px) and (min-width: 768px) {
+  .errorImg {
+	background:url(https://www.pirelli.com/asset/index.php?idelement=47374) no-repeat scroll 0 0 transparent;
+	height:129px;
+	width:406px;
+	margin:50px auto 0;
+	float:none;
+  }
+  .title-text {
+	margin:0 auto;
+  }
+  .errotTxt {
+  	margin: 10px 0 0 0!important;
+	float:none;
+	width:100%
+  }
+}
+@media only screen and (max-width: 767px){
+  .errorImg {
+	background:url(https://www.pirelli.com/asset/index.php?idelement=47372) no-repeat scroll 0 0 transparent;
+	height:100px;
+	width:302px;
+	margin-top:50px;
+	float:none;
+  }
+  .errotTxt {
+	float: none;
+  	width: 100%;
+  	margin: 50px 0 0 0!important;
+	font-size:11px!important;
+  }
+  .errorMenu {
+	width:302px;
+	float: none;
+	margin:20px 0;
+	font-size:11px!important;
+  }
+  .errorMenu .section {
+	float: none;
+    font-size: 13px;
+    margin: 0 0 15px;
+    text-align: center;
+  }
+}
+
+</style>
+
+
+<body>
+
+<a href="https://www.pirelli.com/global/en-ww/homepage"><img class="logoPirelli" src="https://psi-dotcom-prd.s3.eu-west-1.amazonaws.com/TheCal_2022_pressarea/img/Logo_Pirelli.svg"></a>
+
+<span class="errorImg">404</span><br/>
+<p class="errotTxt">THE PAGE YOU WERE LOOKING FOR APPEARS TO HAVE BEEN MOVED OR DELETED.</p>
+<br class="cleared">
+
+</body>
+</html>
