@@ -403,7 +403,7 @@ function TireDetail() {
               <h2 className="text-2xl font-bold uppercase tracking-tight">Customers Also Bought</h2>
               <Link to="/shop" className="text-sm font-semibold text-brand hover:underline">View all →</Link>
             </div>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {relatedFiltered.map((r: any) => <TireCard key={r.id} t={r} />)}
             </div>
           </section>
