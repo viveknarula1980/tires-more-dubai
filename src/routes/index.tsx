@@ -100,19 +100,7 @@ function Home() {
             {[0, 1].map((groupIdx) => {
               const items = (featuredQ.data ?? []).slice(groupIdx * 3, groupIdx * 3 + 3);
               if (items.length === 0) return null;
-              return (
-                <Carousel key={groupIdx} opts={{ loop: true }} className="relative">
-                  <CarouselContent>
-                    {items.map((t: any) => (
-                      <CarouselItem key={t.id}>
-                        <TireCard t={t} />
-                      </CarouselItem>
-                    ))}
-                  </CarouselContent>
-                  <CarouselPrevious className="left-2" />
-                  <CarouselNext className="right-2" />
-                </Carousel>
-              );
+              return <FeaturedSlider key={groupIdx} items={items} delay={4000 + groupIdx * 1000} />;
             })}
           </div>
         )}
