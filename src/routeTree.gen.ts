@@ -15,11 +15,12 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CartRouteImport } from './routes/cart'
-import { Route as BrandsRouteImport } from './routes/brands'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ShopIndexRouteImport } from './routes/shop.index'
+import { Route as BrandsIndexRouteImport } from './routes/brands.index'
 import { Route as ShopSlugRouteImport } from './routes/shop.$slug'
+import { Route as BrandsSlugRouteImport } from './routes/brands.$slug'
 import { Route as AdminImportRouteImport } from './routes/admin.import'
 
 const ServicesRoute = ServicesRouteImport.update({
@@ -52,11 +53,6 @@ const CartRoute = CartRouteImport.update({
   path: '/cart',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BrandsRoute = BrandsRouteImport.update({
-  id: '/brands',
-  path: '/brands',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
@@ -72,9 +68,19 @@ const ShopIndexRoute = ShopIndexRouteImport.update({
   path: '/shop/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BrandsIndexRoute = BrandsIndexRouteImport.update({
+  id: '/brands/',
+  path: '/brands/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ShopSlugRoute = ShopSlugRouteImport.update({
   id: '/shop/$slug',
   path: '/shop/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BrandsSlugRoute = BrandsSlugRouteImport.update({
+  id: '/brands/$slug',
+  path: '/brands/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminImportRoute = AdminImportRouteImport.update({
@@ -86,7 +92,6 @@ const AdminImportRoute = AdminImportRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/brands': typeof BrandsRoute
   '/cart': typeof CartRoute
   '/contact': typeof ContactRoute
   '/forgot-password': typeof ForgotPasswordRoute
@@ -94,13 +99,14 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/services': typeof ServicesRoute
   '/admin/import': typeof AdminImportRoute
+  '/brands/$slug': typeof BrandsSlugRoute
   '/shop/$slug': typeof ShopSlugRoute
+  '/brands/': typeof BrandsIndexRoute
   '/shop/': typeof ShopIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/brands': typeof BrandsRoute
   '/cart': typeof CartRoute
   '/contact': typeof ContactRoute
   '/forgot-password': typeof ForgotPasswordRoute
@@ -108,14 +114,15 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/services': typeof ServicesRoute
   '/admin/import': typeof AdminImportRoute
+  '/brands/$slug': typeof BrandsSlugRoute
   '/shop/$slug': typeof ShopSlugRoute
+  '/brands': typeof BrandsIndexRoute
   '/shop': typeof ShopIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/brands': typeof BrandsRoute
   '/cart': typeof CartRoute
   '/contact': typeof ContactRoute
   '/forgot-password': typeof ForgotPasswordRoute
@@ -123,7 +130,9 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/services': typeof ServicesRoute
   '/admin/import': typeof AdminImportRoute
+  '/brands/$slug': typeof BrandsSlugRoute
   '/shop/$slug': typeof ShopSlugRoute
+  '/brands/': typeof BrandsIndexRoute
   '/shop/': typeof ShopIndexRoute
 }
 export interface FileRouteTypes {
@@ -131,7 +140,6 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
-    | '/brands'
     | '/cart'
     | '/contact'
     | '/forgot-password'
@@ -139,13 +147,14 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/services'
     | '/admin/import'
+    | '/brands/$slug'
     | '/shop/$slug'
+    | '/brands/'
     | '/shop/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
-    | '/brands'
     | '/cart'
     | '/contact'
     | '/forgot-password'
@@ -153,13 +162,14 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/services'
     | '/admin/import'
+    | '/brands/$slug'
     | '/shop/$slug'
+    | '/brands'
     | '/shop'
   id:
     | '__root__'
     | '/'
     | '/about'
-    | '/brands'
     | '/cart'
     | '/contact'
     | '/forgot-password'
@@ -167,14 +177,15 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/services'
     | '/admin/import'
+    | '/brands/$slug'
     | '/shop/$slug'
+    | '/brands/'
     | '/shop/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
-  BrandsRoute: typeof BrandsRoute
   CartRoute: typeof CartRoute
   ContactRoute: typeof ContactRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
@@ -182,7 +193,9 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   ServicesRoute: typeof ServicesRoute
   AdminImportRoute: typeof AdminImportRoute
+  BrandsSlugRoute: typeof BrandsSlugRoute
   ShopSlugRoute: typeof ShopSlugRoute
+  BrandsIndexRoute: typeof BrandsIndexRoute
   ShopIndexRoute: typeof ShopIndexRoute
 }
 
@@ -230,13 +243,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CartRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/brands': {
-      id: '/brands'
-      path: '/brands'
-      fullPath: '/brands'
-      preLoaderRoute: typeof BrandsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/about': {
       id: '/about'
       path: '/about'
@@ -258,11 +264,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ShopIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/brands/': {
+      id: '/brands/'
+      path: '/brands'
+      fullPath: '/brands/'
+      preLoaderRoute: typeof BrandsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/shop/$slug': {
       id: '/shop/$slug'
       path: '/shop/$slug'
       fullPath: '/shop/$slug'
       preLoaderRoute: typeof ShopSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/brands/$slug': {
+      id: '/brands/$slug'
+      path: '/brands/$slug'
+      fullPath: '/brands/$slug'
+      preLoaderRoute: typeof BrandsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/import': {
@@ -278,7 +298,6 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
-  BrandsRoute: BrandsRoute,
   CartRoute: CartRoute,
   ContactRoute: ContactRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
@@ -286,7 +305,9 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   ServicesRoute: ServicesRoute,
   AdminImportRoute: AdminImportRoute,
+  BrandsSlugRoute: BrandsSlugRoute,
   ShopSlugRoute: ShopSlugRoute,
+  BrandsIndexRoute: BrandsIndexRoute,
   ShopIndexRoute: ShopIndexRoute,
 }
 export const routeTree = rootRouteImport
