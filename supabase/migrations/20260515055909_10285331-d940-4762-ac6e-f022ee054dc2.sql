@@ -1,0 +1,2 @@
+UPDATE public.tires SET main_image = '/tires/bridgestone-turanza.jpg' WHERE brand_id = (SELECT id FROM public.brands WHERE name ILIKE 'bridgestone');
+UPDATE public.tires SET main_image = '/tires/nexen-nfera.webp' WHERE brand_id = (SELECT id FROM public.brands WHERE name ILIKE 'nexen');
