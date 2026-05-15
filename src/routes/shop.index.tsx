@@ -77,120 +77,109 @@ function ShopPage() {
     (search.width ? 1 : 0) + (search.profile ? 1 : 0) + (search.rim ? 1 : 0);
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-6">
-        <h1 className="text-3xl md:text-4xl font-bold tracking-tight">Shop Tyres</h1>
-        <p className="mt-2 text-muted-foreground">
-          {tiresQ.data ? `${tiresQ.data.length} tyres available` : "Loading…"} · Free fitting on orders over AED 500
-        </p>
+    <div className="container mx-auto px-4 py-8 pb-40">
+      <div className="mb-6 flex items-end justify-between gap-4 flex-wrap">
+        <div>
+          <h1 className="text-3xl md:text-4xl font-bold tracking-tight">Shop Tyres</h1>
+          <p className="mt-2 text-muted-foreground">
+            {tiresQ.data ? `${tiresQ.data.length} tyres available` : "Loading…"} · Free fitting on orders over AED 500
+          </p>
+        </div>
+        <div className="flex items-center gap-4">
+          <Link to="/cart" className="text-sm font-semibold text-brand hover:underline">View quote cart →</Link>
+          <label className="text-sm flex items-center gap-2">
+            <span className="text-muted-foreground">Sort:</span>
+            <select value={search.sort} onChange={(e) => update({ sort: e.target.value as any })} className="filter-select py-1.5">
+              <option value="featured">Featured</option>
+              <option value="price_asc">Price: Low to High</option>
+              <option value="price_desc">Price: High to Low</option>
+              <option value="name">Name</option>
+            </select>
+          </label>
+        </div>
       </div>
 
-      <div className="grid lg:grid-cols-[260px_1fr] gap-8">
-        {/* Filters */}
-        <aside className="space-y-6">
-          <div className="flex items-center justify-between">
-            <h2 className="font-semibold">Filters {activeCount > 0 && <span className="text-brand">({activeCount})</span>}</h2>
-            {activeCount > 0 && (
-              <button
-                onClick={() => navigate({ search: { sort: "featured" } as any })}
-                className="text-xs text-muted-foreground hover:text-brand inline-flex items-center gap-1"
-              >
-                <X className="h-3 w-3" /> Clear all
-              </button>
-            )}
+      {/* Results — now full width */}
+      <section>
+        {tiresQ.isLoading ? (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="aspect-[3/4] rounded-lg bg-muted animate-pulse" />
+            ))}
           </div>
+        ) : tiresQ.data && tiresQ.data.length > 0 ? (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+            {tiresQ.data.map((t: any) => (
+              <TireGridItem key={t.id} t={t} />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-20 border border-dashed border-border rounded-lg">
+            <p className="font-semibold">No tyres match these filters</p>
+            <p className="text-sm text-muted-foreground mt-1">Try clearing some filters or contact us — we likely have it in stock.</p>
+            <button onClick={() => navigate({ search: { sort: "featured" } as any })} className="mt-4 text-brand font-semibold hover:underline">Reset filters</button>
+          </div>
+        )}
+      </section>
 
-          <FilterGroup label="Brand">
-            <select value={search.brand} onChange={(e) => update({ brand: e.target.value })} className="filter-select">
+      {/* STICKY BOTTOM FILTER BAR */}
+      <div className="fixed bottom-0 left-0 right-0 z-40 bg-card/95 backdrop-blur-md border-t border-border shadow-[0_-8px_30px_-10px_rgba(0,0,0,0.15)]">
+        <div className="container mx-auto px-4 py-3">
+          <div className="flex items-center gap-3 flex-wrap lg:flex-nowrap">
+            <div className="hidden md:flex items-center gap-2 shrink-0 pr-3 border-r border-border">
+              <SlidersHorizontal className="h-4 w-4 text-brand" />
+              <span className="text-xs font-bold uppercase tracking-wider text-navy">
+                Filters {activeCount > 0 && <span className="text-brand">({activeCount})</span>}
+              </span>
+            </div>
+
+            <select value={search.brand} onChange={(e) => update({ brand: e.target.value })} className="filter-select py-2 flex-1 min-w-[140px]">
               <option value="">All brands</option>
               {brandsQ.data?.map((b: any) => (
                 <option key={b.slug} value={b.slug}>{b.name}</option>
               ))}
             </select>
-          </FilterGroup>
 
-          <FilterGroup label="Vehicle type">
-            <div className="grid grid-cols-2 gap-2">
-              {[
-                { v: "", l: "All" },
-                { v: "passenger", l: "Passenger" },
-                { v: "suv", l: "SUV / 4x4" },
-              ].map((o) => (
-                <button
-                  key={o.v}
-                  onClick={() => update({ vehicle_type: o.v as any })}
-                  className={`text-xs font-semibold px-3 py-2 rounded border transition-colors ${
-                    search.vehicle_type === o.v ? "bg-brand text-brand-foreground border-brand" : "bg-card border-border hover:border-brand/50"
-                  }`}
-                >
-                  {o.l}
-                </button>
-              ))}
-            </div>
-          </FilterGroup>
+            <select value={search.vehicle_type} onChange={(e) => update({ vehicle_type: e.target.value as any })} className="filter-select py-2 flex-1 min-w-[130px]">
+              <option value="">All vehicles</option>
+              <option value="passenger">Passenger</option>
+              <option value="suv">SUV / 4x4</option>
+            </select>
 
-          <FilterGroup label="Season">
-            <select value={search.season} onChange={(e) => update({ season: e.target.value as any })} className="filter-select">
+            <select value={search.season} onChange={(e) => update({ season: e.target.value as any })} className="filter-select py-2 flex-1 min-w-[130px]">
               <option value="">All seasons</option>
               <option value="summer">Summer</option>
               <option value="all-season">All-season</option>
               <option value="winter">Winter</option>
             </select>
-          </FilterGroup>
 
-          <FilterGroup label="Tyre size">
-            <div className="grid grid-cols-3 gap-2">
-              <select value={search.width || ""} onChange={(e) => update({ width: Number(e.target.value) || 0 })} className="filter-select" aria-label="Width">
+            <div className="flex items-center gap-1.5 flex-1 min-w-[260px]">
+              <select value={search.width || ""} onChange={(e) => update({ width: Number(e.target.value) || 0 })} className="filter-select py-2 flex-1" aria-label="Width">
                 <option value="">Width</option>
                 {metaQ.data?.widths.map((w) => <option key={w} value={w}>{w}</option>)}
               </select>
-              <select value={search.profile || ""} onChange={(e) => update({ profile: Number(e.target.value) || 0 })} className="filter-select" aria-label="Profile">
+              <span className="text-muted-foreground text-xs">/</span>
+              <select value={search.profile || ""} onChange={(e) => update({ profile: Number(e.target.value) || 0 })} className="filter-select py-2 flex-1" aria-label="Profile">
                 <option value="">Profile</option>
                 {metaQ.data?.profiles.map((p) => <option key={p} value={p}>{p}</option>)}
               </select>
-              <select value={search.rim || ""} onChange={(e) => update({ rim: Number(e.target.value) || 0 })} className="filter-select" aria-label="Rim">
+              <span className="text-muted-foreground text-xs">R</span>
+              <select value={search.rim || ""} onChange={(e) => update({ rim: Number(e.target.value) || 0 })} className="filter-select py-2 flex-1" aria-label="Rim">
                 <option value="">Rim</option>
-                {metaQ.data?.rims.map((r) => <option key={r} value={r}>R{r}</option>)}
+                {metaQ.data?.rims.map((r) => <option key={r} value={r}>{r}</option>)}
               </select>
             </div>
-          </FilterGroup>
-        </aside>
 
-        {/* Results */}
-        <section>
-          <div className="mb-4 flex items-center justify-between gap-4 border-b border-border pb-3">
-            <Link to="/cart" className="text-sm font-semibold text-brand hover:underline">View quote cart →</Link>
-            <label className="text-sm flex items-center gap-2">
-              <span className="text-muted-foreground">Sort:</span>
-              <select value={search.sort} onChange={(e) => update({ sort: e.target.value as any })} className="filter-select py-1.5">
-                <option value="featured">Featured</option>
-                <option value="price_asc">Price: Low to High</option>
-                <option value="price_desc">Price: High to Low</option>
-                <option value="name">Name</option>
-              </select>
-            </label>
+            {activeCount > 0 && (
+              <button
+                onClick={() => navigate({ search: { sort: search.sort } as any })}
+                className="shrink-0 inline-flex items-center gap-1 text-xs font-semibold text-muted-foreground hover:text-brand px-2 py-2"
+              >
+                <X className="h-3.5 w-3.5" /> Clear
+              </button>
+            )}
           </div>
-
-          {tiresQ.isLoading ? (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-              {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="aspect-[3/4] rounded-lg bg-muted animate-pulse" />
-              ))}
-            </div>
-          ) : tiresQ.data && tiresQ.data.length > 0 ? (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-              {tiresQ.data.map((t: any) => (
-                <TireGridItem key={t.id} t={t} />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-20 border border-dashed border-border rounded-lg">
-              <p className="font-semibold">No tyres match these filters</p>
-              <p className="text-sm text-muted-foreground mt-1">Try clearing some filters or contact us — we likely have it in stock.</p>
-              <button onClick={() => navigate({ search: { sort: "featured" } as any })} className="mt-4 text-brand font-semibold hover:underline">Reset filters</button>
-            </div>
-          )}
-        </section>
+        </div>
       </div>
     </div>
   );
