@@ -131,6 +131,7 @@ function AdminImportPage() {
       push(e instanceof Error ? e.message : String(e), "err");
     } finally {
       setActiveBrand(null);
+      reportQ.refetch();
     }
   }
 
