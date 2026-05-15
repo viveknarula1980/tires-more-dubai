@@ -11,10 +11,14 @@ export const Route = createFileRoute("/admin/import")({
     // Skip on SSR — the browser client has no session storage on the server,
     // so it would always redirect. The check re-runs on the client.
     if (typeof window === "undefined") return;
-    const { data: userData } = await supabase.auth.getUser();
+    const redirectTo = `${location.pathname}${location.search}${location.hash}`;
+    const { data: sessionData } = await supabase.auth.getSession();
+    const { data: userData } = sessionData.session
+      ? await supabase.auth.getUser()
+      : { data: { user: null } };
     const user = userData.user;
     if (!user) {
-      throw redirect({ to: "/login", search: { redirect: location.href } });
+      throw redirect({ to: "/login", search: { redirect: redirectTo } });
     }
     const { data: role } = await supabase
       .from("user_roles")
@@ -23,7 +27,10 @@ export const Route = createFileRoute("/admin/import")({
       .eq("role", "admin")
       .maybeSingle();
     if (!role) {
-      throw redirect({ to: "/login", search: { redirect: location.href } });
+      throw redirect({
+        to: "/login",
+        search: { redirect: redirectTo, message: "Your account does not have admin access." },
+      });
     }
   },
   component: AdminImportPage,
