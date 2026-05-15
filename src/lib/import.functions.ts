@@ -92,6 +92,7 @@ type ImportResult = {
 };
 
 export const importBrandBatch = createServerFn({ method: "POST" })
+  .middleware([requireAdmin])
   .inputValidator((d: { brandSlug: string; urls: string[] }) =>
     z
       .object({
