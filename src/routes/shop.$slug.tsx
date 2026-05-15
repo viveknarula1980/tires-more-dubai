@@ -98,7 +98,7 @@ function TireDetail() {
       </div>
 
       <div className="container mx-auto px-4 py-8">
-        <div className="grid lg:grid-cols-[80px_1fr_360px] gap-6 lg:gap-8 items-start">
+        <div className="grid lg:grid-cols-[72px_minmax(0,1fr)_minmax(0,1fr)_340px] gap-6 lg:gap-6 items-start">
           {/* Vertical thumbnails */}
           {gallery.length > 1 && (
             <div className="hidden lg:flex flex-col gap-3 order-1">
