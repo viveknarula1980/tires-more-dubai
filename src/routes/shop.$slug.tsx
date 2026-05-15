@@ -116,104 +116,100 @@ function TireDetail() {
             </div>
           )}
 
-          {/* Main image + middle info: span 2 cols on smaller, custom layout */}
-          <div className="order-2 lg:contents">
-            {/* Image */}
-            <div className="relative bg-background rounded-xl border border-border p-6 order-1">
-              {discount > 0 && (
-                <span className="absolute top-4 left-4 z-10 bg-brand text-brand-foreground text-xs font-bold px-3 py-1.5 rounded-md">
-                  Save {discount}%
-                </span>
-              )}
-              <button
-                type="button"
-                onClick={() => setLightboxOpen(true)}
-                className="group block w-full cursor-zoom-in"
-                aria-label="Open full-size image"
-              >
-                <img
-                  src={gallery[activeImg]}
-                  alt={t.name}
-                  className="w-full aspect-square object-contain transition-transform group-hover:scale-[1.02]"
-                />
-              </button>
-              <span className="absolute bottom-4 right-4 inline-flex items-center gap-1.5 rounded-full bg-foreground/80 text-background px-3 py-1.5 text-xs font-semibold backdrop-blur pointer-events-none">
-                <ZoomIn className="h-3.5 w-3.5" /> Click to enlarge
+          {/* Image */}
+          <div className="relative bg-background rounded-xl border border-border p-6 order-2">
+            {discount > 0 && (
+              <span className="absolute top-4 left-4 z-10 bg-brand text-brand-foreground text-xs font-bold px-3 py-1.5 rounded-md">
+                Save {discount}%
               </span>
+            )}
+            <button
+              type="button"
+              onClick={() => setLightboxOpen(true)}
+              className="group block w-full cursor-zoom-in"
+              aria-label="Open full-size image"
+            >
+              <img
+                src={gallery[activeImg]}
+                alt={t.name}
+                className="w-full aspect-square object-contain transition-transform group-hover:scale-[1.02]"
+              />
+            </button>
+            <span className="absolute bottom-4 right-4 inline-flex items-center gap-1.5 rounded-full bg-foreground/80 text-background px-3 py-1.5 text-xs font-semibold backdrop-blur pointer-events-none">
+              <ZoomIn className="h-3.5 w-3.5" /> Click to enlarge
+            </span>
+          </div>
+
+          {/* Middle column: title, price, size, chips */}
+          <div className="order-3 lg:px-2 min-w-0">
+            {brand?.name && (
+              <div className="h-10 w-36 mb-3">
+                <BrandLogo
+                  name={brand.name}
+                  logoUrl={brand.logo_url}
+                  className="h-full w-full bg-transparent justify-start"
+                  textClassName="text-lg"
+                />
+              </div>
+            )}
+
+            <h1 className="text-2xl md:text-3xl font-bold tracking-tight uppercase text-navy break-words">
+              {t.name}
+            </h1>
+
+            <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
+              <div className="flex items-center gap-0.5 text-amber-400">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star key={i} className={`h-4 w-4 ${i < 4 ? "fill-current" : "fill-current opacity-40"}`} />
+                ))}
+              </div>
+              <span className="text-muted-foreground">4.6 (128 reviews)</span>
+              <a href="#reviews" className="text-brand font-semibold hover:underline">Write a review</a>
             </div>
 
-            {/* Middle column: title, price, size, chips */}
-            <div className="order-2 lg:px-2">
-              {brand?.name && (
-                <div className="h-10 w-36 mb-3">
-                  <BrandLogo
-                    name={brand.name}
-                    logoUrl={brand.logo_url}
-                    className="h-full w-full bg-transparent justify-start"
-                    textClassName="text-lg"
-                  />
-                </div>
-              )}
-
-              <h1 className="text-3xl md:text-4xl font-bold tracking-tight uppercase text-navy">
-                {t.name}
-              </h1>
-
-              <div className="mt-3 flex items-center gap-3 text-sm">
-                <div className="flex items-center gap-0.5 text-amber-400">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star key={i} className={`h-4 w-4 ${i < 4 ? "fill-current" : "fill-current opacity-40"}`} />
-                  ))}
-                </div>
-                <span className="text-muted-foreground">4.6 (128 reviews)</span>
-                <span className="text-border">|</span>
-                <a href="#reviews" className="text-brand font-semibold hover:underline">Write a review</a>
-              </div>
-
-              <div className="mt-4 flex items-baseline gap-3">
-                <span className="text-4xl font-bold text-brand">AED {Number(t.price_aed).toFixed(0)}</span>
-                {discount > 0 && (
-                  <span className="text-xl line-through text-muted-foreground">
-                    AED {Number(t.original_price_aed).toFixed(0)}
-                  </span>
-                )}
-              </div>
-              <p className="text-xs text-muted-foreground mt-1">Per Tire <span className="opacity-70">(VAT included)</span></p>
-
-              <div className="mt-4 flex items-center gap-4 text-sm">
-                <span className="inline-flex items-center gap-1.5 font-semibold text-emerald-600">
-                  <Check className="h-4 w-4" /> In Stock
+            <div className="mt-4 flex flex-wrap items-baseline gap-3">
+              <span className="text-3xl md:text-4xl font-bold text-brand">AED {Number(t.price_aed).toFixed(0)}</span>
+              {discount > 0 && (
+                <span className="text-lg line-through text-muted-foreground">
+                  AED {Number(t.original_price_aed).toFixed(0)}
                 </span>
-                <span className="text-muted-foreground">SKU: {t.id.slice(0, 6).toUpperCase()}</span>
-              </div>
+              )}
+            </div>
+            <p className="text-xs text-muted-foreground mt-1">Per Tire <span className="opacity-70">(VAT included)</span></p>
 
-              {/* Size box */}
-              <div className="mt-5 flex items-center gap-4 rounded-xl border border-border bg-background p-4">
-                <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center shrink-0">
-                  <RouteIcon className="h-6 w-6 text-navy" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-mono font-bold text-base text-navy">
-                    {size}{t.load_index ? ` ${t.load_index}` : ""}{t.speed_rating ?? ""}
-                  </p>
-                  <div className="mt-1 grid grid-cols-2 gap-x-4 gap-y-0.5 text-xs text-muted-foreground">
-                    <span>Width: <span className="text-foreground font-semibold">{t.width}</span></span>
-                    <span>Aspect: <span className="text-foreground font-semibold">{t.profile}</span></span>
-                    <span>Rim: <span className="text-foreground font-semibold">{t.rim}</span></span>
-                    {t.load_index && <span>Load: <span className="text-foreground font-semibold">{t.load_index}</span></span>}
-                    {t.speed_rating && <span>Speed: <span className="text-foreground font-semibold">{t.speed_rating}</span></span>}
-                  </div>
-                </div>
-              </div>
+            <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
+              <span className="inline-flex items-center gap-1.5 font-semibold text-emerald-600">
+                <Check className="h-4 w-4" /> In Stock
+              </span>
+              <span className="text-muted-foreground">SKU: {t.id.slice(0, 6).toUpperCase()}</span>
+            </div>
 
-              {/* Feature chips */}
-              <div className="mt-5 grid grid-cols-5 gap-2">
-                <FeatureChip icon={SeasonIcon} top={t.season ?? "All"} bottom="Season" />
-                <FeatureChip icon={Zap} top="High" bottom="Performance" />
-                <FeatureChip icon={Droplet} top="Wet" bottom="Traction" badge="A" badgeColor="bg-emerald-500" />
-                <FeatureChip icon={Volume2} top="Low" bottom="Noise" badge="B" badgeColor="bg-amber-500" />
-                <FeatureChip icon={ShieldCheck} top={t.warranty ?? "60K"} bottom="Warranty" />
+            {/* Size box */}
+            <div className="mt-5 flex items-center gap-3 rounded-xl border border-border bg-background p-3">
+              <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center shrink-0">
+                <RouteIcon className="h-5 w-5 text-navy" />
               </div>
+              <div className="flex-1 min-w-0">
+                <p className="font-mono font-bold text-sm text-navy">
+                  {size}{t.load_index ? ` ${t.load_index}` : ""}{t.speed_rating ?? ""}
+                </p>
+                <div className="mt-0.5 flex flex-wrap gap-x-3 gap-y-0.5 text-xs text-muted-foreground">
+                  <span>W: <span className="text-foreground font-semibold">{t.width}</span></span>
+                  <span>A: <span className="text-foreground font-semibold">{t.profile}</span></span>
+                  <span>R: <span className="text-foreground font-semibold">{t.rim}</span></span>
+                  {t.load_index && <span>L: <span className="text-foreground font-semibold">{t.load_index}</span></span>}
+                  {t.speed_rating && <span>S: <span className="text-foreground font-semibold">{t.speed_rating}</span></span>}
+                </div>
+              </div>
+            </div>
+
+            {/* Feature chips */}
+            <div className="mt-4 grid grid-cols-3 sm:grid-cols-5 gap-2">
+              <FeatureChip icon={SeasonIcon} top={t.season ?? "All"} bottom="Season" />
+              <FeatureChip icon={Zap} top="High" bottom="Performance" />
+              <FeatureChip icon={Droplet} top="Wet" bottom="Traction" badge="A" badgeColor="bg-emerald-500" />
+              <FeatureChip icon={Volume2} top="Low" bottom="Noise" badge="B" badgeColor="bg-amber-500" />
+              <FeatureChip icon={ShieldCheck} top={t.warranty ?? "60K"} bottom="Warranty" />
             </div>
           </div>
 
