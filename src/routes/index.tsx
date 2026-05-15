@@ -6,8 +6,21 @@ import { SearchWidget } from "@/components/SearchWidget";
 import { TireCard } from "@/components/TireCard";
 import { BrandLogo } from "@/components/BrandLogo";
 import { getBrands, getFeaturedTires } from "@/lib/catalog.functions";
-import hero from "@/assets/hero-forest-road.jpg";
-import heroTyre from "@/assets/hero-tyre.png";
+import hero from "@/assets/hero-dubai.jpg";
+import tyreMichelin from "@/assets/tyre-michelin.png";
+import tyreBridgestone from "@/assets/tyre-bridgestone.png";
+import tyrePirelli from "@/assets/tyre-pirelli.png";
+import tyreContinental from "@/assets/tyre-continental.png";
+import tyreGoodyear from "@/assets/tyre-goodyear.png";
+import { useEffect, useState } from "react";
+
+const heroSlides = [
+  { img: tyreMichelin, brand: "Michelin" },
+  { img: tyreBridgestone, brand: "Bridgestone" },
+  { img: tyrePirelli, brand: "Pirelli" },
+  { img: tyreContinental, brand: "Continental" },
+  { img: tyreGoodyear, brand: "Goodyear" },
+];
 
 export const Route = createFileRoute("/")({
   head: () => ({
