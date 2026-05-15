@@ -1,26 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
-import { Wrench, ShieldCheck, Truck, Clock, Star, ChevronRight, MessageCircle, Phone, BadgeCheck, Tag, Truck as TruckIcon } from "lucide-react";
+import { Wrench, ShieldCheck, Truck, Clock, Star, ChevronRight, MessageCircle, Phone } from "lucide-react";
 import { SearchWidget } from "@/components/SearchWidget";
 import { TireCard } from "@/components/TireCard";
 import { BrandLogo } from "@/components/BrandLogo";
 import { getBrands, getFeaturedTires } from "@/lib/catalog.functions";
 import hero from "@/assets/hero-dubai.jpg";
-import tyreMichelin from "@/assets/tyre-michelin.png";
-import tyreBridgestone from "@/assets/tyre-bridgestone.png";
-import tyrePirelli from "@/assets/tyre-pirelli.png";
-import tyreContinental from "@/assets/tyre-continental.png";
-import tyreGoodyear from "@/assets/tyre-goodyear.png";
-import { useEffect, useState } from "react";
-
-const heroSlides = [
-  { img: tyreMichelin, brand: "Michelin" },
-  { img: tyreBridgestone, brand: "Bridgestone" },
-  { img: tyrePirelli, brand: "Pirelli" },
-  { img: tyreContinental, brand: "Continental" },
-  { img: tyreGoodyear, brand: "Goodyear" },
-];
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -40,107 +26,58 @@ function Home() {
   const brandsQ = useQuery({ queryKey: ["brands"], queryFn: () => fetchBrands() });
   const featuredQ = useQuery({ queryKey: ["featured"], queryFn: () => fetchFeatured() });
 
-  const [slide, setSlide] = useState(0);
-  useEffect(() => {
-    const id = setInterval(() => setSlide((s) => (s + 1) % heroSlides.length), 3500);
-    return () => clearInterval(id);
-  }, []);
-
   return (
     <>
       {/* Hero */}
-      <section className="relative bg-[#0b0d10] text-white overflow-hidden">
-        <img src={hero} alt="" className="absolute inset-0 h-full w-full object-cover opacity-70" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0b0d10] via-[#0b0d10]/85 to-[#0b0d10]/30" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0b0d10] via-transparent to-transparent" />
-
-        <div className="relative container mx-auto px-4 pt-8 pb-10 md:pt-10 md:pb-14">
-          <div className="grid lg:grid-cols-[minmax(0,520px)_1fr] gap-8 items-center">
-            {/* Left: search panel */}
-            <div className="relative z-10">
-              {/* tabs OUTSIDE the panel */}
-              <div className="flex items-end gap-8 px-2 mb-0 text-[11px] font-bold uppercase tracking-widest leading-tight">
-                <span className="text-white pb-3 border-b-[3px] border-white">Search<br/>Tyres</span>
-                <span className="text-white/45 pb-3 border-b-[3px] border-transparent cursor-default">Package<br/>Tyres / Wheels</span>
-                <span className="text-white/45 pb-3 border-b-[3px] border-transparent cursor-default">UTV &<br/>Trailer Tyres</span>
-              </div>
-              <div className="bg-black/80 backdrop-blur-sm border border-white/10 rounded-tr-2xl rounded-b-2xl p-5 md:p-6 shadow-2xl">
-                <SearchWidget />
-              </div>
-              <div className="mt-4 flex flex-wrap gap-3 text-sm px-2">
-                <Link to="/shop" className="inline-flex items-center gap-1 text-amber-400 font-semibold hover:underline">
-                  Browse all tyres <ChevronRight className="h-4 w-4" />
-                </Link>
-                <span className="text-white/30">·</span>
-                <a href="https://wa.me/97142326666" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-white/80 hover:text-amber-400">
-                  <MessageCircle className="h-4 w-4" /> Chat on WhatsApp
-                </a>
-              </div>
-            </div>
-
-            {/* Right: brand tyre slider */}
-            <div className="relative hidden lg:block min-h-[460px]">
-              <div className="absolute inset-0 flex items-center justify-center">
-                {heroSlides.map((s, i) => (
-                  <img
-                    key={s.brand}
-                    src={s.img}
-                    alt={`${s.brand} tyre`}
-                    width={1024}
-                    height={1024}
-                    className={`absolute h-[440px] w-auto object-contain drop-shadow-[0_30px_50px_rgba(0,0,0,0.7)] transition-all duration-700 ease-out ${
-                      i === slide ? "opacity-100 scale-100" : "opacity-0 scale-95"
-                    }`}
-                  />
-                ))}
-              </div>
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3">
-                <p className="text-xs uppercase tracking-[0.3em] text-white/70 font-semibold">
-                  {heroSlides[slide].brand}
-                </p>
-                <div className="flex gap-2">
-                  {heroSlides.map((_, i) => (
-                    <button
-                      key={i}
-                      onClick={() => setSlide(i)}
-                      aria-label={`Slide ${i + 1}`}
-                      className={`h-1.5 rounded-full transition-all ${
-                        i === slide ? "w-6 bg-amber-400" : "w-1.5 bg-white/30 hover:bg-white/60"
-                      }`}
-                    />
-                  ))}
-                </div>
-              </div>
-            </div>
+      <section className="relative bg-navy text-navy-foreground overflow-hidden">
+        <img src={hero} alt="" className="absolute inset-0 h-full w-full object-cover opacity-25" />
+        <div className="absolute inset-0 bg-gradient-to-b from-navy/40 via-navy/70 to-navy" />
+        <div className="relative container mx-auto px-4 py-16 md:py-24">
+          <div className="max-w-3xl mx-auto text-center">
+            <span className="inline-block bg-brand/15 text-brand text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-full">
+              Dubai's Tyre Specialists Since 2008
+            </span>
+            <h1 className="mt-5 text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
+              The right tyres. <span className="text-brand">Right now.</span>
+            </h1>
+            <p className="mt-4 text-lg text-navy-foreground/80">
+              Premium tyres from 14 leading brands. Free fitting, balancing & disposal at our Al Quoz workshop.
+            </p>
           </div>
-
-          {/* Headline below */}
-          <p className="mt-6 max-w-3xl text-xs text-white/55 leading-relaxed">
-            Premium tyres from the world's leading brands. Free fitting at our Al Quoz workshop, open 7 days a week.
-          </p>
-        </div>
-
-        {/* Trust strip */}
-        <div className="relative border-t border-white/10 bg-black/60 backdrop-blur">
-          <div className="container mx-auto px-4 py-5 grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[
-              { icon: ShieldCheck, t: "FREE PROTECTION", s: "Against road hazards" },
-              { icon: Tag, t: "BEST PRICE GUARANTEE", s: "We beat the competition" },
-              { icon: TruckIcon, t: "FREE DELIVERY", s: "Or at the best price" },
-              { icon: Star, t: "4.9 / 5 ON GOOGLE", s: "Over 2,000 reviews" },
-            ].map((x) => (
-              <div key={x.t} className="flex items-center gap-3 text-white">
-                <x.icon className="h-7 w-7 text-brand shrink-0" />
-                <div>
-                  <p className="font-bold text-xs tracking-wide">{x.t}</p>
-                  <p className="text-[11px] text-white/60 uppercase tracking-wider">{x.s}</p>
-                </div>
-              </div>
-            ))}
+          <div className="mt-10 max-w-3xl mx-auto">
+            <SearchWidget />
+          </div>
+          <div className="mt-6 flex flex-wrap justify-center gap-2 text-sm">
+            <Link to="/shop" className="inline-flex items-center gap-1 text-brand font-semibold hover:underline">
+              Browse all tyres <ChevronRight className="h-4 w-4" />
+            </Link>
+            <span className="text-navy-foreground/40">·</span>
+            <a href="https://wa.me/97142326666" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 hover:text-brand">
+              <MessageCircle className="h-4 w-4" /> Chat on WhatsApp
+            </a>
           </div>
         </div>
       </section>
 
+      {/* Trust strip */}
+      <section className="border-b border-border bg-background">
+        <div className="container mx-auto px-4 py-6 grid grid-cols-2 md:grid-cols-4 gap-4">
+          {[
+            { icon: Wrench, t: "Free fitting", s: "balancing & disposal" },
+            { icon: ShieldCheck, t: "Genuine tyres", s: "manufacturer warranty" },
+            { icon: Clock, t: "30-min service", s: "while you wait" },
+            { icon: Truck, t: "UAE-wide delivery", s: "same-day in Dubai" },
+          ].map((x) => (
+            <div key={x.t} className="flex items-center gap-3">
+              <x.icon className="h-8 w-8 text-brand shrink-0" />
+              <div>
+                <p className="font-bold text-sm">{x.t}</p>
+                <p className="text-xs text-muted-foreground">{x.s}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
 
       {/* Featured */}
       <section className="container mx-auto px-4 py-14">
@@ -165,63 +102,31 @@ function Home() {
       </section>
 
       {/* Brands */}
-      <section className="relative bg-[#0b0d10] text-white py-16">
-        {/* ribbon */}
-        <div className="absolute left-1/2 -top-px -translate-x-1/2 z-10">
-          <div className="relative bg-navy text-white px-8 py-3 text-center shadow-lg"
-               style={{ clipPath: "polygon(0 0, 100% 0, calc(100% - 16px) 100%, 16px 100%)" }}>
-            <p className="text-[10px] uppercase tracking-widest text-white/60">Exclusivity</p>
-            <p className="text-sm font-bold uppercase tracking-wider">Tires &amp; More UAE</p>
+      <section className="bg-muted/40 py-14">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-8">
+            <p className="text-xs uppercase tracking-widest text-brand font-bold">14 premium brands</p>
+            <h2 className="mt-1 text-3xl font-bold">Shop by brand</h2>
           </div>
-        </div>
-
-        <div className="container mx-auto px-4 pt-8">
-          <div className="grid lg:grid-cols-[320px_1fr] gap-10 items-center">
-            {/* Left: Free protection panel */}
-            <div>
-              <h2 className="font-display text-5xl md:text-6xl font-extrabold text-amber-400 leading-none">FREE!</h2>
-              <p className="mt-3 text-lg font-bold tracking-wide uppercase">Road Hazard Protection</p>
-              <div className="mt-5 flex items-start gap-4">
-                <div className="border border-amber-400/60 rounded-md px-3 py-2 text-center shrink-0">
-                  <p className="text-[10px] uppercase tracking-widest text-amber-400">Value of</p>
-                  <p className="text-xl font-extrabold text-amber-400">AED 400</p>
-                </div>
-                <p className="text-sm text-white/70 leading-relaxed">
-                  Applicable to the purchase of 4 tyres from the eligible brands listed.
-                </p>
-              </div>
-              <Link to="/services" className="mt-4 inline-block text-amber-400 text-sm font-semibold underline underline-offset-4 hover:text-amber-300">
-                More details →
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-4">
+            {brandsQ.data?.slice(0, 14).map((b: any) => (
+              <Link
+                key={b.slug}
+                to="/shop"
+                search={{ brand: b.slug, vehicle_type: "", season: "", width: 0, profile: 0, rim: 0, sort: "featured" }}
+                className="aspect-square bg-background rounded-lg border border-border flex items-center justify-center p-4 hover:border-brand hover:shadow-md transition-all"
+              >
+                <BrandLogo
+                  name={b.name}
+                  logoUrl={b.logo_url}
+                  className="h-full w-full"
+                  textClassName="text-sm md:text-base"
+                />
               </Link>
-            </div>
-
-            {/* Right: brands grid */}
-            <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
-              {(brandsQ.data?.length ? brandsQ.data.slice(0, 14) : Array.from({ length: 12 })).map((b: any, i: number) => (
-                b ? (
-                  <Link
-                    key={b.slug}
-                    to="/shop"
-                    search={{ brand: b.slug, vehicle_type: "", season: "", width: 0, profile: 0, rim: 0, sort: "featured" }}
-                    className="aspect-[3/2] bg-white rounded-md flex items-center justify-center p-3 hover:scale-[1.04] transition-transform shadow-md"
-                  >
-                    <BrandLogo
-                      name={b.name}
-                      logoUrl={b.logo_url}
-                      className="h-full w-full bg-transparent"
-                      textClassName="text-xs md:text-sm text-navy"
-                    />
-                  </Link>
-                ) : (
-                  <div key={i} className="aspect-[3/2] bg-white/5 rounded-md animate-pulse" />
-                )
-              ))}
-            </div>
-
+            ))}
           </div>
         </div>
       </section>
-
 
       {/* Services */}
       <section className="container mx-auto px-4 py-14">
