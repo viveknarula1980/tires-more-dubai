@@ -418,6 +418,7 @@ function TireDetail() {
         setIndex={setActiveImg}
         alt={t.name}
       />
+      <StickyBottomSearch />
     </div>
   );
 }
