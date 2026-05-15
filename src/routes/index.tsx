@@ -167,22 +167,27 @@ function Home() {
 
             {/* Right: brands grid */}
             <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
-              {brandsQ.data?.slice(0, 14).map((b: any) => (
-                <Link
-                  key={b.slug}
-                  to="/shop"
-                  search={{ brand: b.slug, vehicle_type: "", season: "", width: 0, profile: 0, rim: 0, sort: "featured" }}
-                  className="aspect-[3/2] bg-white rounded-md flex items-center justify-center p-3 hover:scale-[1.04] transition-transform shadow-md"
-                >
-                  <BrandLogo
-                    name={b.name}
-                    logoUrl={b.logo_url}
-                    className="h-full w-full bg-transparent"
-                    textClassName="text-xs md:text-sm text-navy"
-                  />
-                </Link>
+              {(brandsQ.data?.length ? brandsQ.data.slice(0, 14) : Array.from({ length: 12 })).map((b: any, i: number) => (
+                b ? (
+                  <Link
+                    key={b.slug}
+                    to="/shop"
+                    search={{ brand: b.slug, vehicle_type: "", season: "", width: 0, profile: 0, rim: 0, sort: "featured" }}
+                    className="aspect-[3/2] bg-white rounded-md flex items-center justify-center p-3 hover:scale-[1.04] transition-transform shadow-md"
+                  >
+                    <BrandLogo
+                      name={b.name}
+                      logoUrl={b.logo_url}
+                      className="h-full w-full bg-transparent"
+                      textClassName="text-xs md:text-sm text-navy"
+                    />
+                  </Link>
+                ) : (
+                  <div key={i} className="aspect-[3/2] bg-white/5 rounded-md animate-pulse" />
+                )
               ))}
             </div>
+
           </div>
         </div>
       </section>
