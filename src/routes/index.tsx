@@ -90,14 +90,30 @@ function Home() {
           <Link to="/shop" className="text-sm font-semibold text-brand hover:underline">View all →</Link>
         </div>
         {featuredQ.isLoading ? (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {Array.from({ length: 4 }).map((_, i) => (
+          <div className="grid sm:grid-cols-2 gap-5">
+            {Array.from({ length: 2 }).map((_, i) => (
               <div key={i} className="aspect-[3/4] rounded-lg bg-muted animate-pulse" />
             ))}
           </div>
         ) : (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {featuredQ.data?.slice(0, 4).map((t: any) => <TireCard key={t.id} t={t} />)}
+          <div className="grid sm:grid-cols-2 gap-5">
+            {[0, 1].map((groupIdx) => {
+              const items = (featuredQ.data ?? []).slice(groupIdx * 3, groupIdx * 3 + 3);
+              if (items.length === 0) return null;
+              return (
+                <Carousel key={groupIdx} opts={{ loop: true }} className="relative">
+                  <CarouselContent>
+                    {items.map((t: any) => (
+                      <CarouselItem key={t.id}>
+                        <TireCard t={t} />
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  <CarouselPrevious className="left-2" />
+                  <CarouselNext className="right-2" />
+                </Carousel>
+              );
+            })}
           </div>
         )}
       </section>
