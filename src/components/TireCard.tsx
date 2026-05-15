@@ -26,17 +26,17 @@ export function TireCard({ t }: { t: Tire }) {
   return (
     <div className="group relative flex flex-col h-full rounded-2xl bg-card border border-border overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_50px_-15px_rgba(0,0,0,0.15)] hover:-translate-y-1 transition-all duration-300">
       <Link to="/shop/$slug" params={{ slug: t.slug }} className="block">
-        {/* Image area */}
-        <div className="relative aspect-[4/3] bg-[hsl(220_14%_97%)] flex items-center justify-center p-6 overflow-hidden">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.04)_0%,transparent_70%)]" />
+        {/* Image area — oversized tire bleeding off the left edge */}
+        <div className="relative aspect-[4/3] bg-white flex items-center justify-center overflow-hidden">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(0,0,0,0.05)_0%,transparent_65%)]" />
 
           {discount > 0 && (
-            <span className="absolute top-3 left-3 z-10 bg-brand text-brand-foreground text-xs font-bold px-2.5 py-1 rounded-md shadow-sm">
+            <span className="absolute top-3 left-3 z-20 bg-brand text-brand-foreground text-xs font-bold px-2.5 py-1 rounded-md shadow-md">
               -{discount}%
             </span>
           )}
           {t.brand?.name && (
-            <div className="absolute top-3 right-3 z-10 bg-white px-3 py-1.5 rounded-md shadow-sm border border-border/50 h-9 min-w-[5rem] flex items-center justify-center">
+            <div className="absolute top-3 right-3 z-20 bg-white px-3 py-1.5 rounded-md shadow-sm border border-border/50 h-9 min-w-[5rem] flex items-center justify-center">
               <BrandLogo
                 name={t.brand.name}
                 logoUrl={t.brand.logo_url}
@@ -50,7 +50,7 @@ export function TireCard({ t }: { t: Tire }) {
             src={t.main_image ?? "/tire-default.jpg"}
             alt={t.name}
             loading="lazy"
-            className="relative max-h-full max-w-full object-contain transition-transform duration-500 group-hover:scale-105"
+            className="absolute left-[-30%] top-1/2 -translate-y-1/2 h-[150%] w-auto max-w-none object-contain transition-transform duration-500 group-hover:scale-105 group-hover:rotate-3 drop-shadow-2xl"
           />
         </div>
       </Link>
