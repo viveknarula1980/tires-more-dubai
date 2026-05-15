@@ -513,13 +513,35 @@ function Lightbox({
   );
 }
 
-function Spec({ icon: Icon, label, value, cap }: { icon: any; label: string; value: string; cap?: boolean }) {
+function FeatureChip({
+  icon: Icon, top, bottom, badge, badgeColor,
+}: { icon: any; top: string; bottom: string; badge?: string; badgeColor?: string }) {
   return (
-    <div className="rounded-lg border border-border bg-background p-3">
-      <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-        <Icon className="h-3.5 w-3.5" /> {label}
+    <div className="relative flex flex-col items-center justify-center gap-1 rounded-lg border border-border bg-background px-1 py-3">
+      <Icon className="h-5 w-5 text-navy" strokeWidth={1.5} />
+      <div className="text-center leading-tight">
+        <p className="text-[11px] font-bold text-foreground capitalize">{top}</p>
+        <p className="text-[10px] text-muted-foreground">{bottom}</p>
       </div>
-      <p className={`mt-1 text-sm font-bold ${cap ? "capitalize" : ""}`}>{value}</p>
+      {badge && (
+        <span className={`absolute top-1.5 right-1.5 h-4 w-4 rounded-full ${badgeColor} text-white text-[9px] font-bold flex items-center justify-center`}>
+          {badge}
+        </span>
+      )}
+    </div>
+  );
+}
+
+function BenefitRow({ icon: Icon, title, sub }: { icon: any; title: string; sub: string }) {
+  return (
+    <div className="flex items-center gap-3">
+      <div className="h-9 w-9 rounded-full bg-muted flex items-center justify-center shrink-0">
+        <Icon className="h-4 w-4 text-navy" />
+      </div>
+      <div className="min-w-0">
+        <p className="text-sm font-bold leading-tight">{title}</p>
+        <p className="text-xs text-muted-foreground">{sub}</p>
+      </div>
     </div>
   );
 }
