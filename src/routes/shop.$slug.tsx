@@ -214,7 +214,7 @@ function TireDetail() {
           </div>
 
           {/* Right: Sticky checkout card */}
-          <aside className="order-3 lg:sticky lg:top-6">
+          <aside className="order-4 lg:sticky lg:top-6 min-w-0">
             <div className="rounded-xl border border-border bg-background p-5 space-y-4">
               <div className="flex items-center justify-between">
                 <span className="text-sm font-semibold">Quantity</span>
