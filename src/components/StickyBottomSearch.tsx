@@ -86,7 +86,7 @@ export function StickyBottomSearch() {
           {/* Desktop: single row with mode toggle */}
           <div className="hidden lg:flex items-center gap-4 py-3">
             {/* Mode tabs */}
-            <div className="flex flex-col gap-1.5 shrink-0">
+            <div className="flex items-center gap-1.5 shrink-0">
               <button
                 type="button"
                 onClick={() => setMode("size")}
