@@ -4,8 +4,9 @@ import { useQuery } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import {
   ShoppingCart, Check, Truck, ShieldCheck, Wrench, MessageCircle,
-  Phone, Star, Calendar, Globe, Gauge, Snowflake, Sun, CloudSun,
-  ZoomIn, X, ChevronLeft, ChevronRight,
+  Phone, Star, Snowflake, Sun, CloudSun, Heart, RotateCcw, Lock,
+  Droplet, Volume2, Route as RouteIcon, Zap,
+  ZoomIn, X, ChevronLeft, ChevronRight, Plus, Minus,
 } from "lucide-react";
 import { getTireBySlug, searchTires } from "@/lib/catalog.functions";
 import { useCart } from "@/lib/cart";
