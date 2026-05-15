@@ -155,7 +155,8 @@ export const importBrandBatch = createServerFn({ method: "POST" })
           if (!width || !profile || !rim || !scrapedPrice) continue;
 
           const finalPrice = Math.round(scrapedPrice * (1 - DISCOUNT) * 100) / 100;
-          const modelClean = (model || "").replace(/^continental\s+/i, "").trim();
+          const brandPrefix = new RegExp(`^${brand.name.replace(/[.*+?^${}()|[\\]\\\\]/g, "\\\\$&")}\\s+`, "i");
+          const modelClean = (model || "").replace(brandPrefix, "").trim();
           const baseName =
             (v.name as string | undefined)?.trim() ||
             `${brand.name} ${modelClean} ${width}/${profile} R${rim}`.trim();
