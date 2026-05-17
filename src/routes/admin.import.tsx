@@ -59,7 +59,7 @@ const BRANDS: BrandEntry[] = [
   { slug: "roadstone", name: "Roadstone" },
   { slug: "zeetex", name: "Zeetex" },
   { slug: "dunlop", name: "Dunlop" },
-  { slug: "jumbo", name: "Jumbo" },
+  { slug: "kumho", name: "Kumho" },
   { slug: "cooper", name: "Cooper Tires", sourceSlug: "cooper-tires" },
 ];
 
