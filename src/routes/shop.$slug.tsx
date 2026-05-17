@@ -81,7 +81,7 @@ function TireDetail() {
   const seasonIcon = t.season === "winter" ? Snowflake : t.season === "summer" ? Sun : CloudSun;
   const SeasonIcon = seasonIcon;
 
-  const relatedFiltered = (related ?? []).filter((r: any) => r.id !== t.id).slice(0, 4);
+  const relatedFiltered = (related ?? []).filter((r: any) => r.id !== t.id).slice(0, 3);
 
   return (
     <div className="bg-muted/30">
