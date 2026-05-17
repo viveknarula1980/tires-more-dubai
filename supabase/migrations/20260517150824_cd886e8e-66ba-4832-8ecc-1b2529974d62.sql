@@ -1,0 +1,1 @@
+UPDATE public.tires SET main_image = '/tires/maxxis.png' WHERE brand_id = (SELECT id FROM public.brands WHERE slug = 'maxxis');
