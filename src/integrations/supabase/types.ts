@@ -125,6 +125,131 @@ export type Database = {
         }
         Relationships: []
       }
+      rim_brands: {
+        Row: {
+          country: string | null
+          created_at: string
+          description: string | null
+          id: string
+          logo_url: string | null
+          name: string
+          slug: string
+          sort_order: number | null
+        }
+        Insert: {
+          country?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          logo_url?: string | null
+          name: string
+          slug: string
+          sort_order?: number | null
+        }
+        Update: {
+          country?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          logo_url?: string | null
+          name?: string
+          slug?: string
+          sort_order?: number | null
+        }
+        Relationships: []
+      }
+      rims: {
+        Row: {
+          bolt_count: number | null
+          brand_id: string
+          center_bore: number | null
+          color: string | null
+          construction: string | null
+          country_of_origin: string | null
+          created_at: string
+          description: string | null
+          diameter: number
+          featured: boolean
+          features: string[] | null
+          finish: string | null
+          fitment_notes: string | null
+          gallery_images: string[] | null
+          id: string
+          in_stock: boolean
+          load_rating: number | null
+          main_image: string | null
+          model: string | null
+          name: string
+          offset_mm: number | null
+          pcd: string | null
+          slug: string
+          weight_kg: number | null
+          width: number | null
+        }
+        Insert: {
+          bolt_count?: number | null
+          brand_id: string
+          center_bore?: number | null
+          color?: string | null
+          construction?: string | null
+          country_of_origin?: string | null
+          created_at?: string
+          description?: string | null
+          diameter: number
+          featured?: boolean
+          features?: string[] | null
+          finish?: string | null
+          fitment_notes?: string | null
+          gallery_images?: string[] | null
+          id?: string
+          in_stock?: boolean
+          load_rating?: number | null
+          main_image?: string | null
+          model?: string | null
+          name: string
+          offset_mm?: number | null
+          pcd?: string | null
+          slug: string
+          weight_kg?: number | null
+          width?: number | null
+        }
+        Update: {
+          bolt_count?: number | null
+          brand_id?: string
+          center_bore?: number | null
+          color?: string | null
+          construction?: string | null
+          country_of_origin?: string | null
+          created_at?: string
+          description?: string | null
+          diameter?: number
+          featured?: boolean
+          features?: string[] | null
+          finish?: string | null
+          fitment_notes?: string | null
+          gallery_images?: string[] | null
+          id?: string
+          in_stock?: boolean
+          load_rating?: number | null
+          main_image?: string | null
+          model?: string | null
+          name?: string
+          offset_mm?: number | null
+          pcd?: string | null
+          slug?: string
+          weight_kg?: number | null
+          width?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rims_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "rim_brands"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tires: {
         Row: {
           brand_id: string
