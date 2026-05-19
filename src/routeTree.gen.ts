@@ -21,6 +21,7 @@ import { Route as ShopIndexRouteImport } from './routes/shop.index'
 import { Route as RimsIndexRouteImport } from './routes/rims.index'
 import { Route as BrandsIndexRouteImport } from './routes/brands.index'
 import { Route as ShopSlugRouteImport } from './routes/shop.$slug'
+import { Route as RimsSlugRouteImport } from './routes/rims.$slug'
 import { Route as BrandsSlugRouteImport } from './routes/brands.$slug'
 import { Route as AdminImportRouteImport } from './routes/admin.import'
 
@@ -84,6 +85,11 @@ const ShopSlugRoute = ShopSlugRouteImport.update({
   path: '/shop/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RimsSlugRoute = RimsSlugRouteImport.update({
+  id: '/rims/$slug',
+  path: '/rims/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BrandsSlugRoute = BrandsSlugRouteImport.update({
   id: '/brands/$slug',
   path: '/brands/$slug',
@@ -106,6 +112,7 @@ export interface FileRoutesByFullPath {
   '/services': typeof ServicesRoute
   '/admin/import': typeof AdminImportRoute
   '/brands/$slug': typeof BrandsSlugRoute
+  '/rims/$slug': typeof RimsSlugRoute
   '/shop/$slug': typeof ShopSlugRoute
   '/brands/': typeof BrandsIndexRoute
   '/rims/': typeof RimsIndexRoute
@@ -122,6 +129,7 @@ export interface FileRoutesByTo {
   '/services': typeof ServicesRoute
   '/admin/import': typeof AdminImportRoute
   '/brands/$slug': typeof BrandsSlugRoute
+  '/rims/$slug': typeof RimsSlugRoute
   '/shop/$slug': typeof ShopSlugRoute
   '/brands': typeof BrandsIndexRoute
   '/rims': typeof RimsIndexRoute
@@ -139,6 +147,7 @@ export interface FileRoutesById {
   '/services': typeof ServicesRoute
   '/admin/import': typeof AdminImportRoute
   '/brands/$slug': typeof BrandsSlugRoute
+  '/rims/$slug': typeof RimsSlugRoute
   '/shop/$slug': typeof ShopSlugRoute
   '/brands/': typeof BrandsIndexRoute
   '/rims/': typeof RimsIndexRoute
@@ -157,6 +166,7 @@ export interface FileRouteTypes {
     | '/services'
     | '/admin/import'
     | '/brands/$slug'
+    | '/rims/$slug'
     | '/shop/$slug'
     | '/brands/'
     | '/rims/'
@@ -173,6 +183,7 @@ export interface FileRouteTypes {
     | '/services'
     | '/admin/import'
     | '/brands/$slug'
+    | '/rims/$slug'
     | '/shop/$slug'
     | '/brands'
     | '/rims'
@@ -189,6 +200,7 @@ export interface FileRouteTypes {
     | '/services'
     | '/admin/import'
     | '/brands/$slug'
+    | '/rims/$slug'
     | '/shop/$slug'
     | '/brands/'
     | '/rims/'
@@ -206,6 +218,7 @@ export interface RootRouteChildren {
   ServicesRoute: typeof ServicesRoute
   AdminImportRoute: typeof AdminImportRoute
   BrandsSlugRoute: typeof BrandsSlugRoute
+  RimsSlugRoute: typeof RimsSlugRoute
   ShopSlugRoute: typeof ShopSlugRoute
   BrandsIndexRoute: typeof BrandsIndexRoute
   RimsIndexRoute: typeof RimsIndexRoute
@@ -298,6 +311,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ShopSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/rims/$slug': {
+      id: '/rims/$slug'
+      path: '/rims/$slug'
+      fullPath: '/rims/$slug'
+      preLoaderRoute: typeof RimsSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/brands/$slug': {
       id: '/brands/$slug'
       path: '/brands/$slug'
@@ -326,6 +346,7 @@ const rootRouteChildren: RootRouteChildren = {
   ServicesRoute: ServicesRoute,
   AdminImportRoute: AdminImportRoute,
   BrandsSlugRoute: BrandsSlugRoute,
+  RimsSlugRoute: RimsSlugRoute,
   ShopSlugRoute: ShopSlugRoute,
   BrandsIndexRoute: BrandsIndexRoute,
   RimsIndexRoute: RimsIndexRoute,
