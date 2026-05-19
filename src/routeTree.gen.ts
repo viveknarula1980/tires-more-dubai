@@ -18,8 +18,10 @@ import { Route as CartRouteImport } from './routes/cart'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ShopIndexRouteImport } from './routes/shop.index'
+import { Route as RimsIndexRouteImport } from './routes/rims.index'
 import { Route as BrandsIndexRouteImport } from './routes/brands.index'
 import { Route as ShopSlugRouteImport } from './routes/shop.$slug'
+import { Route as RimsSlugRouteImport } from './routes/rims.$slug'
 import { Route as BrandsSlugRouteImport } from './routes/brands.$slug'
 import { Route as AdminImportRouteImport } from './routes/admin.import'
 
@@ -68,6 +70,11 @@ const ShopIndexRoute = ShopIndexRouteImport.update({
   path: '/shop/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RimsIndexRoute = RimsIndexRouteImport.update({
+  id: '/rims/',
+  path: '/rims/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BrandsIndexRoute = BrandsIndexRouteImport.update({
   id: '/brands/',
   path: '/brands/',
@@ -76,6 +83,11 @@ const BrandsIndexRoute = BrandsIndexRouteImport.update({
 const ShopSlugRoute = ShopSlugRouteImport.update({
   id: '/shop/$slug',
   path: '/shop/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RimsSlugRoute = RimsSlugRouteImport.update({
+  id: '/rims/$slug',
+  path: '/rims/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BrandsSlugRoute = BrandsSlugRouteImport.update({
@@ -100,8 +112,10 @@ export interface FileRoutesByFullPath {
   '/services': typeof ServicesRoute
   '/admin/import': typeof AdminImportRoute
   '/brands/$slug': typeof BrandsSlugRoute
+  '/rims/$slug': typeof RimsSlugRoute
   '/shop/$slug': typeof ShopSlugRoute
   '/brands/': typeof BrandsIndexRoute
+  '/rims/': typeof RimsIndexRoute
   '/shop/': typeof ShopIndexRoute
 }
 export interface FileRoutesByTo {
@@ -115,8 +129,10 @@ export interface FileRoutesByTo {
   '/services': typeof ServicesRoute
   '/admin/import': typeof AdminImportRoute
   '/brands/$slug': typeof BrandsSlugRoute
+  '/rims/$slug': typeof RimsSlugRoute
   '/shop/$slug': typeof ShopSlugRoute
   '/brands': typeof BrandsIndexRoute
+  '/rims': typeof RimsIndexRoute
   '/shop': typeof ShopIndexRoute
 }
 export interface FileRoutesById {
@@ -131,8 +147,10 @@ export interface FileRoutesById {
   '/services': typeof ServicesRoute
   '/admin/import': typeof AdminImportRoute
   '/brands/$slug': typeof BrandsSlugRoute
+  '/rims/$slug': typeof RimsSlugRoute
   '/shop/$slug': typeof ShopSlugRoute
   '/brands/': typeof BrandsIndexRoute
+  '/rims/': typeof RimsIndexRoute
   '/shop/': typeof ShopIndexRoute
 }
 export interface FileRouteTypes {
@@ -148,8 +166,10 @@ export interface FileRouteTypes {
     | '/services'
     | '/admin/import'
     | '/brands/$slug'
+    | '/rims/$slug'
     | '/shop/$slug'
     | '/brands/'
+    | '/rims/'
     | '/shop/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -163,8 +183,10 @@ export interface FileRouteTypes {
     | '/services'
     | '/admin/import'
     | '/brands/$slug'
+    | '/rims/$slug'
     | '/shop/$slug'
     | '/brands'
+    | '/rims'
     | '/shop'
   id:
     | '__root__'
@@ -178,8 +200,10 @@ export interface FileRouteTypes {
     | '/services'
     | '/admin/import'
     | '/brands/$slug'
+    | '/rims/$slug'
     | '/shop/$slug'
     | '/brands/'
+    | '/rims/'
     | '/shop/'
   fileRoutesById: FileRoutesById
 }
@@ -194,8 +218,10 @@ export interface RootRouteChildren {
   ServicesRoute: typeof ServicesRoute
   AdminImportRoute: typeof AdminImportRoute
   BrandsSlugRoute: typeof BrandsSlugRoute
+  RimsSlugRoute: typeof RimsSlugRoute
   ShopSlugRoute: typeof ShopSlugRoute
   BrandsIndexRoute: typeof BrandsIndexRoute
+  RimsIndexRoute: typeof RimsIndexRoute
   ShopIndexRoute: typeof ShopIndexRoute
 }
 
@@ -264,6 +290,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ShopIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/rims/': {
+      id: '/rims/'
+      path: '/rims'
+      fullPath: '/rims/'
+      preLoaderRoute: typeof RimsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/brands/': {
       id: '/brands/'
       path: '/brands'
@@ -276,6 +309,13 @@ declare module '@tanstack/react-router' {
       path: '/shop/$slug'
       fullPath: '/shop/$slug'
       preLoaderRoute: typeof ShopSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rims/$slug': {
+      id: '/rims/$slug'
+      path: '/rims/$slug'
+      fullPath: '/rims/$slug'
+      preLoaderRoute: typeof RimsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/brands/$slug': {
@@ -306,20 +346,12 @@ const rootRouteChildren: RootRouteChildren = {
   ServicesRoute: ServicesRoute,
   AdminImportRoute: AdminImportRoute,
   BrandsSlugRoute: BrandsSlugRoute,
+  RimsSlugRoute: RimsSlugRoute,
   ShopSlugRoute: ShopSlugRoute,
   BrandsIndexRoute: BrandsIndexRoute,
+  RimsIndexRoute: RimsIndexRoute,
   ShopIndexRoute: ShopIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
