@@ -5,6 +5,17 @@ import { getBrands } from "@/lib/catalog.functions";
 import { BrandLogo } from "@/components/BrandLogo";
 import { StickyBottomSearch } from "@/components/StickyBottomSearch";
 import { supabase } from "@/integrations/supabase/client";
+import foxLogo from "/brands/shocks/fox.png?url";
+import dobinsonsLogo from "/brands/shocks/dobinsons.png?url";
+import radfloLogo from "/brands/shocks/radflo.png?url";
+import falconLogo from "/brands/shocks/falcon.png?url";
+
+const SHOCK_BRANDS = [
+  { slug: "fox", name: "Fox", logo_url: foxLogo },
+  { slug: "dobinsons", name: "Dobinsons", logo_url: dobinsonsLogo },
+  { slug: "radflo", name: "Radflo", logo_url: radfloLogo },
+  { slug: "falcon", name: "Falcon", logo_url: falconLogo },
+];
 
 export const Route = createFileRoute("/brands/")({
   head: () => ({
