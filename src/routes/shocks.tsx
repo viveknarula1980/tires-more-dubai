@@ -126,9 +126,6 @@ function HeroSlider() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/20" />
                 <div className="relative z-10 container mx-auto h-full px-4 flex flex-col justify-end pb-12 md:pb-20">
                   <div className="max-w-2xl">
-                    <div className="inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur px-3 py-1 text-xs font-semibold uppercase tracking-wider text-white/90 mb-4">
-                      <Sparkles className="h-3.5 w-3.5" /> Coming soon to Dubai
-                    </div>
                     <div className="bg-white/95 rounded-xl px-5 py-3 inline-flex mb-5 shadow-2xl">
                       <img src={b.logo} alt={b.name} className="h-10 md:h-14 w-auto object-contain" />
                     </div>
