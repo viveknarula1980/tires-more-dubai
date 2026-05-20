@@ -30,6 +30,17 @@ function Home() {
   const brandsQ = useQuery({ queryKey: ["brands"], queryFn: () => fetchBrands() });
   const featuredQ = useQuery({ queryKey: ["featured"], queryFn: () => fetchFeatured() });
 
+  useEffect(() => {
+    if (typeof window !== "undefined" && (window as any).instgrm) {
+      (window as any).instgrm.Embeds.process();
+    } else if (typeof window !== "undefined") {
+      const script = document.createElement("script");
+      script.src = "https://www.instagram.com/embed.js";
+      script.async = true;
+      document.body.appendChild(script);
+    }
+  }, []);
+
   return (
     <>
       {/* Hero */}
@@ -278,24 +289,43 @@ function Home() {
           </div>
 
           {/* Recent posts grid */}
-          <div className="mt-10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-            {[wheelsImg, shocksImg, wheelsImg, shocksImg, wheelsImg, shocksImg].map((src, i) => (
-              <a
-                key={i}
-                href="https://www.instagram.com/tiresandmore.ae/"
-                target="_blank"
-                rel="noreferrer"
-                className="group relative aspect-square overflow-hidden rounded-lg border border-white/10"
+          <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[
+              "https://www.instagram.com/p/DVa-640Elzz/",
+              "https://www.instagram.com/p/DU0wpN-kmu8/",
+              "https://www.instagram.com/p/DSKW_tqkubq/",
+              "https://www.instagram.com/p/DXWfoWRDJ6x/",
+              "https://www.instagram.com/p/DVK8UHSEtFl/",
+              "https://www.instagram.com/p/DVJFPaekvRF/",
+            ].map((url) => (
+              <blockquote
+                key={url}
+                className="instagram-media"
+                data-instgrm-permalink={url + "?utm_source=ig_embed&utm_campaign=loading"}
+                data-instgrm-version="14"
+                style={{
+                  background: "#FFF",
+                  border: 0,
+                  borderRadius: 3,
+                  boxShadow: "0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15)",
+                  margin: 1,
+                  maxWidth: 540,
+                  minWidth: 326,
+                  padding: 0,
+                  width: "calc(100% - 2px)",
+                }}
               >
-                <img
-                  src={src}
-                  alt={`Instagram post ${i + 1}`}
-                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-br from-[#833ab4]/0 via-[#fd1d1d]/0 to-[#fcb045]/0 group-hover:from-[#833ab4]/70 group-hover:via-[#fd1d1d]/60 group-hover:to-[#fcb045]/70 transition-all duration-300 flex items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white opacity-0 group-hover:opacity-100 transition-opacity"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+                <div style={{ padding: 16 }}>
+                  <a
+                    href={url}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{ textDecoration: "none" }}
+                  >
+                    View this post on Instagram
+                  </a>
                 </div>
-              </a>
+              </blockquote>
             ))}
           </div>
         </div>
