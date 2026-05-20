@@ -281,12 +281,14 @@ const RIM_SOURCES: RimSource[] = [
   { key: "dakar", label: "Dakar Forged", sub: "tunerstop.com/wheelbrand/Dakar Forged" },
   { key: "kmc", label: "KMC Wheels", sub: "kmcwheels.com/wheels/all-wheels" },
   { key: "rrw", label: "RRW (Relations Race Wheels)", sub: "tunerstop.com/wheelbrand/Relations Race Wheels" },
+  { key: "baja", label: "Baja Built Wheels", sub: "bajabuiltwheels.com/collections/all" },
 ];
 
 function RimsImportSection() {
   const importDakar = useServerFn(importDakarForgedRims);
   const importKmc = useServerFn(importKmcWheels);
   const importRrw = useServerFn(importRrwWheels);
+  const importBaja = useServerFn(importBajaWheels);
   const [activeKey, setActiveKey] = useState<string | null>(null);
   const [result, setResult] = useState<(RimResult & { label: string }) | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -297,7 +299,13 @@ function RimsImportSection() {
     setError(null);
     try {
       const fn =
-        src.key === "kmc" ? importKmc : src.key === "rrw" ? importRrw : importDakar;
+        src.key === "kmc"
+          ? importKmc
+          : src.key === "rrw"
+            ? importRrw
+            : src.key === "baja"
+              ? importBaja
+              : importDakar;
       const r = (await fn()) as RimResult;
       setResult({ ...r, label: src.label });
     } catch (e) {
