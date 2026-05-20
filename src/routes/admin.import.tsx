@@ -275,25 +275,36 @@ type RimResult = {
   failures: { sku: string; error: string }[];
 };
 
+type RimSource = { key: string; label: string; sub: string };
+
+const RIM_SOURCES: RimSource[] = [
+  { key: "dakar", label: "Dakar Forged", sub: "tunerstop.com/wheelbrand/Dakar Forged" },
+  { key: "kmc", label: "KMC Wheels", sub: "kmcwheels.com/wheels/all-wheels" },
+];
+
 function RimsImportSection() {
   const importDakar = useServerFn(importDakarForgedRims);
-  const [running, setRunning] = useState(false);
-  const [result, setResult] = useState<RimResult | null>(null);
+  const importKmc = useServerFn(importKmcWheels);
+  const [activeKey, setActiveKey] = useState<string | null>(null);
+  const [result, setResult] = useState<(RimResult & { label: string }) | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  async function runDakar() {
-    setRunning(true);
+  async function run(src: RimSource) {
+    setActiveKey(src.key);
     setResult(null);
     setError(null);
     try {
-      const r = (await importDakar()) as RimResult;
-      setResult(r);
+      const fn = src.key === "kmc" ? importKmc : importDakar;
+      const r = (await fn()) as RimResult;
+      setResult({ ...r, label: src.label });
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
     } finally {
-      setRunning(false);
+      setActiveKey(null);
     }
   }
+
+  const running = activeKey !== null;
 
   return (
     <Card className="mt-6 p-6">
@@ -303,25 +314,27 @@ function RimsImportSection() {
         are quote-only. Existing rims (matched by slug) get spec + image updates.
       </p>
       <div className="grid gap-2 sm:grid-cols-2">
-        <div className="flex items-center justify-between gap-3 rounded-md border p-3">
-          <div className="min-w-0">
-            <div className="font-medium">Dakar Forged</div>
-            <div className="text-xs text-muted-foreground truncate">
-              tunerstop.com/wheelbrand/Dakar Forged
+        {RIM_SOURCES.map((src) => (
+          <div
+            key={src.key}
+            className="flex items-center justify-between gap-3 rounded-md border p-3"
+          >
+            <div className="min-w-0">
+              <div className="font-medium">{src.label}</div>
+              <div className="text-xs text-muted-foreground truncate">{src.sub}</div>
             </div>
+            <Button size="sm" onClick={() => run(src)} disabled={running}>
+              {activeKey === src.key ? "Syncing…" : "Sync"}
+            </Button>
           </div>
-          <Button size="sm" onClick={runDakar} disabled={running}>
-            {running ? "Syncing…" : "Sync"}
-          </Button>
-        </div>
+        ))}
       </div>
 
-      {error && (
-        <div className="mt-4 text-sm text-destructive">{error}</div>
-      )}
+      {error && <div className="mt-4 text-sm text-destructive">{error}</div>}
 
       {result && (
         <div className="mt-4 space-y-3">
+          <div className="text-xs text-muted-foreground">Last run: {result.label}</div>
           <div className="grid grid-cols-4 gap-3 text-center text-sm">
             <Stat label="Found" value={result.total} />
             <Stat label="Inserted" value={result.inserted} />
