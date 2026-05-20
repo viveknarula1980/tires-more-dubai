@@ -107,11 +107,11 @@ function Home() {
       </section>
 
       {/* Brands */}
-      <section className="bg-muted/40 py-14">
+      <section className="bg-muted/40 py-8">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-8">
+          <div className="text-center mb-6">
             <p className="text-xs uppercase tracking-widest text-brand font-bold">14 premium brands</p>
-            <h2 className="mt-1 text-3xl font-bold">Shop by brand</h2>
+            <h2 className="mt-1 text-3xl font-bold">Shop tires by brand</h2>
           </div>
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-4">
             {brandsQ.data?.slice(0, 14).map((b: any) => (
@@ -119,13 +119,13 @@ function Home() {
                 key={b.slug}
                 to="/shop"
                 search={{ brand: b.slug, vehicle_type: "", season: "", width: 0, profile: 0, rim: 0, sort: "featured" }}
-                className="aspect-square bg-background rounded-lg border border-border flex items-center justify-center p-4 hover:border-brand hover:shadow-md transition-all"
+                className="h-20 bg-background rounded-lg border border-border flex items-center justify-center p-2 hover:border-brand hover:shadow-md transition-all"
               >
                 <BrandLogo
                   name={b.name}
                   logoUrl={b.logo_url}
                   className="h-full w-full"
-                  textClassName="text-sm md:text-base"
+                  textClassName="text-xs md:text-sm"
                 />
               </Link>
             ))}
