@@ -108,7 +108,7 @@ function BrandsPage() {
       <header className="mt-14 mb-8">
         <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Shock Brands</h2>
         <p className="mt-2 text-muted-foreground">
-          Premium off-road shock absorbers — coming soon.{" "}
+          Premium off-road shock absorbers.{" "}
           <Link to="/shocks" className="text-brand font-semibold hover:underline">
             Explore the lineup →
           </Link>
