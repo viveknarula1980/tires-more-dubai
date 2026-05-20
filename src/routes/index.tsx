@@ -275,6 +275,28 @@ function Home() {
               Follow on Instagram
             </a>
           </div>
+
+          {/* Recent posts grid */}
+          <div className="mt-10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+            {[homeWheels, homeShocks, homeWheels, homeShocks, homeWheels, homeShocks].map((src, i) => (
+              <a
+                key={i}
+                href="https://www.instagram.com/tiresandmore.ae/"
+                target="_blank"
+                rel="noreferrer"
+                className="group relative aspect-square overflow-hidden rounded-lg border border-white/10"
+              >
+                <img
+                  src={src}
+                  alt={`Instagram post ${i + 1}`}
+                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-br from-[#833ab4]/0 via-[#fd1d1d]/0 to-[#fcb045]/0 group-hover:from-[#833ab4]/70 group-hover:via-[#fd1d1d]/60 group-hover:to-[#fcb045]/70 transition-all duration-300 flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white opacity-0 group-hover:opacity-100 transition-opacity"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+                </div>
+              </a>
+            ))}
+          </div>
         </div>
       </section>
 
