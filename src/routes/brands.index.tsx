@@ -4,14 +4,15 @@ import { useQuery } from "@tanstack/react-query";
 import { getBrands } from "@/lib/catalog.functions";
 import { BrandLogo } from "@/components/BrandLogo";
 import { StickyBottomSearch } from "@/components/StickyBottomSearch";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/brands/")({
   head: () => ({
     meta: [
-      { title: "Tyre Brands — Tires & More UAE" },
-      { name: "description", content: "Browse all tyre brands we carry — Michelin, Bridgestone, Continental, Pirelli, Goodyear and more." },
-      { property: "og:title", content: "Tyre Brands — Tires & More UAE" },
-      { property: "og:description", content: "All premium tyre brands available in Dubai." },
+      { title: "Tyre & Wheel Brands — Tires & More UAE" },
+      { name: "description", content: "Browse all tyre and wheel brands we carry — Michelin, Bridgestone, Pirelli, KMC, Baja Rim, Dakar Forged and more." },
+      { property: "og:title", content: "Tyre & Wheel Brands — Tires & More UAE" },
+      { property: "og:description", content: "All premium tyre and wheel brands available in Dubai." },
     ],
   }),
   component: BrandsPage,
@@ -21,9 +22,21 @@ function BrandsPage() {
   const fetchBrands = useServerFn(getBrands);
   const { data, isLoading } = useQuery({ queryKey: ["brands"], queryFn: () => fetchBrands() });
 
+  const { data: rimBrands, isLoading: rimsLoading } = useQuery({
+    queryKey: ["rim-brands"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("rim_brands")
+        .select("slug, name, logo_url")
+        .order("name");
+      if (error) throw error;
+      return data;
+    },
+  });
+
   return (
     <div className="container mx-auto px-4 py-12">
-      <header className="mb-10">
+      <header className="mb-8">
         <h1 className="text-3xl md:text-4xl font-bold tracking-tight">Tyre Brands</h1>
         <p className="mt-2 text-muted-foreground">Pick a brand to explore its tyres.</p>
       </header>
@@ -31,7 +44,7 @@ function BrandsPage() {
       {isLoading ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
           {Array.from({ length: 10 }).map((_, i) => (
-            <div key={i} className="aspect-[4/3] rounded-xl bg-muted animate-pulse" />
+            <div key={i} className="h-24 rounded-xl bg-muted animate-pulse" />
           ))}
         </div>
       ) : (
@@ -41,16 +54,46 @@ function BrandsPage() {
               key={b.slug}
               to="/brands/$slug"
               params={{ slug: b.slug }}
-              className="group aspect-[4/3] rounded-xl border border-border bg-card flex flex-col items-center justify-center p-6 hover:border-brand hover:shadow-lg transition-all"
+              className="group rounded-xl border border-border bg-card flex flex-col items-center justify-center px-4 py-3 hover:border-brand hover:shadow-lg transition-all"
             >
               <BrandLogo name={b.name} logoUrl={b.logo_url} className="h-12 w-full" textClassName="text-base" />
-              <span className="mt-3 text-xs font-semibold text-muted-foreground group-hover:text-brand">
+              <span className="mt-2 text-xs font-semibold text-muted-foreground group-hover:text-brand">
                 View tyres →
               </span>
             </Link>
           ))}
         </div>
       )}
+
+      <header className="mt-14 mb-8">
+        <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Wheel Brands</h2>
+        <p className="mt-2 text-muted-foreground">Pick a brand to explore its wheels.</p>
+      </header>
+
+      {rimsLoading ? (
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="h-24 rounded-xl bg-muted animate-pulse" />
+          ))}
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+          {rimBrands?.map((b: any) => (
+            <Link
+              key={b.slug}
+              to="/rims/$slug"
+              params={{ slug: b.slug }}
+              className="group rounded-xl border border-border bg-card flex flex-col items-center justify-center px-4 py-3 hover:border-brand hover:shadow-lg transition-all"
+            >
+              <BrandLogo name={b.name} logoUrl={b.logo_url} className="h-12 w-full" textClassName="text-base" />
+              <span className="mt-2 text-xs font-semibold text-muted-foreground group-hover:text-brand">
+                View wheels →
+              </span>
+            </Link>
+          ))}
+        </div>
+      )}
+
       <StickyBottomSearch />
     </div>
   );
