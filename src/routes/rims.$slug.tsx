@@ -21,6 +21,7 @@ function RimDetail() {
   const { slug } = Route.useParams();
   const fetchRim = useServerFn(getRimBySlug);
   const submitQuote = useServerFn(requestRimQuote);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const { data: r, isLoading } = useQuery({
     queryKey: ["rim", slug],
@@ -82,6 +83,10 @@ function RimDetail() {
     `Hi, I'm interested in the ${r.name}. Could you share availability, price and fitment details? Thanks.`
   );
   const wa = `https://wa.me/97142326666?text=${waMsg}`;
+  const gallery = Array.from(
+    new Set([r.main_image, ...(((r as { gallery_images?: string[] | null }).gallery_images) ?? [])].filter(Boolean) as string[])
+  );
+  const heroImage = selectedImage && gallery.includes(selectedImage) ? selectedImage : gallery[0];
 
   const specs: Array<[string, string | number | null | undefined]> = [
     ["Brand", brand?.name],
@@ -118,11 +123,29 @@ function RimDetail() {
           <div>
             <div className="bg-background rounded-xl border border-border p-8 flex items-center justify-center">
               <img
-                src={r.main_image ?? "/rim-default.svg"}
+                src={heroImage ?? "/rim-default.svg"}
                 alt={r.name}
                 className="w-full max-w-md aspect-square object-contain"
               />
             </div>
+
+            {gallery.length > 1 && (
+              <div className="mt-4 grid grid-cols-5 sm:grid-cols-6 md:grid-cols-8 gap-2">
+                {gallery.map((image, index) => (
+                  <button
+                    key={image}
+                    type="button"
+                    onClick={() => setSelectedImage(image)}
+                    className={`aspect-square rounded-md border bg-background p-1.5 transition-colors ${
+                      (heroImage ?? gallery[0]) === image ? "border-brand" : "border-border hover:border-brand/60"
+                    }`}
+                    aria-label={`View ${r.name} gallery image ${index + 1}`}
+                  >
+                    <img src={image} alt={`${r.name} finish ${index + 1}`} loading="lazy" className="h-full w-full object-contain" />
+                  </button>
+                ))}
+              </div>
+            )}
 
             <div className="mt-6">
               {brand?.name && (
