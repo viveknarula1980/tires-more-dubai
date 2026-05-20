@@ -315,7 +315,7 @@ function RimsImportSection() {
             : src.key === "baja"
               ? importBaja
               : importDakar;
-      const r = (await fn()) as RimResult;
+      const r = (await fn({ headers: await getAuthHeaders() })) as RimResult;
       setResult({ ...r, label: src.label });
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
