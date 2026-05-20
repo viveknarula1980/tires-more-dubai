@@ -574,3 +574,169 @@ export const importRrwWheels = createServerFn({ method: "POST" })
       failures,
     };
   });
+
+// ---------- Baja Built Wheels (bajabuiltwheels.com — Shopify) ----------
+
+type ShopifyVariant = {
+  id: number;
+  title: string;
+  option1: string | null;
+  option2: string | null;
+  option3: string | null;
+};
+type ShopifyImage = { src: string; position: number };
+type ShopifyProduct = {
+  id: number;
+  handle: string;
+  title: string;
+  body_html: string;
+  vendor: string;
+  product_type: string;
+  variants: ShopifyVariant[];
+  images: ShopifyImage[];
+  options: { name: string; values: string[] }[];
+};
+
+function stripHtml(s: string): string {
+  return s
+    .replace(/<style[\s\S]*?<\/style>/gi, "")
+    .replace(/<script[\s\S]*?<\/script>/gi, "")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function parseBajaSize(option: string) {
+  // e.g. "17x9 | 5x5 (5x127) | -12mm/4.5”"
+  const m = option.match(/^(\d{2})x(\d+(?:\.\d+)?)\s*\|\s*([^|]+?)\s*\|\s*(-?\d+)mm/);
+  if (!m) return null;
+  const diameter = Number(m[1]);
+  const width = Number(m[2]);
+  const pcdRaw = m[3].trim();
+  const pcdMatch = pcdRaw.match(/(\d)x(\d+(?:\.\d+)?)/);
+  const pcd = pcdMatch ? `${pcdMatch[1]}x${pcdMatch[2]}` : pcdRaw;
+  const bolt = pcdMatch ? Number(pcdMatch[1]) : null;
+  const offset = Number(m[4]);
+  return { diameter, width, pcd, bolt, offset };
+}
+
+export const importBajaWheels = createServerFn({ method: "POST" })
+  .middleware([requireAdmin])
+  .handler(async () => {
+    const url = "https://bajabuiltwheels.com/products.json?limit=100";
+
+    const { data: brand, error: bErr } = await supabaseAdmin
+      .from("rim_brands")
+      .select("id, name, slug")
+      .eq("slug", "baja-rim")
+      .maybeSingle();
+    if (bErr) throw new Error(bErr.message);
+    if (!brand) throw new Error("Rim brand 'baja-rim' not found");
+
+    const res = await fetch(url, { headers: { "User-Agent": "Mozilla/5.0" } });
+    if (!res.ok) throw new Error(`Failed to fetch Baja products: ${res.status}`);
+    const json = (await res.json()) as { products: ShopifyProduct[] };
+    const products = json.products ?? [];
+
+    let inserted = 0;
+    let updated = 0;
+    const failures: { sku: string; error: string }[] = [];
+
+    for (const p of products) {
+      try {
+        const slug = slugify(`baja-${p.handle}`);
+
+        // Aggregate sizes + colors from variants/options
+        const sizeOption = p.options.find((o) => /size/i.test(o.name));
+        const colorOption = p.options.find((o) => /color|finish/i.test(o.name));
+        const sizes = sizeOption?.values ?? [];
+        const colors = colorOption?.values ?? [];
+
+        // Derive headline diameter/width/offset from first size variant
+        const first = sizes.map(parseBajaSize).find((s) => s != null);
+        const diameter = first?.diameter ?? 17;
+        const width = first?.width ?? null;
+        const offset = first?.offset ?? null;
+        const pcd = first?.pcd ?? null;
+        const bolt = first?.bolt ?? null;
+
+        // Distinct bolt patterns across all sizes for fitment notes
+        const patterns = new Set<string>();
+        const offsets = new Set<number>();
+        for (const s of sizes) {
+          const parsed = parseBajaSize(s);
+          if (parsed?.pcd) patterns.add(parsed.pcd);
+          if (parsed?.offset != null) offsets.add(parsed.offset);
+        }
+        const fitmentParts: string[] = [];
+        if (patterns.size > 0)
+          fitmentParts.push(`Bolt patterns: ${Array.from(patterns).join(", ")}.`);
+        if (offsets.size > 0)
+          fitmentParts.push(
+            `Offsets: ${Array.from(offsets)
+              .sort((a, b) => a - b)
+              .map((o) => `${o}mm`)
+              .join(", ")}.`
+          );
+        if (colors.length > 0)
+          fitmentParts.push(`Finishes: ${colors.length} options available.`);
+
+        const description = stripHtml(p.body_html).slice(0, 1200) || null;
+
+        const payload = {
+          brand_id: brand.id,
+          slug,
+          name: `Baja ${p.title}`.replace(/\s+/g, " ").trim(),
+          model: p.title,
+          diameter,
+          width,
+          offset_mm: offset,
+          pcd,
+          bolt_count: bolt,
+          finish: colors[0] ?? null,
+          color: null,
+          construction: /forged/i.test(p.product_type) ? "Forged" : "Monoblock Forged",
+          country_of_origin: null,
+          description,
+          fitment_notes: fitmentParts.join(" ") || null,
+          features: colors.length > 0 ? colors.slice(0, 16) : null,
+          main_image: p.images[0]?.src ?? null,
+          gallery_images: p.images.slice(0, 12).map((i) => i.src),
+          in_stock: true,
+        };
+
+        const { data: existing } = await supabaseAdmin
+          .from("rims")
+          .select("id")
+          .eq("slug", slug)
+          .maybeSingle();
+
+        if (existing) {
+          const { error } = await supabaseAdmin
+            .from("rims")
+            .update(payload)
+            .eq("id", existing.id);
+          if (error) throw new Error(error.message);
+          updated++;
+        } else {
+          const { error } = await supabaseAdmin.from("rims").insert(payload);
+          if (error) throw new Error(error.message);
+          inserted++;
+        }
+      } catch (e) {
+        failures.push({
+          sku: p.handle,
+          error: e instanceof Error ? e.message : String(e),
+        });
+      }
+    }
+
+    return {
+      source: url,
+      total: products.length,
+      inserted,
+      updated,
+      failed: failures.length,
+      failures,
+    };
+  });
