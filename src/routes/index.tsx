@@ -63,22 +63,31 @@ function Home() {
       </section>
 
       {/* Trust strip */}
-      <section className="border-b border-border bg-background">
-        <div className="container mx-auto px-4 py-6 grid grid-cols-2 md:grid-cols-4 gap-4">
-          {[
-            { icon: Wrench, t: "Free fitting", s: "balancing & disposal" },
-            { icon: ShieldCheck, t: "Genuine tyres", s: "manufacturer warranty" },
-            { icon: Clock, t: "30-min service", s: "while you wait" },
-            { icon: Truck, t: "UAE-wide delivery", s: "same-day in Dubai" },
-          ].map((x) => (
-            <div key={x.t} className="flex items-center gap-3">
-              <x.icon className="h-8 w-8 text-brand shrink-0" />
-              <div>
-                <p className="font-bold text-sm">{x.t}</p>
-                <p className="text-xs text-muted-foreground">{x.s}</p>
-              </div>
+      <section className="bg-background py-8">
+        <div className="container mx-auto px-4">
+          <div className="relative w-full bg-navy rounded-2xl overflow-hidden shadow-2xl border-b-4 border-brand">
+            <div className="absolute top-0 right-0 h-full w-32 bg-white/5 -skew-x-12 transform translate-x-16 pointer-events-none" />
+            <div className="relative grid grid-cols-1 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-white/10">
+              {[
+                { icon: Wrench, t: "Free fitting", s: "balancing & disposal" },
+                { icon: ShieldCheck, t: "Genuine tyres", s: "manufacturer warranty" },
+                { icon: Clock, t: "30-min service", s: "while you wait" },
+                { icon: Truck, t: "UAE-wide delivery", s: "same-day in Dubai" },
+              ].map((x) => (
+                <div key={x.t} className="flex items-center p-6 md:p-8 transition-colors hover:bg-white/5 group">
+                  <div className="flex-shrink-0 mr-5">
+                    <div className="p-3 bg-white/5 rounded-xl border border-white/10 group-hover:border-brand/50 transition-colors">
+                      <x.icon className="h-8 w-8 text-brand" strokeWidth={2} />
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="text-white text-lg font-extrabold uppercase tracking-tight leading-tight group-hover:text-brand transition-colors">{x.t}</h3>
+                    <p className="text-blue-200/60 text-xs font-medium uppercase tracking-wider mt-1">{x.s}</p>
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
       </section>
 
