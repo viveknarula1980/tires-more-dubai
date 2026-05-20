@@ -701,7 +701,7 @@ export const importBajaWheels = createServerFn({ method: "POST" })
           fitment_notes: fitmentParts.join(" ") || null,
           features: colors.length > 0 ? colors.slice(0, 16) : null,
           main_image: p.images[0]?.src ?? null,
-          gallery_images: p.images.slice(0, 12).map((i) => i.src),
+          gallery_images: p.images.map((i) => i.src),
           in_stock: true,
         };
 
