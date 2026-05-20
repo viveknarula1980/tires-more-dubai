@@ -119,13 +119,13 @@ function Home() {
                 key={b.slug}
                 to="/shop"
                 search={{ brand: b.slug, vehicle_type: "", season: "", width: 0, profile: 0, rim: 0, sort: "featured" }}
-                className="aspect-square bg-background rounded-lg border border-border flex items-center justify-center p-4 hover:border-brand hover:shadow-md transition-all"
+                className="h-20 bg-background rounded-lg border border-border flex items-center justify-center p-2 hover:border-brand hover:shadow-md transition-all"
               >
                 <BrandLogo
                   name={b.name}
                   logoUrl={b.logo_url}
                   className="h-full w-full"
-                  textClassName="text-sm md:text-base"
+                  textClassName="text-xs md:text-sm"
                 />
               </Link>
             ))}
