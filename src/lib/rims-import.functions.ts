@@ -642,6 +642,13 @@ export const importBajaWheels = createServerFn({ method: "POST" })
     let updated = 0;
     const failures: { sku: string; error: string }[] = [];
 
+    await supabaseAdmin
+      .from("rims")
+      .delete()
+      .eq("brand_id", brand.id)
+      .like("slug", "baja-rim-%")
+      .is("main_image", null);
+
     for (const p of products) {
       try {
         const slug = slugify(`baja-${p.handle}`);
