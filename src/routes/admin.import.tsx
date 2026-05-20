@@ -265,3 +265,81 @@ function Stat({ label, value }: { label: string; value: number }) {
     </div>
   );
 }
+
+type RimResult = {
+  source: string;
+  total: number;
+  inserted: number;
+  updated: number;
+  failed: number;
+  failures: { sku: string; error: string }[];
+};
+
+function RimsImportSection() {
+  const importDakar = useServerFn(importDakarForgedRims);
+  const [running, setRunning] = useState(false);
+  const [result, setResult] = useState<RimResult | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  async function runDakar() {
+    setRunning(true);
+    setResult(null);
+    setError(null);
+    try {
+      const r = (await importDakar()) as RimResult;
+      setResult(r);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
+    } finally {
+      setRunning(false);
+    }
+  }
+
+  return (
+    <Card className="mt-6 p-6">
+      <h2 className="font-medium mb-1">Rims</h2>
+      <p className="text-xs text-muted-foreground mb-4">
+        Imports the rim catalog from external sources. No prices are stored — rims
+        are quote-only. Existing rims (matched by slug) get spec + image updates.
+      </p>
+      <div className="grid gap-2 sm:grid-cols-2">
+        <div className="flex items-center justify-between gap-3 rounded-md border p-3">
+          <div className="min-w-0">
+            <div className="font-medium">Dakar Forged</div>
+            <div className="text-xs text-muted-foreground truncate">
+              tunerstop.com/wheelbrand/Dakar Forged
+            </div>
+          </div>
+          <Button size="sm" onClick={runDakar} disabled={running}>
+            {running ? "Syncing…" : "Sync"}
+          </Button>
+        </div>
+      </div>
+
+      {error && (
+        <div className="mt-4 text-sm text-destructive">{error}</div>
+      )}
+
+      {result && (
+        <div className="mt-4 space-y-3">
+          <div className="grid grid-cols-4 gap-3 text-center text-sm">
+            <Stat label="Found" value={result.total} />
+            <Stat label="Inserted" value={result.inserted} />
+            <Stat label="Updated" value={result.updated} />
+            <Stat label="Failed" value={result.failed} />
+          </div>
+          {result.failures.length > 0 && (
+            <div className="rounded-md border p-3 font-mono text-xs max-h-60 overflow-auto">
+              {result.failures.map((f, i) => (
+                <div key={i} className="text-destructive">
+                  {f.sku} — {f.error}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+    </Card>
+  );
+}
+
