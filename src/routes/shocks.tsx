@@ -284,7 +284,7 @@ function BrandSections() {
 
 function ComingSoonCTA() {
   return (
-    <section className="bg-gradient-to-br from-navy via-navy to-black text-navy-foreground py-16 md:py-24">
+    <section className="bg-gradient-to-br from-red-900 via-red-950 to-black text-white py-16 md:py-24">
       <div className="container mx-auto px-4 text-center max-w-3xl">
         <Sparkles className="h-10 w-10 text-brand mx-auto mb-4" />
         <h2 className="text-3xl md:text-5xl font-bold tracking-tight">Building your dream rig?</h2>
