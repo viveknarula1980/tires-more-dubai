@@ -256,29 +256,24 @@ function Home() {
         </div>
       </section>
 
-      {/* Reviews */}
+      {/* Instagram */}
       <section className="bg-navy text-navy-foreground py-14">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-10">
-            <div className="inline-flex items-center gap-1 text-amber-400">
-              {Array.from({ length: 5 }).map((_, i) => <Star key={i} className="h-5 w-5 fill-current" />)}
-            </div>
-            <h2 className="mt-2 text-3xl font-bold">Trusted by 12,000+ Dubai drivers</h2>
-          </div>
-          <div className="grid md:grid-cols-3 gap-5">
-            {[
-              { n: "Ahmed K.", c: "Dubai Marina", q: "Best price on Michelin in Dubai. Fitted in 25 minutes, free coffee, brilliant service." },
-              { n: "Sarah M.", c: "JLT", q: "Searched by my Pajero's reg and they had four Bridgestones in stock the same day. Easy." },
-              { n: "Rakesh P.", c: "Business Bay", q: "WhatsApp quote in 10 minutes, set of Continentals delivered and fitted at the office." },
-            ].map((r) => (
-              <div key={r.n} className="bg-navy-foreground/5 border border-navy-foreground/10 rounded-xl p-5">
-                <div className="flex gap-1 text-amber-400 mb-3">
-                  {Array.from({ length: 5 }).map((_, i) => <Star key={i} className="h-4 w-4 fill-current" />)}
-                </div>
-                <p className="text-sm leading-relaxed text-navy-foreground/90">"{r.q}"</p>
-                <p className="mt-3 text-xs font-semibold">{r.n} · <span className="opacity-60">{r.c}</span></p>
-              </div>
-            ))}
+          <div className="max-w-2xl mx-auto text-center">
+            <p className="text-xs uppercase tracking-widest text-brand font-bold">Follow us</p>
+            <h2 className="mt-2 text-3xl font-bold">@tiresandmore.ae</h2>
+            <p className="mt-3 text-navy-foreground/80">
+              See our latest builds, behind-the-scenes workshop shots, and daily deals on Instagram.
+            </p>
+            <a
+              href="https://www.instagram.com/tiresandmore.ae/"
+              target="_blank"
+              rel="noreferrer"
+              className="mt-6 inline-flex items-center justify-center gap-2 bg-gradient-to-br from-[#833ab4] via-[#fd1d1d] to-[#fcb045] text-white rounded-md px-6 py-3 font-bold hover:opacity-90"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+              Follow on Instagram
+            </a>
           </div>
         </div>
       </section>
