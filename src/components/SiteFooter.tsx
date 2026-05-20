@@ -48,7 +48,7 @@ export function SiteFooter() {
       <div className="border-t border-white/10">
         <div className="container mx-auto px-4 py-4 text-xs text-white/60 flex flex-wrap justify-between gap-2">
           <span>© {new Date().getFullYear()} Tires & More UAE. All rights reserved.</span>
-          <span>Tyre Shop Dubai · Mobile Tyre Service · Wheel Alignment</span>
+          <span>Tyre Shop Dubai · Alloy Wheels · Performance Shocks · Mobile Tyre Service</span>
         </div>
       </div>
     </footer>
