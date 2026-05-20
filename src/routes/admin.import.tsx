@@ -3,7 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { discoverBrandModelUrls, importBrandBatch, getSyncReport } from "@/lib/import.functions";
-import { importDakarForgedRims, importKmcWheels } from "@/lib/rims-import.functions";
+import { importDakarForgedRims, importKmcWheels, importRrwWheels } from "@/lib/rims-import.functions";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
@@ -280,11 +280,13 @@ type RimSource = { key: string; label: string; sub: string };
 const RIM_SOURCES: RimSource[] = [
   { key: "dakar", label: "Dakar Forged", sub: "tunerstop.com/wheelbrand/Dakar Forged" },
   { key: "kmc", label: "KMC Wheels", sub: "kmcwheels.com/wheels/all-wheels" },
+  { key: "rrw", label: "RRW (Relations Race Wheels)", sub: "tunerstop.com/wheelbrand/Relations Race Wheels" },
 ];
 
 function RimsImportSection() {
   const importDakar = useServerFn(importDakarForgedRims);
   const importKmc = useServerFn(importKmcWheels);
+  const importRrw = useServerFn(importRrwWheels);
   const [activeKey, setActiveKey] = useState<string | null>(null);
   const [result, setResult] = useState<(RimResult & { label: string }) | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -294,7 +296,8 @@ function RimsImportSection() {
     setResult(null);
     setError(null);
     try {
-      const fn = src.key === "kmc" ? importKmc : importDakar;
+      const fn =
+        src.key === "kmc" ? importKmc : src.key === "rrw" ? importRrw : importDakar;
       const r = (await fn()) as RimResult;
       setResult({ ...r, label: src.label });
     } catch (e) {

@@ -415,3 +415,162 @@ export const importKmcWheels = createServerFn({ method: "POST" })
       failures,
     };
   });
+
+// ---------- RRW / Relations Race Wheels (tunerstop.com) ----------
+
+type RrwCard = {
+  name: string;
+  image: string;
+  detailUrl: string;
+  sku: string;
+};
+
+function parseRrwCards(markdown: string): RrwCard[] {
+  const out: RrwCard[] = [];
+  const re =
+    /\[!\[([^\]]+)\]\((https:\/\/[^\s)]+)\)\]\((https:\/\/www\.tunerstop\.com\/[^\s)]+)\)/g;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(markdown))) {
+    const name = m[1].trim();
+    const image = m[2];
+    const detailUrl = m[3];
+    const sku = detailUrl.split("/").pop() ?? "";
+    // RRW SKUs look like RR7-S-1785-0139-MF, RR2-1790-..., RR6-H-..., etc.
+    if (!/^RR[0-9A-Z-]+-\d{4}-\d{4,6}-[A-Z]{2}$/.test(sku)) continue;
+    if (out.some((p) => p.sku === sku)) continue;
+    out.push({ name, image, detailUrl, sku });
+  }
+  return out;
+}
+
+function parseRrwSku(sku: string) {
+  // Last 3 dash-separated segments are DDWW, ETPCD, COLOR. Model = the rest.
+  const parts = sku.split("-");
+  if (parts.length < 4) return null;
+  const color = parts.pop()!;
+  const etpcd = parts.pop()!;
+  const ddww = parts.pop()!;
+  const model = parts.join("-");
+  if (!/^\d{4}$/.test(ddww)) return null;
+  const diameter = Number(ddww.slice(0, 2));
+  const width = Number(ddww.slice(2)) / 10;
+  // ETPCD: ET (1-3 digits) + PCD suffix (2-3 digits, last bit identifies PCD)
+  const m = etpcd.match(/^(\d{1,3})(\d{3})$/) ?? etpcd.match(/^(\d{1,3})(\d{2})$/);
+  let offset: number | null = null;
+  let pcd: string | null = null;
+  if (m) {
+    offset = Number(m[1]);
+    pcd = inferPcd(m[2]);
+  }
+  const bolt = pcd ? Number(pcd.split("x")[0]) : null;
+  const finishInfo = COLOR_MAP[color] ?? { finish: color, color };
+  return { model, diameter, width, offset, pcd, bolt, ...finishInfo };
+}
+
+async function scrapeTunerstopPage(url: string): Promise<string> {
+  const res = await fetch(`${FIRECRAWL}/scrape`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${fcKey()}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      url,
+      onlyMainContent: true,
+      formats: ["markdown"],
+    }),
+  });
+  if (!res.ok) {
+    throw new Error(`Firecrawl scrape failed: ${res.status} ${await res.text()}`);
+  }
+  const json = (await res.json()) as { data?: { markdown?: string } };
+  return json.data?.markdown ?? "";
+}
+
+export const importRrwWheels = createServerFn({ method: "POST" })
+  .middleware([requireAdmin])
+  .handler(async () => {
+    const baseUrl =
+      "https://www.tunerstop.com/wheelbrand/Relations%20Race%20Wheels?brand=Relations%20Race%20Wheels";
+
+    const { data: brand, error: bErr } = await supabaseAdmin
+      .from("rim_brands")
+      .select("id, name, slug")
+      .eq("slug", "rrw")
+      .maybeSingle();
+    if (bErr) throw new Error(bErr.message);
+    if (!brand) throw new Error("Rim brand 'rrw' not found");
+
+    // Scrape pages 1 and 2 and merge.
+    const pages = [baseUrl, `${baseUrl}&page=2`];
+    const allCards: RrwCard[] = [];
+    for (const p of pages) {
+      const md = await scrapeTunerstopPage(p);
+      if (!md) continue;
+      for (const c of parseRrwCards(md)) {
+        if (!allCards.some((x) => x.sku === c.sku)) allCards.push(c);
+      }
+    }
+
+    let inserted = 0;
+    let updated = 0;
+    const failures: { sku: string; error: string }[] = [];
+
+    for (const c of allCards) {
+      try {
+        const specs = parseRrwSku(c.sku);
+        const slug = slugify(`rrw-${c.sku}`);
+        const payload = {
+          brand_id: brand.id,
+          slug,
+          name: `RRW ${c.name}`.replace(/\s+/g, " ").trim(),
+          model: specs?.model ?? null,
+          diameter: specs?.diameter ?? 17,
+          width: specs?.width ?? null,
+          offset_mm: specs?.offset ?? null,
+          pcd: specs?.pcd ?? null,
+          bolt_count: specs?.bolt ?? null,
+          finish: specs?.finish ?? null,
+          color: specs?.color ?? null,
+          construction: "Flow Formed",
+          country_of_origin: null,
+          main_image: c.image,
+          gallery_images: [c.image],
+          in_stock: true,
+        };
+
+        const { data: existing } = await supabaseAdmin
+          .from("rims")
+          .select("id")
+          .eq("slug", slug)
+          .maybeSingle();
+
+        if (existing) {
+          const { error } = await supabaseAdmin
+            .from("rims")
+            .update(payload)
+            .eq("id", existing.id);
+          if (error) throw new Error(error.message);
+          updated++;
+        } else {
+          const { error } = await supabaseAdmin.from("rims").insert(payload);
+          if (error) throw new Error(error.message);
+          inserted++;
+        }
+      } catch (e) {
+        failures.push({
+          sku: c.sku,
+          error: e instanceof Error ? e.message : String(e),
+        });
+      }
+    }
+
+    return {
+      source: baseUrl,
+      total: allCards.length,
+      inserted,
+      updated,
+      failed: failures.length,
+      failures,
+    };
+  });
