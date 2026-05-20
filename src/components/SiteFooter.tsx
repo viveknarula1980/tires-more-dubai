@@ -4,7 +4,7 @@ import logo from "@/assets/logo.png";
 
 export function SiteFooter() {
   return (
-    <footer className="bg-navy text-navy-foreground mt-20">
+    <footer className="bg-navy text-navy-foreground">
       <div className="container mx-auto grid gap-10 px-4 py-14 md:grid-cols-4">
         <div className="space-y-4">
           <img src={logo} alt="Tires & More UAE" className="h-12 w-auto bg-white rounded p-2" />
