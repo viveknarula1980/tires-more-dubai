@@ -105,6 +105,32 @@ function BrandsPage() {
         </div>
       )}
 
+      <header className="mt-14 mb-8">
+        <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Shock Brands</h2>
+        <p className="mt-2 text-muted-foreground">
+          Premium off-road shock absorbers — coming soon.{" "}
+          <Link to="/shocks" className="text-brand font-semibold hover:underline">
+            Explore the lineup →
+          </Link>
+        </p>
+      </header>
+
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+        {SHOCK_BRANDS.map((b) => (
+          <Link
+            key={b.slug}
+            to="/shocks"
+            hash={b.slug}
+            className="group rounded-xl border border-border bg-card flex flex-col items-center justify-center px-4 py-3 hover:border-brand hover:shadow-lg transition-all"
+          >
+            <BrandLogo name={b.name} logoUrl={b.logo_url} className="h-12 w-full" textClassName="text-base" />
+            <span className="mt-2 text-xs font-semibold text-muted-foreground group-hover:text-brand">
+              View shocks →
+            </span>
+          </Link>
+        ))}
+      </div>
+
       <StickyBottomSearch />
     </div>
   );
