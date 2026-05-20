@@ -135,10 +135,22 @@ export const importDakarForgedRims = createServerFn({ method: "POST" })
     let updated = 0;
     const failures: { sku: string; error: string }[] = [];
 
+    // Group images by model so each card's gallery includes all color variants.
+    const galleryByModel = new Map<string, string[]>();
+    for (const c of cards) {
+      const s = parseSku(c.sku);
+      const key = s?.model ?? c.name;
+      const arr = galleryByModel.get(key) ?? [];
+      if (c.image && !arr.includes(c.image)) arr.push(c.image);
+      galleryByModel.set(key, arr);
+    }
+
     for (const c of cards) {
       try {
         const specs = parseSku(c.sku);
         const slug = slugify(`dakar-forged-${c.sku}`);
+        const modelKey = specs?.model ?? c.name;
+        const gallery = galleryByModel.get(modelKey) ?? [c.image];
         const payload = {
           brand_id: brand.id,
           slug,
@@ -156,7 +168,7 @@ export const importDakarForgedRims = createServerFn({ method: "POST" })
           construction: "Forged",
           country_of_origin: null,
           main_image: c.image,
-          gallery_images: [c.image],
+          gallery_images: gallery,
           in_stock: true,
         };
 
