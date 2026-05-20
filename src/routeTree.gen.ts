@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ShocksRouteImport } from './routes/shocks'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as LoginRouteImport } from './routes/login'
@@ -25,6 +26,11 @@ import { Route as RimsSlugRouteImport } from './routes/rims.$slug'
 import { Route as BrandsSlugRouteImport } from './routes/brands.$slug'
 import { Route as AdminImportRouteImport } from './routes/admin.import'
 
+const ShocksRoute = ShocksRouteImport.update({
+  id: '/shocks',
+  path: '/shocks',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ServicesRoute = ServicesRouteImport.update({
   id: '/services',
   path: '/services',
@@ -110,6 +116,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/reset-password': typeof ResetPasswordRoute
   '/services': typeof ServicesRoute
+  '/shocks': typeof ShocksRoute
   '/admin/import': typeof AdminImportRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/rims/$slug': typeof RimsSlugRoute
@@ -127,6 +134,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/reset-password': typeof ResetPasswordRoute
   '/services': typeof ServicesRoute
+  '/shocks': typeof ShocksRoute
   '/admin/import': typeof AdminImportRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/rims/$slug': typeof RimsSlugRoute
@@ -145,6 +153,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/reset-password': typeof ResetPasswordRoute
   '/services': typeof ServicesRoute
+  '/shocks': typeof ShocksRoute
   '/admin/import': typeof AdminImportRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/rims/$slug': typeof RimsSlugRoute
@@ -164,6 +173,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/reset-password'
     | '/services'
+    | '/shocks'
     | '/admin/import'
     | '/brands/$slug'
     | '/rims/$slug'
@@ -181,6 +191,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/reset-password'
     | '/services'
+    | '/shocks'
     | '/admin/import'
     | '/brands/$slug'
     | '/rims/$slug'
@@ -198,6 +209,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/reset-password'
     | '/services'
+    | '/shocks'
     | '/admin/import'
     | '/brands/$slug'
     | '/rims/$slug'
@@ -216,6 +228,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   ServicesRoute: typeof ServicesRoute
+  ShocksRoute: typeof ShocksRoute
   AdminImportRoute: typeof AdminImportRoute
   BrandsSlugRoute: typeof BrandsSlugRoute
   RimsSlugRoute: typeof RimsSlugRoute
@@ -227,6 +240,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/shocks': {
+      id: '/shocks'
+      path: '/shocks'
+      fullPath: '/shocks'
+      preLoaderRoute: typeof ShocksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/services': {
       id: '/services'
       path: '/services'
@@ -344,6 +364,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   ServicesRoute: ServicesRoute,
+  ShocksRoute: ShocksRoute,
   AdminImportRoute: AdminImportRoute,
   BrandsSlugRoute: BrandsSlugRoute,
   RimsSlugRoute: RimsSlugRoute,
