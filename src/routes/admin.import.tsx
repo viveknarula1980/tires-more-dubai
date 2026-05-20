@@ -78,7 +78,7 @@ function AdminImportPage() {
 
   const reportQ = useQuery({
     queryKey: ["sync-report"],
-    queryFn: () => fetchReport(),
+    queryFn: async () => fetchReport({ headers: await getAuthHeaders() }),
   });
 
   const [activeBrand, setActiveBrand] = useState<string | null>(null);
