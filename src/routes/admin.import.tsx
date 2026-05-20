@@ -64,6 +64,13 @@ const BRANDS: BrandEntry[] = [
   { slug: "cooper", name: "Cooper Tires", sourceSlug: "coopertires" },
 ];
 
+async function getAuthHeaders() {
+  const { data } = await supabase.auth.getSession();
+  const token = data.session?.access_token;
+  if (!token) throw new Error("Please sign in again before running a sync.");
+  return { Authorization: `Bearer ${token}` };
+}
+
 function AdminImportPage() {
   const discover = useServerFn(discoverBrandModelUrls);
   const importBatch = useServerFn(importBrandBatch);
@@ -89,6 +96,7 @@ function AdminImportPage() {
       push(`Discovering ${brand.name} model pages on pitstoparabia.com…`);
       const { urls } = await discover({
         data: { brandSlug: brand.slug, sourceSlug: brand.sourceSlug },
+        headers: await getAuthHeaders(),
       });
       push(`Found ${urls.length} model pages. Scraping in batches of 5…`, "ok");
 
@@ -104,6 +112,7 @@ function AdminImportPage() {
         try {
           const { results } = await importBatch({
             data: { brandSlug: brand.slug, urls: chunk },
+            headers: await getAuthHeaders(),
           });
           for (const r of results) {
             models++;
