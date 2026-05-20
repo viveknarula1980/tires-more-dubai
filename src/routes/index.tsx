@@ -278,7 +278,7 @@ function Home() {
 
           {/* Recent posts grid */}
           <div className="mt-10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-            {[homeWheels, homeShocks, homeWheels, homeShocks, homeWheels, homeShocks].map((src, i) => (
+            {[wheelsImg, shocksImg, wheelsImg, shocksImg, wheelsImg, shocksImg].map((src, i) => (
               <a
                 key={i}
                 href="https://www.instagram.com/tiresandmore.ae/"
