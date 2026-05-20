@@ -232,6 +232,9 @@ function AdminImportPage() {
         )}
       </Card>
 
+      <RimsImportSection />
+
+
       {log.length > 0 && (
         <Card className="mt-6 p-4 max-h-[60vh] overflow-auto font-mono text-xs">
           {log.map((l, i) => (
