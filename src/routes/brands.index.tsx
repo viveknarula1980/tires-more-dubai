@@ -124,9 +124,6 @@ function BrandsPage() {
             className="group rounded-xl border border-border bg-card flex flex-col items-center justify-center px-4 py-5 hover:border-brand hover:shadow-lg transition-all"
           >
             <BrandLogo name={b.name} logoUrl={b.logo_url} className="h-20 w-full" textClassName="text-lg" />
-            <span className="mt-2 text-xs font-semibold text-muted-foreground group-hover:text-brand">
-              View shocks →
-            </span>
           </Link>
         ))}
       </div>
