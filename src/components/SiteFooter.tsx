@@ -9,14 +9,16 @@ export function SiteFooter() {
         <div className="space-y-4">
           <img src={logo} alt="Tires & More UAE" className="h-12 w-auto bg-white rounded p-2" />
           <p className="text-sm text-white/70">
-            Dubai's trusted tyre shop since day one. Premium tyres, expert installation,
-            and mobile service across the UAE.
+            Dubai's trusted tyre, wheel & suspension shop. Premium tyres, alloy wheels,
+            performance shocks, expert installation and mobile service across the UAE.
           </p>
         </div>
         <div>
           <h4 className="font-display text-lg mb-4">Shop</h4>
           <ul className="space-y-2 text-sm text-white/80">
             <li><Link to="/shop" className="hover:text-brand">All Tyres</Link></li>
+            <li><Link to="/rims" className="hover:text-brand">Alloy Wheels</Link></li>
+            <li><Link to="/shocks" className="hover:text-brand">Performance Shocks</Link></li>
             <li><Link to="/brands" className="hover:text-brand">Brands</Link></li>
             <li><Link to="/shop" search={{ vehicle_type: "passenger" }}>Passenger</Link></li>
             <li><Link to="/shop" search={{ vehicle_type: "suv" }}>SUV & 4×4</Link></li>
