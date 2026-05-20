@@ -357,6 +357,15 @@ export const importKmcWheels = createServerFn({ method: "POST" })
     let updated = 0;
     const failures: { sku: string; error: string }[] = [];
 
+    // Group images by model name (case-insensitive) for galleries.
+    const galleryByModel = new Map<string, string[]>();
+    for (const c of cards) {
+      const key = c.name.toLowerCase();
+      const arr = galleryByModel.get(key) ?? [];
+      if (c.image && !arr.includes(c.image)) arr.push(c.image);
+      galleryByModel.set(key, arr);
+    }
+
     for (const c of cards) {
       try {
         const specs = parseKmcImage(c.image);
@@ -367,6 +376,7 @@ export const importKmcWheels = createServerFn({ method: "POST" })
           diameters.length > 1
             ? `Also available in ${diameters.map((d) => `${d}"`).join(", ")}.`
             : null;
+        const gallery = galleryByModel.get(c.name.toLowerCase()) ?? [c.image];
 
         const payload = {
           brand_id: brand.id,
@@ -388,7 +398,7 @@ export const importKmcWheels = createServerFn({ method: "POST" })
           country_of_origin: null,
           fitment_notes: fitment,
           main_image: c.image,
-          gallery_images: [c.image],
+          gallery_images: gallery,
           in_stock: true,
         };
 
