@@ -195,3 +195,223 @@ export const importDakarForgedRims = createServerFn({ method: "POST" })
       failures,
     };
   });
+
+// ---------- KMC Wheels (kmcwheels.com) ----------
+
+type KmcCard = {
+  name: string;
+  image: string;
+  detailUrl: string;
+  slugSuffix: string; // e.g. "kmc-archer"
+};
+
+function parseKmcCards(markdown: string): KmcCard[] {
+  const out: KmcCard[] = [];
+  const re =
+    /\[!\[([^\]]+)\]\((https:\/\/www\.kmcwheels\.com\/media\/[^\s)]+)\)\]\((https:\/\/www\.kmcwheels\.com\/[a-z0-9-]+)\)/gi;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(markdown))) {
+    const name = m[1].trim();
+    const image = m[2];
+    const detailUrl = m[3];
+    const slugSuffix = detailUrl.split("/").pop() ?? "";
+    if (!slugSuffix || slugSuffix === "all-wheels") continue;
+    if (out.some((p) => p.slugSuffix === slugSuffix)) continue;
+    out.push({ name, image, detailUrl, slugSuffix });
+  }
+  return out;
+}
+
+// Pull all "NN\"" diameters appearing in the small text block after a card
+function extractDiametersAfter(md: string, anchor: string): number[] {
+  const idx = md.indexOf(anchor);
+  if (idx < 0) return [];
+  const slice = md.slice(idx, idx + 800);
+  const diams = new Set<number>();
+  const re = /\b(\d{2})"/g;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(slice))) {
+    const n = Number(m[1]);
+    if (n >= 14 && n <= 26) diams.add(n);
+  }
+  return Array.from(diams).sort((a, b) => a - b);
+}
+
+function parseKmcImage(imageUrl: string) {
+  // Examples seen:
+  //   kmc-km732-archer-17x8-5-6-et0-gloss-anthracite-a1-png.png
+  //   km708-17x8-et38-bronze_a1-png.png
+  //   km719-17x85-et35-5-black-gray_a1-png.png
+  //   km5476-6lug-17x9-et-12-matte-bronze-w-blk-lip-a1-png.png
+  //   km234-17x85-et0-8lug-black_a1-png.png
+  const file = imageUrl.split("/").pop()?.toLowerCase() ?? "";
+  const base = file.replace(/\.(png|jpe?g|webp)$/i, "");
+
+  let diameter: number | null = null;
+  let width: number | null = null;
+  // diameter x width — width may be "8", "85" (=>8.5) or "8-5"
+  const size =
+    base.match(/(\d{2})x(\d)-(\d)/) ||
+    base.match(/(\d{2})x(\d{2})\b/) ||
+    base.match(/(\d{2})x(\d)\b/);
+  if (size) {
+    diameter = Number(size[1]);
+    if (size.length === 4) {
+      width = Number(`${size[2]}.${size[3]}`);
+    } else {
+      const w = size[2];
+      width = w.length === 2 ? Number(w) / 10 : Number(w);
+    }
+  }
+
+  let offset: number | null = null;
+  const et = base.match(/et-?(\d{1,3})/);
+  if (et) {
+    // "et-12" means negative, "et0" / "et38" positive
+    const neg = /et-\d/.test(base);
+    offset = neg ? -Number(et[1]) : Number(et[1]);
+  }
+
+  let bolt: number | null = null;
+  const blug = base.match(/(\d)lug/) || base.match(/-(\d)-et/);
+  if (blug) bolt = Number(blug[1]);
+
+  // Finish keyword extraction
+  const FINISH_KEYS: { key: RegExp; finish: string; color: string }[] = [
+    { key: /matte-bronze/, finish: "Matte Bronze", color: "Bronze" },
+    { key: /matte-black/, finish: "Matte Black", color: "Black" },
+    { key: /satin-black/, finish: "Satin Black", color: "Black" },
+    { key: /gloss-black/, finish: "Gloss Black", color: "Black" },
+    { key: /textured-black/, finish: "Textured Black", color: "Black" },
+    { key: /gloss-anthracite/, finish: "Gloss Anthracite", color: "Anthracite" },
+    { key: /satin-anthracite/, finish: "Satin Anthracite", color: "Anthracite" },
+    { key: /gloss-gunmetal/, finish: "Gloss Gunmetal", color: "Gunmetal" },
+    { key: /candy-red/, finish: "Candy Red", color: "Red" },
+    { key: /bronze/, finish: "Bronze", color: "Bronze" },
+    { key: /gloss-silver/, finish: "Gloss Silver", color: "Silver" },
+    { key: /silver/, finish: "Silver", color: "Silver" },
+    { key: /machined/, finish: "Machined", color: "Machined" },
+    { key: /blackout|black\b/, finish: "Black", color: "Black" },
+  ];
+  let finish: string | null = null;
+  let color: string | null = null;
+  for (const f of FINISH_KEYS) {
+    if (f.key.test(base)) {
+      finish = f.finish;
+      color = f.color;
+      break;
+    }
+  }
+
+  return { diameter, width, offset, bolt, finish, color };
+}
+
+export const importKmcWheels = createServerFn({ method: "POST" })
+  .middleware([requireAdmin])
+  .handler(async () => {
+    const url = "https://www.kmcwheels.com/wheels/all-wheels";
+
+    const { data: brand, error: bErr } = await supabaseAdmin
+      .from("rim_brands")
+      .select("id, name, slug")
+      .eq("slug", "kmc")
+      .maybeSingle();
+    if (bErr) throw new Error(bErr.message);
+    if (!brand) throw new Error("Rim brand 'kmc' not found");
+
+    // KMC's listing renders all 40 wheels on one page (?p=48).
+    const scrapeUrl = `${url}?product_list_limit=48`;
+    const res = await fetch(`${FIRECRAWL}/scrape`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${fcKey()}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        url: scrapeUrl,
+        onlyMainContent: true,
+        formats: ["markdown"],
+      }),
+    });
+    if (!res.ok) {
+      throw new Error(`Firecrawl scrape failed: ${res.status} ${await res.text()}`);
+    }
+    const json = (await res.json()) as { data?: { markdown?: string } };
+    const md = json.data?.markdown ?? "";
+    if (!md) throw new Error("No markdown returned from Firecrawl");
+
+    const cards = parseKmcCards(md);
+    let inserted = 0;
+    let updated = 0;
+    const failures: { sku: string; error: string }[] = [];
+
+    for (const c of cards) {
+      try {
+        const specs = parseKmcImage(c.image);
+        const diameters = extractDiametersAfter(md, `](${c.detailUrl})`);
+        const diameter = specs.diameter ?? diameters[0] ?? 17;
+        const slug = slugify(c.slugSuffix); // e.g. "kmc-archer"
+        const fitment =
+          diameters.length > 1
+            ? `Also available in ${diameters.map((d) => `${d}"`).join(", ")}.`
+            : null;
+
+        const payload = {
+          brand_id: brand.id,
+          slug,
+          name: `KMC ${c.name}`.replace(/\s+/g, " ").trim(),
+          model: c.name
+            .toLowerCase()
+            .split(/\s+/)
+            .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+            .join(" "),
+          diameter,
+          width: specs.width,
+          offset_mm: specs.offset,
+          pcd: null,
+          bolt_count: specs.bolt,
+          finish: specs.finish,
+          color: specs.color,
+          construction: "Cast Aluminum",
+          country_of_origin: null,
+          fitment_notes: fitment,
+          main_image: c.image,
+          gallery_images: [c.image],
+          in_stock: true,
+        };
+
+        const { data: existing } = await supabaseAdmin
+          .from("rims")
+          .select("id")
+          .eq("slug", slug)
+          .maybeSingle();
+
+        if (existing) {
+          const { error } = await supabaseAdmin
+            .from("rims")
+            .update(payload)
+            .eq("id", existing.id);
+          if (error) throw new Error(error.message);
+          updated++;
+        } else {
+          const { error } = await supabaseAdmin.from("rims").insert(payload);
+          if (error) throw new Error(error.message);
+          inserted++;
+        }
+      } catch (e) {
+        failures.push({
+          sku: c.slugSuffix,
+          error: e instanceof Error ? e.message : String(e),
+        });
+      }
+    }
+
+    return {
+      source: scrapeUrl,
+      total: cards.length,
+      inserted,
+      updated,
+      failed: failures.length,
+      failures,
+    };
+  });
