@@ -3,7 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { discoverBrandModelUrls, importBrandBatch, getSyncReport } from "@/lib/import.functions";
-import { importDakarForgedRims, importKmcWheels } from "@/lib/rims-import.functions";
+import { importDakarForgedRims, importKmcWheels, importRrwWheels } from "@/lib/rims-import.functions";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
