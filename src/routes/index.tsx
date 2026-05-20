@@ -1,13 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
-import { Wrench, ShieldCheck, Truck, Clock, Star, ChevronRight, MessageCircle, Phone, Disc3, Zap } from "lucide-react";
+import { Wrench, ShieldCheck, Truck, Clock, Star, ChevronRight, MessageCircle, Phone } from "lucide-react";
 import { SearchWidget } from "@/components/SearchWidget";
 import { TireCard } from "@/components/TireCard";
 import { BrandLogo } from "@/components/BrandLogo";
 import { FeaturedSlider } from "@/components/FeaturedSlider";
 import { getBrands, getFeaturedTires } from "@/lib/catalog.functions";
 import hero from "@/assets/hero-dubai.jpg";
+import wheelsImg from "@/assets/home-wheels.jpg";
+import shocksImg from "@/assets/home-shocks.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -134,27 +136,29 @@ function Home() {
       </section>
 
       {/* Alloy Wheels */}
-      <section className="container mx-auto px-4 py-14">
-        <div className="grid lg:grid-cols-2 gap-10 items-center">
-          <div className="order-2 lg:order-1 relative aspect-[4/3] rounded-2xl overflow-hidden bg-gradient-to-br from-slate-800 via-slate-900 to-black flex items-center justify-center">
-            <Disc3 className="h-48 w-48 text-brand/80" strokeWidth={1} />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-            <span className="absolute bottom-5 left-5 text-white font-bold text-lg">Premium alloy wheels</span>
-          </div>
-          <div className="order-1 lg:order-2">
-            <p className="text-xs uppercase tracking-widest text-brand font-bold">Wheels</p>
-            <h2 className="mt-1 text-3xl md:text-4xl font-bold">Transform your ride with alloy wheels</h2>
-            <p className="mt-3 text-muted-foreground">
-              Stand out on Dubai's roads with a curated range of premium alloy wheels — from sleek OEM upgrades to bold aftermarket designs. Sizes 15" to 24" with expert fitment.
-            </p>
-            <ul className="mt-5 space-y-2 text-sm">
-              {["Top global brands & finishes", "Professional fitting & balancing", "Tyre + wheel package deals"].map((t) => (
-                <li key={t} className="flex gap-2"><ChevronRight className="h-5 w-5 text-brand shrink-0" /> {t}</li>
-              ))}
-            </ul>
-            <Link to="/rims" className="mt-6 inline-flex items-center gap-2 bg-brand text-brand-foreground px-5 py-3 rounded-md font-bold hover:opacity-90">
-              Browse wheels <ChevronRight className="h-4 w-4" />
-            </Link>
+      <section className="bg-gradient-to-br from-blue-900 via-blue-950 to-slate-950 text-white py-14">
+        <div className="container mx-auto px-4">
+          <div className="grid lg:grid-cols-2 gap-10 items-center">
+            <div className="order-2 lg:order-1 relative aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
+              <img src={wheelsImg} alt="Premium alloy wheel" loading="lazy" width={1024} height={1024} className="absolute inset-0 h-full w-full object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+              <span className="absolute bottom-5 left-5 text-white font-bold text-lg">Premium alloy wheels</span>
+            </div>
+            <div className="order-1 lg:order-2">
+              <p className="text-xs uppercase tracking-widest text-brand font-bold">Wheels</p>
+              <h2 className="mt-1 text-3xl md:text-4xl font-bold">Transform your ride with alloy wheels</h2>
+              <p className="mt-3 text-white/80">
+                Stand out on Dubai's roads with a curated range of premium alloy wheels — from sleek OEM upgrades to bold aftermarket designs. Sizes 15" to 24" with expert fitment.
+              </p>
+              <ul className="mt-5 space-y-2 text-sm">
+                {["Top global brands & finishes", "Professional fitting & balancing", "Tyre + wheel package deals"].map((t) => (
+                  <li key={t} className="flex gap-2"><ChevronRight className="h-5 w-5 text-brand shrink-0" /> {t}</li>
+                ))}
+              </ul>
+              <Link to="/rims" className="mt-6 inline-flex items-center gap-2 bg-brand text-brand-foreground px-5 py-3 rounded-md font-bold hover:opacity-90">
+                Browse wheels <ChevronRight className="h-4 w-4" />
+              </Link>
+            </div>
           </div>
         </div>
       </section>
@@ -178,8 +182,8 @@ function Home() {
                 Explore shocks <ChevronRight className="h-4 w-4" />
               </Link>
             </div>
-            <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-gradient-to-br from-black via-red-950/60 to-red-900/40 border border-white/10 flex items-center justify-center">
-              <Zap className="h-48 w-48 text-brand/80" strokeWidth={1} />
+            <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
+              <img src={shocksImg} alt="Performance shock absorber" loading="lazy" width={1024} height={1024} className="absolute inset-0 h-full w-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
               <span className="absolute bottom-5 left-5 text-white font-bold text-lg">Built for the dunes</span>
             </div>
