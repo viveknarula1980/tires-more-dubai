@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
-import { Wrench, ShieldCheck, Truck, Clock, Star, ChevronRight, MessageCircle, Phone } from "lucide-react";
+import { Wrench, ShieldCheck, Truck, Clock, Star, ChevronRight, MessageCircle, Phone, Users } from "lucide-react";
 import { SearchWidget } from "@/components/SearchWidget";
 import { TireCard } from "@/components/TireCard";
 import { BrandLogo } from "@/components/BrandLogo";
@@ -72,7 +72,7 @@ function Home() {
                 { icon: Wrench, t: "Free fitting", s: "balancing & disposal" },
                 { icon: ShieldCheck, t: "Genuine tyres", s: "manufacturer warranty" },
                 { icon: Clock, t: "30-min service", s: "while you wait" },
-                { icon: Truck, t: "UAE-wide delivery", s: "same-day in Dubai" },
+                { icon: Users, t: "Expert team", s: "Certified technicians" },
               ].map((x) => (
                 <div key={x.t} className="flex items-center p-6 md:p-8 transition-colors hover:bg-white/5 group">
                   <div className="flex-shrink-0 mr-5">
