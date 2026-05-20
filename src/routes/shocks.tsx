@@ -4,14 +4,14 @@ import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import { MessageCircle, Phone, Wrench, ShieldCheck, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
-import foxBanner from "/brands/shocks/fox-banner.jpg?url";
-import dobinsonsBanner from "/brands/shocks/dobinsons-banner.jpg?url";
-import radfloBanner from "/brands/shocks/radflo-banner.jpg?url";
-import falconBanner from "/brands/shocks/falcon-banner.jpg?url";
-import foxLogo from "/brands/shocks/fox.png?url";
-import dobinsonsLogo from "/brands/shocks/dobinsons.png?url";
-import radfloLogo from "/brands/shocks/radflo.png?url";
-import falconLogo from "/brands/shocks/falcon.png?url";
+const foxBanner = "/brands/shocks/fox-banner.jpg";
+const dobinsonsBanner = "/brands/shocks/dobinsons-banner.jpg";
+const radfloBanner = "/brands/shocks/radflo-banner.jpg";
+const falconBanner = "/brands/shocks/falcon-banner.jpg";
+const foxLogo = "/brands/shocks/fox.png";
+const dobinsonsLogo = "/brands/shocks/dobinsons.png";
+const radfloLogo = "/brands/shocks/radflo.png";
+const falconLogo = "/brands/shocks/falcon.png";
 
 export const Route = createFileRoute("/shocks")({
   head: () => ({

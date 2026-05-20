@@ -5,10 +5,10 @@ import { getBrands } from "@/lib/catalog.functions";
 import { BrandLogo } from "@/components/BrandLogo";
 import { StickyBottomSearch } from "@/components/StickyBottomSearch";
 import { supabase } from "@/integrations/supabase/client";
-import foxLogo from "/brands/shocks/fox.png?url";
-import dobinsonsLogo from "/brands/shocks/dobinsons.png?url";
-import radfloLogo from "/brands/shocks/radflo.png?url";
-import falconLogo from "/brands/shocks/falcon.png?url";
+const foxLogo = "/brands/shocks/fox.png";
+const dobinsonsLogo = "/brands/shocks/dobinsons.png";
+const radfloLogo = "/brands/shocks/radflo.png";
+const falconLogo = "/brands/shocks/falcon.png";
 
 const SHOCK_BRANDS = [
   { slug: "fox", name: "Fox", logo_url: foxLogo },
