@@ -99,7 +99,11 @@ function TireDetail() {
       </div>
 
       <div className="container mx-auto px-4 py-8">
-        <div className="grid lg:grid-cols-[72px_minmax(0,1fr)_minmax(0,1fr)_340px] gap-6 lg:gap-6 items-start">
+        <div className={`grid gap-6 lg:gap-6 items-start ${
+          gallery.length > 1
+            ? "lg:grid-cols-[72px_minmax(0,1fr)_minmax(0,1fr)_340px]"
+            : "lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_340px]"
+        }`}>
           {/* Vertical thumbnails */}
           {gallery.length > 1 && (
             <div className="hidden lg:flex flex-col gap-3 order-1">
@@ -116,6 +120,7 @@ function TireDetail() {
               ))}
             </div>
           )}
+
 
           {/* Image */}
           <div className="relative bg-background rounded-xl border border-border p-6 order-2">
