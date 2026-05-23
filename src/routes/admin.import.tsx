@@ -243,7 +243,11 @@ function AdminImportPage() {
         )}
       </Card>
 
+      <TireImagesSection />
+
       <RimsImportSection />
+
+
 
 
       {log.length > 0 && (
