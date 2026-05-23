@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { discoverBrandModelUrls, importBrandBatch, getSyncReport } from "@/lib/import.functions";
 import { importDakarForgedRims, importKmcWheels, importRrwWheels, importBajaWheels } from "@/lib/rims-import.functions";
-import { syncTireImages } from "@/lib/tire-images.functions";
+import { syncTireImages, getTireImagesReport } from "@/lib/tire-images.functions";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
