@@ -1,10 +1,10 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { discoverBrandModelUrls, importBrandBatch, getSyncReport } from "@/lib/import.functions";
 import { importDakarForgedRims, importKmcWheels, importRrwWheels, importBajaWheels } from "@/lib/rims-import.functions";
-import { syncTireImages } from "@/lib/tire-images.functions";
+import { syncTireImages, getTireImagesReport } from "@/lib/tire-images.functions";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -244,6 +244,8 @@ function AdminImportPage() {
       </Card>
 
       <TireImagesSection />
+
+      <TireImagesReportSection />
 
       <RimsImportSection />
 
@@ -524,3 +526,133 @@ function TireImagesSection() {
 }
 
 
+
+function TireImagesReportSection() {
+  const fetchReport = useServerFn(getTireImagesReport);
+  const [expanded, setExpanded] = useState<string | null>(null);
+  const q = useQuery({
+    queryKey: ["tire-images-report"],
+    queryFn: async () => fetchReport({ headers: await getAuthHeaders() }),
+  });
+
+  const totals = q.data?.rows.reduce(
+    (a, r) => ({
+      total: a.total + r.total,
+      withImage: a.withImage + r.withImage,
+      missing: a.missing + r.missing,
+    }),
+    { total: 0, withImage: 0, missing: 0 }
+  );
+
+  return (
+    <Card className="mt-6 p-6">
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <h2 className="font-medium">Tire image coverage</h2>
+          <p className="text-xs text-muted-foreground">
+            How many tires per brand have a product image set. Click a row to see what's missing.
+          </p>
+        </div>
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={() => q.refetch()}
+          disabled={q.isFetching}
+        >
+          {q.isFetching ? "Refreshing…" : "Refresh"}
+        </Button>
+      </div>
+
+      {q.isLoading ? (
+        <p className="text-sm text-muted-foreground">Loading…</p>
+      ) : q.error ? (
+        <p className="text-sm text-destructive">{(q.error as Error).message}</p>
+      ) : (
+        <>
+          {totals && (
+            <div className="grid grid-cols-4 gap-3 text-center text-sm mb-4">
+              <Stat label="Tires" value={totals.total} />
+              <Stat label="With image" value={totals.withImage} />
+              <Stat label="Missing" value={totals.missing} />
+              <Stat
+                label="Coverage %"
+                value={totals.total ? Math.round((totals.withImage / totals.total) * 100) : 0}
+              />
+            </div>
+          )}
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-left text-xs uppercase tracking-wider text-muted-foreground border-b">
+                  <th className="py-2 pr-3">Brand</th>
+                  <th className="py-2 pr-3 text-right">Tires</th>
+                  <th className="py-2 pr-3 text-right">With image</th>
+                  <th className="py-2 pr-3 text-right">Missing</th>
+                  <th className="py-2 pr-3">Coverage</th>
+                </tr>
+              </thead>
+              <tbody>
+                {q.data?.rows.map((r) => {
+                  const pct = Math.round(r.coverage * 100);
+                  const isOpen = expanded === r.slug;
+                  return (
+                    <Fragment key={r.slug}>
+                      <tr
+                        className="border-b last:border-0 cursor-pointer hover:bg-muted/40"
+                        onClick={() => setExpanded(isOpen ? null : r.slug)}
+                      >
+                        <td className="py-2 pr-3 font-medium">
+                          <span className="inline-block w-3 opacity-60">{isOpen ? "▾" : "▸"}</span>{" "}
+                          {r.name}
+                        </td>
+                        <td className="py-2 pr-3 text-right tabular-nums">{r.total}</td>
+                        <td className="py-2 pr-3 text-right tabular-nums">{r.withImage}</td>
+                        <td
+                          className={`py-2 pr-3 text-right tabular-nums ${r.missing > 0 ? "text-destructive" : ""}`}
+                        >
+                          {r.missing}
+                        </td>
+                        <td className="py-2 pr-3">
+                          <div className="flex items-center gap-2">
+                            <div className="h-1.5 w-24 rounded-full bg-muted overflow-hidden">
+                              <div
+                                className={`h-full ${pct === 100 ? "bg-emerald-500" : pct >= 50 ? "bg-amber-500" : "bg-destructive"}`}
+                                style={{ width: `${pct}%` }}
+                              />
+                            </div>
+                            <span className="text-xs tabular-nums text-muted-foreground">
+                              {pct}%
+                            </span>
+                          </div>
+                        </td>
+                      </tr>
+                      {isOpen && r.missing > 0 && (
+                        <tr key={`${r.slug}-missing`} className="border-b last:border-0 bg-muted/20">
+                          <td colSpan={5} className="py-3 pl-8 pr-3">
+                            <div className="text-xs font-medium mb-2 text-muted-foreground">
+                              Missing images ({r.missing})
+                            </div>
+                            <div className="flex flex-wrap gap-1.5">
+                              {r.missingList.map((m) => (
+                                <span
+                                  key={m.slug}
+                                  className="inline-block rounded border px-2 py-0.5 text-xs bg-background"
+                                >
+                                  {m.name}
+                                </span>
+                              ))}
+                            </div>
+                          </td>
+                        </tr>
+                      )}
+                    </Fragment>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </>
+      )}
+    </Card>
+  );
+}
