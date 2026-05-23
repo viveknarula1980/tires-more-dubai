@@ -382,3 +382,145 @@ function RimsImportSection() {
   );
 }
 
+type ImageOutcome = {
+  tireSlug: string;
+  tireName: string;
+  ok: boolean;
+  matchedProduct?: string;
+  score?: number;
+  imageUrl?: string;
+  error?: string;
+  skipped?: boolean;
+};
+
+function TireImagesSection() {
+  const sync = useServerFn(syncTireImages);
+  const [brandSlug, setBrandSlug] = useState<string>(BRANDS[0]?.slug ?? "");
+  const [sourceUrl, setSourceUrl] = useState<string>("");
+  const [onlyMissing, setOnlyMissing] = useState<boolean>(true);
+  const [running, setRunning] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [results, setResults] = useState<ImageOutcome[] | null>(null);
+  const [scrapedCount, setScrapedCount] = useState<number>(0);
+
+  async function run() {
+    if (!sourceUrl) {
+      setError("Paste the brand's source URL first.");
+      return;
+    }
+    setRunning(true);
+    setError(null);
+    setResults(null);
+    try {
+      const r = await sync({
+        data: { brandSlug, sourceUrl, onlyMissing },
+        headers: await getAuthHeaders(),
+      });
+      setScrapedCount(r.scrapedCount);
+      setResults(r.results);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
+    } finally {
+      setRunning(false);
+    }
+  }
+
+  const okCount = results?.filter((r) => r.ok).length ?? 0;
+  const skipCount = results?.filter((r) => r.skipped).length ?? 0;
+  const failCount = results?.filter((r) => !r.ok && !r.skipped).length ?? 0;
+
+  return (
+    <Card className="mt-6 p-6">
+      <h2 className="font-medium mb-1">Tire images</h2>
+      <p className="text-xs text-muted-foreground mb-4">
+        Pulls product images from a brand's official website (e.g.
+        {" "}<code className="text-xs">https://tires.bridgestone.com</code>), matches them to
+        tires in the catalog by model name, downloads them to Lovable Cloud storage, and updates
+        each tire's main image.
+      </p>
+
+      <div className="grid gap-3 sm:grid-cols-[180px_1fr_auto] items-end">
+        <div>
+          <label className="text-xs font-medium block mb-1">Brand</label>
+          <select
+            value={brandSlug}
+            onChange={(e) => setBrandSlug(e.target.value)}
+            className="h-9 w-full rounded-md border border-input bg-background px-2 text-sm"
+            disabled={running}
+          >
+            {BRANDS.map((b) => (
+              <option key={b.slug} value={b.slug}>{b.name}</option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="text-xs font-medium block mb-1">Source URL</label>
+          <Input
+            type="url"
+            placeholder="https://tires.bridgestone.com/..."
+            value={sourceUrl}
+            onChange={(e) => setSourceUrl(e.target.value)}
+            disabled={running}
+          />
+        </div>
+        <Button onClick={run} disabled={running || !sourceUrl}>
+          {running ? "Syncing…" : "Sync images"}
+        </Button>
+      </div>
+
+      <label className="mt-3 inline-flex items-center gap-2 text-xs text-muted-foreground">
+        <input
+          type="checkbox"
+          checked={onlyMissing}
+          onChange={(e) => setOnlyMissing(e.target.checked)}
+          disabled={running}
+        />
+        Only update tires that don't have an image yet
+      </label>
+
+      {error && <div className="mt-4 text-sm text-destructive">{error}</div>}
+
+      {results && (
+        <div className="mt-5 space-y-3">
+          <div className="grid grid-cols-4 gap-3 text-center text-sm">
+            <Stat label="Scraped" value={scrapedCount} />
+            <Stat label="Updated" value={okCount} />
+            <Stat label="Skipped" value={skipCount} />
+            <Stat label="Failed" value={failCount} />
+          </div>
+          <div className="rounded-md border max-h-[60vh] overflow-auto font-mono text-xs">
+            {results.map((r, i) => (
+              <div
+                key={i}
+                className={`flex items-start gap-3 px-3 py-2 border-b last:border-0 ${
+                  r.ok ? "" : r.skipped ? "text-muted-foreground" : "text-destructive"
+                }`}
+              >
+                <span className="w-4">{r.ok ? "✓" : r.skipped ? "·" : "✗"}</span>
+                <div className="min-w-0 flex-1">
+                  <div className="truncate">{r.tireName}</div>
+                  {r.matchedProduct && (
+                    <div className="opacity-70">
+                      → {r.matchedProduct}
+                      {typeof r.score === "number" && ` (${(r.score * 100).toFixed(0)}%)`}
+                    </div>
+                  )}
+                  {r.error && <div className="opacity-70">{r.error}</div>}
+                </div>
+                {r.imageUrl && (
+                  <img
+                    src={r.imageUrl}
+                    alt=""
+                    className="h-10 w-10 object-contain rounded bg-white border"
+                  />
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </Card>
+  );
+}
+
+
