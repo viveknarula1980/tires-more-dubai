@@ -592,61 +592,63 @@ function TireImagesReportSection() {
                 </tr>
               </thead>
               <tbody>
-                {q.data?.rows.map((r) => {
+                {q.data?.rows.flatMap((r) => {
                   const pct = Math.round(r.coverage * 100);
                   const isOpen = expanded === r.slug;
-                  return (
-                    <Fragment key={r.slug}>
-                      <tr
-                        className="border-b last:border-0 cursor-pointer hover:bg-muted/40"
-                        onClick={() => setExpanded(isOpen ? null : r.slug)}
+                  const rows = [
+                    <tr
+                      key={r.slug}
+                      className="border-b last:border-0 cursor-pointer hover:bg-muted/40"
+                      onClick={() => setExpanded(isOpen ? null : r.slug)}
+                    >
+                      <td className="py-2 pr-3 font-medium">
+                        <span className="inline-block w-3 opacity-60">{isOpen ? "▾" : "▸"}</span>{" "}
+                        {r.name}
+                      </td>
+                      <td className="py-2 pr-3 text-right tabular-nums">{r.total}</td>
+                      <td className="py-2 pr-3 text-right tabular-nums">{r.withImage}</td>
+                      <td
+                        className={`py-2 pr-3 text-right tabular-nums ${r.missing > 0 ? "text-destructive" : ""}`}
                       >
-                        <td className="py-2 pr-3 font-medium">
-                          <span className="inline-block w-3 opacity-60">{isOpen ? "▾" : "▸"}</span>{" "}
-                          {r.name}
-                        </td>
-                        <td className="py-2 pr-3 text-right tabular-nums">{r.total}</td>
-                        <td className="py-2 pr-3 text-right tabular-nums">{r.withImage}</td>
-                        <td
-                          className={`py-2 pr-3 text-right tabular-nums ${r.missing > 0 ? "text-destructive" : ""}`}
-                        >
-                          {r.missing}
-                        </td>
-                        <td className="py-2 pr-3">
-                          <div className="flex items-center gap-2">
-                            <div className="h-1.5 w-24 rounded-full bg-muted overflow-hidden">
-                              <div
-                                className={`h-full ${pct === 100 ? "bg-emerald-500" : pct >= 50 ? "bg-amber-500" : "bg-destructive"}`}
-                                style={{ width: `${pct}%` }}
-                              />
-                            </div>
-                            <span className="text-xs tabular-nums text-muted-foreground">
-                              {pct}%
-                            </span>
+                        {r.missing}
+                      </td>
+                      <td className="py-2 pr-3">
+                        <div className="flex items-center gap-2">
+                          <div className="h-1.5 w-24 rounded-full bg-muted overflow-hidden">
+                            <div
+                              className={`h-full ${pct === 100 ? "bg-emerald-500" : pct >= 50 ? "bg-amber-500" : "bg-destructive"}`}
+                              style={{ width: `${pct}%` }}
+                            />
+                          </div>
+                          <span className="text-xs tabular-nums text-muted-foreground">
+                            {pct}%
+                          </span>
+                        </div>
+                      </td>
+                    </tr>,
+                  ];
+                  if (isOpen && r.missing > 0) {
+                    rows.push(
+                      <tr key={`${r.slug}-missing`} className="border-b last:border-0 bg-muted/20">
+                        <td colSpan={5} className="py-3 pl-8 pr-3">
+                          <div className="text-xs font-medium mb-2 text-muted-foreground">
+                            Missing images ({r.missing})
+                          </div>
+                          <div className="flex flex-wrap gap-1.5">
+                            {r.missingList.map((m) => (
+                              <span
+                                key={m.slug}
+                                className="inline-block rounded border px-2 py-0.5 text-xs bg-background"
+                              >
+                                {m.name}
+                              </span>
+                            ))}
                           </div>
                         </td>
                       </tr>
-                      {isOpen && r.missing > 0 && (
-                        <tr key={`${r.slug}-missing`} className="border-b last:border-0 bg-muted/20">
-                          <td colSpan={5} className="py-3 pl-8 pr-3">
-                            <div className="text-xs font-medium mb-2 text-muted-foreground">
-                              Missing images ({r.missing})
-                            </div>
-                            <div className="flex flex-wrap gap-1.5">
-                              {r.missingList.map((m) => (
-                                <span
-                                  key={m.slug}
-                                  className="inline-block rounded border px-2 py-0.5 text-xs bg-background"
-                                >
-                                  {m.name}
-                                </span>
-                              ))}
-                            </div>
-                          </td>
-                        </tr>
-                      )}
-                    </Fragment>
-                  );
+                    );
+                  }
+                  return rows;
                 })}
               </tbody>
             </table>
