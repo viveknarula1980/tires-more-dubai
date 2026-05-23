@@ -179,7 +179,7 @@ function RimCard({ r }: { r: RimItem }) {
           src={r.main_image ?? "/rim-default.svg"}
           alt={r.name}
           loading="lazy"
-          className="h-[81%] w-[81%] object-contain transition-transform group-hover:scale-105"
+          className="h-[90%] w-[90%] object-contain transition-transform group-hover:scale-105"
         />
       </Link>
       <div className="p-4 flex flex-col flex-1">
