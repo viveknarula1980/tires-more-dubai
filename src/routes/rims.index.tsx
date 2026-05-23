@@ -167,7 +167,7 @@ type RimItem = {
   color: string | null;
   construction: string | null;
   main_image: string | null;
-  brand: { name: string; slug: string } | null;
+  brand: { name: string; slug: string; logo_url: string | null } | null;
 };
 
 function RimCard({ r }: { r: RimItem }) {
@@ -179,12 +179,19 @@ function RimCard({ r }: { r: RimItem }) {
           src={r.main_image ?? "/rim-default.svg"}
           alt={r.name}
           loading="lazy"
-          className="h-full w-full object-contain transition-transform group-hover:scale-105"
+          className="h-[81%] w-[81%] object-contain transition-transform group-hover:scale-105"
         />
       </Link>
       <div className="p-4 flex flex-col flex-1">
         {r.brand?.name && (
-          <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">{r.brand.name}</p>
+          <div className="h-8 w-28 flex items-center">
+            <BrandLogo
+              name={r.brand.name}
+              logoUrl={r.brand.logo_url}
+              className="h-full w-full bg-transparent justify-start"
+              textClassName="text-sm"
+            />
+          </div>
         )}
         <h3 className="mt-1 font-bold text-base leading-tight">
           <Link to="/rims/$slug" params={{ slug: r.slug }} className="hover:text-brand">{r.name}</Link>
