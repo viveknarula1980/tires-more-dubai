@@ -183,24 +183,28 @@ function RimCard({ r }: { r: RimItem }) {
         />
       </Link>
       <div className="p-4 flex flex-col flex-1">
-        {r.brand?.name && (
-          <div className="h-8 w-28 flex items-center">
-            <BrandLogo
-              name={r.brand.name}
-              logoUrl={r.brand.logo_url}
-              className="h-full w-full bg-transparent justify-start"
-              textClassName="text-sm"
-            />
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-1">
+            <h3 className="font-bold text-base leading-tight">
+              <Link to="/rims/$slug" params={{ slug: r.slug }} className="hover:text-brand">{r.name}</Link>
+            </h3>
+            <div className="mt-2 flex flex-wrap gap-1.5 text-[11px] font-semibold text-muted-foreground">
+              <span className="bg-muted px-2 py-0.5 rounded">{r.diameter}"</span>
+              {r.width && <span className="bg-muted px-2 py-0.5 rounded">{r.width}J</span>}
+              {r.pcd && <span className="bg-muted px-2 py-0.5 rounded">{r.pcd}</span>}
+              {r.color && <span className="bg-muted px-2 py-0.5 rounded">{r.color}</span>}
+            </div>
           </div>
-        )}
-        <h3 className="mt-1 font-bold text-base leading-tight">
-          <Link to="/rims/$slug" params={{ slug: r.slug }} className="hover:text-brand">{r.name}</Link>
-        </h3>
-        <div className="mt-2 flex flex-wrap gap-1.5 text-[11px] font-semibold text-muted-foreground">
-          <span className="bg-muted px-2 py-0.5 rounded">{r.diameter}"</span>
-          {r.width && <span className="bg-muted px-2 py-0.5 rounded">{r.width}J</span>}
-          {r.pcd && <span className="bg-muted px-2 py-0.5 rounded">{r.pcd}</span>}
-          {r.color && <span className="bg-muted px-2 py-0.5 rounded">{r.color}</span>}
+          {r.brand?.name && (
+            <div className="h-8 w-28 flex-shrink-0 flex items-center">
+              <BrandLogo
+                name={r.brand.name}
+                logoUrl={r.brand.logo_url}
+                className="h-full w-full bg-transparent"
+                textClassName="text-sm"
+              />
+            </div>
+          )}
         </div>
         <div className="mt-4 flex items-center gap-2 pt-3 border-t border-border">
           <Link
