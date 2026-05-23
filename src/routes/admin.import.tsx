@@ -596,9 +596,8 @@ function TireImagesReportSection() {
                   const pct = Math.round(r.coverage * 100);
                   const isOpen = expanded === r.slug;
                   return (
-                    <>
+                    <Fragment key={r.slug}>
                       <tr
-                        key={r.slug}
                         className="border-b last:border-0 cursor-pointer hover:bg-muted/40"
                         onClick={() => setExpanded(isOpen ? null : r.slug)}
                       >
