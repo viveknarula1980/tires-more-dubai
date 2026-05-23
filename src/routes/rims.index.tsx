@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { SlidersHorizontal, X, MessageCircle } from "lucide-react";
 import { getRimBrands, searchRims } from "@/lib/rims.functions";
+import { BrandLogo } from "@/components/BrandLogo";
 
 type RimsSearch = {
   brand: string;
