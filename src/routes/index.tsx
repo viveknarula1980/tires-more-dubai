@@ -258,14 +258,14 @@ function Home() {
         </div>
       </section>
 
-      {/* Instagram */}
+      {/* Follow Us */}
       <section className="bg-navy text-navy-foreground py-14">
         <div className="container mx-auto px-4">
           <div className="max-w-2xl mx-auto text-center">
             <p className="text-xs uppercase tracking-widest text-brand font-bold">Follow us</p>
             <h2 className="mt-2 text-3xl font-bold">@tiresandmore.ae</h2>
             <p className="mt-3 text-navy-foreground/80">
-              See our latest builds, behind-the-scenes workshop shots, and daily deals on Instagram.
+              See our latest builds, behind-the-scenes workshop shots, and daily deals.
             </p>
             <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
               <a
