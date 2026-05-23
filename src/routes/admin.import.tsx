@@ -661,3 +661,212 @@ function TireImagesReportSection() {
     </Card>
   );
 }
+
+function BulkTireImageSection() {
+  const listFn = useServerFn(listTiresForBulkImage);
+  const uploadFn = useServerFn(bulkSetTireImage);
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ["bulk-tire-image-list"],
+    queryFn: () => listFn({}),
+  });
+  const [brandFilter, setBrandFilter] = useState<string>("");
+  const [search, setSearch] = useState("");
+  const [onlyMissing, setOnlyMissing] = useState(false);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [file, setFile] = useState<File | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [result, setResult] = useState<{ ok: boolean; msg: string } | null>(null);
+
+  const brands = data?.brands ?? [];
+  const tires = data?.tires ?? [];
+  const brandById = new Map(brands.map((b) => [b.id, b]));
+
+  const filtered = tires.filter((t) => {
+    if (brandFilter && t.brand_id !== brandFilter) return false;
+    if (onlyMissing && t.main_image) return false;
+    if (search) {
+      const q = search.toLowerCase();
+      const sizeStr = `${t.width}/${t.profile}r${t.rim}`;
+      if (
+        !t.name.toLowerCase().includes(q) &&
+        !sizeStr.includes(q) &&
+        !(brandById.get(t.brand_id)?.name.toLowerCase().includes(q) ?? false)
+      )
+        return false;
+    }
+    return true;
+  });
+
+  const toggle = (id: string) => {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const selectAllVisible = () => {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      filtered.forEach((t) => next.add(t.id));
+      return next;
+    });
+  };
+
+  const clearSelection = () => setSelected(new Set());
+
+  const submit = async () => {
+    if (!file || selected.size === 0) return;
+    setBusy(true);
+    setResult(null);
+    try {
+      const buf = new Uint8Array(await file.arrayBuffer());
+      let binary = "";
+      for (let i = 0; i < buf.byteLength; i++) binary += String.fromCharCode(buf[i]);
+      const base64 = btoa(binary);
+      const res = await uploadFn({
+        data: {
+          tireIds: Array.from(selected),
+          imageBase64: base64,
+          contentType: file.type || "image/jpeg",
+        },
+      });
+      setResult({ ok: true, msg: `Image applied to ${res.updatedCount} tire(s).` });
+      setSelected(new Set());
+      setFile(null);
+      refetch();
+    } catch (e) {
+      setResult({ ok: false, msg: e instanceof Error ? e.message : String(e) });
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <Card className="mt-6 p-4">
+      <h2 className="text-lg font-semibold mb-2">Bulk upload product image</h2>
+      <p className="text-sm text-muted-foreground mb-4">
+        Select multiple tires, upload one image, and apply it as the main image for all of them.
+      </p>
+
+      <div className="grid gap-3 md:grid-cols-3 mb-3">
+        <select
+          className="border rounded-md px-2 py-2 bg-background text-sm"
+          value={brandFilter}
+          onChange={(e) => setBrandFilter(e.target.value)}
+        >
+          <option value="">All brands</option>
+          {brands.map((b) => (
+            <option key={b.id} value={b.id}>
+              {b.name}
+            </option>
+          ))}
+        </select>
+        <Input
+          placeholder="Search by name or size (e.g. 225/45R17)"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        <label className="flex items-center gap-2 text-sm">
+          <input
+            type="checkbox"
+            checked={onlyMissing}
+            onChange={(e) => setOnlyMissing(e.target.checked)}
+          />
+          Only tires without image
+        </label>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-2 mb-3">
+        <Button type="button" variant="outline" size="sm" onClick={selectAllVisible}>
+          Select all visible ({filtered.length})
+        </Button>
+        <Button type="button" variant="outline" size="sm" onClick={clearSelection}>
+          Clear selection
+        </Button>
+        <span className="text-sm text-muted-foreground">
+          {selected.size} selected
+        </span>
+      </div>
+
+      <div className="border rounded-md max-h-80 overflow-auto mb-3">
+        {isLoading ? (
+          <div className="p-4 text-sm text-muted-foreground">Loading tires…</div>
+        ) : filtered.length === 0 ? (
+          <div className="p-4 text-sm text-muted-foreground">No tires match.</div>
+        ) : (
+          <table className="w-full text-sm">
+            <tbody>
+              {filtered.map((t) => {
+                const checked = selected.has(t.id);
+                return (
+                  <tr
+                    key={t.id}
+                    className="border-b last:border-0 hover:bg-muted/30 cursor-pointer"
+                    onClick={() => toggle(t.id)}
+                  >
+                    <td className="p-2 w-8">
+                      <input
+                        type="checkbox"
+                        checked={checked}
+                        onChange={() => toggle(t.id)}
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                    </td>
+                    <td className="p-2 w-12">
+                      {t.main_image ? (
+                        <img
+                          src={t.main_image}
+                          alt=""
+                          className="h-8 w-8 object-contain"
+                        />
+                      ) : (
+                        <span className="text-xs text-muted-foreground">—</span>
+                      )}
+                    </td>
+                    <td className="p-2">
+                      <div className="font-medium">{t.name}</div>
+                      <div className="text-xs text-muted-foreground">
+                        {brandById.get(t.brand_id)?.name} · {t.width}/{t.profile}R{t.rim}
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        )}
+      </div>
+
+      <div className="flex flex-wrap items-center gap-3">
+        <Input
+          type="file"
+          accept="image/*"
+          onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+          className="max-w-xs"
+        />
+        <Button
+          type="button"
+          onClick={submit}
+          disabled={busy || !file || selected.size === 0}
+        >
+          {busy ? "Uploading…" : `Apply image to ${selected.size} tire(s)`}
+        </Button>
+        {file && (
+          <span className="text-xs text-muted-foreground">
+            {file.name} · {(file.size / 1024).toFixed(0)} KB
+          </span>
+        )}
+      </div>
+
+      {result && (
+        <div
+          className={`mt-3 text-sm ${result.ok ? "text-green-600" : "text-destructive"}`}
+        >
+          {result.msg}
+        </div>
+      )}
+    </Card>
+  );
+}
