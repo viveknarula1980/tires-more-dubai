@@ -242,3 +242,56 @@ export const getTireImagesReport = createServerFn({ method: "GET" })
 
     return { rows };
   });
+
+export const listTiresForBulkImage = createServerFn({ method: "GET" })
+  .middleware([requireAdmin])
+  .handler(async () => {
+    const { data: brands, error: bErr } = await supabaseAdmin
+      .from("brands")
+      .select("id, name, slug")
+      .order("name");
+    if (bErr) throw new Error(bErr.message);
+    const { data: tires, error: tErr } = await supabaseAdmin
+      .from("tires")
+      .select("id, name, slug, brand_id, main_image, width, profile, rim")
+      .order("name");
+    if (tErr) throw new Error(tErr.message);
+    return { brands: brands ?? [], tires: tires ?? [] };
+  });
+
+export const bulkSetTireImage = createServerFn({ method: "POST" })
+  .middleware([requireAdmin])
+  .inputValidator(
+    (d: { tireIds: string[]; imageBase64: string; contentType: string }) =>
+      z
+        .object({
+          tireIds: z.array(z.string().uuid()).min(1).max(500),
+          imageBase64: z.string().min(1).max(20_000_000),
+          contentType: z.string().min(1).max(100),
+        })
+        .parse(d),
+  )
+  .handler(async ({ data }) => {
+    const ext = data.contentType.includes("png")
+      ? "png"
+      : data.contentType.includes("webp")
+        ? "webp"
+        : data.contentType.includes("svg")
+          ? "svg"
+          : "jpg";
+    const buf = Buffer.from(data.imageBase64, "base64");
+    const path = `bulk/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+    const { error: upErr } = await supabaseAdmin.storage
+      .from(BUCKET)
+      .upload(path, buf, { contentType: data.contentType, upsert: false });
+    if (upErr) throw new Error(`upload: ${upErr.message}`);
+    const { data: pub } = supabaseAdmin.storage.from(BUCKET).getPublicUrl(path);
+    const imageUrl = pub.publicUrl;
+    const { error: updErr } = await supabaseAdmin
+      .from("tires")
+      .update({ main_image: imageUrl })
+      .in("id", data.tireIds);
+    if (updErr) throw new Error(updErr.message);
+    return { ok: true, imageUrl, updatedCount: data.tireIds.length };
+  });
+
