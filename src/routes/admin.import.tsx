@@ -245,6 +245,9 @@ function AdminImportPage() {
 
       <TireImagesSection />
 
+      <BulkTireImageSection />
+
+
       <TireImagesReportSection />
 
       <RimsImportSection />
