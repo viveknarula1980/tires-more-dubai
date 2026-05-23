@@ -645,7 +645,7 @@ function TireImagesReportSection() {
                           </td>
                         </tr>
                       )}
-                    </>
+                    </Fragment>
                   );
                 })}
               </tbody>
