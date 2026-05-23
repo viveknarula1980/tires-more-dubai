@@ -30,16 +30,6 @@ function Home() {
   const brandsQ = useQuery({ queryKey: ["brands"], queryFn: () => fetchBrands() });
   const featuredQ = useQuery({ queryKey: ["featured"], queryFn: () => fetchFeatured() });
 
-  useEffect(() => {
-    if (typeof window !== "undefined" && (window as any).instgrm) {
-      (window as any).instgrm.Embeds.process();
-    } else if (typeof window !== "undefined") {
-      const script = document.createElement("script");
-      script.src = "https://www.instagram.com/embed.js";
-      script.async = true;
-      document.body.appendChild(script);
-    }
-  }, []);
 
   return (
     <>
