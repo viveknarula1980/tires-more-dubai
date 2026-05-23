@@ -210,3 +210,35 @@ export const syncTireImages = createServerFn({ method: "POST" })
 
     return { scrapedCount: products.length, results };
   });
+
+export const getTireImagesReport = createServerFn({ method: "GET" })
+  .middleware([requireAdmin])
+  .handler(async () => {
+    const { data: brands, error: bErr } = await supabaseAdmin
+      .from("brands")
+      .select("id, name, slug")
+      .order("name");
+    if (bErr) throw new Error(bErr.message);
+
+    const { data: tires, error: tErr } = await supabaseAdmin
+      .from("tires")
+      .select("id, name, slug, brand_id, main_image");
+    if (tErr) throw new Error(tErr.message);
+
+    const rows = (brands ?? []).map((b) => {
+      const items = (tires ?? []).filter((t) => t.brand_id === b.id);
+      const withImage = items.filter((t) => !!t.main_image);
+      const missing = items.filter((t) => !t.main_image);
+      return {
+        slug: b.slug,
+        name: b.name,
+        total: items.length,
+        withImage: withImage.length,
+        missing: missing.length,
+        coverage: items.length ? withImage.length / items.length : 0,
+        missingList: missing.map((t) => ({ slug: t.slug, name: t.name })),
+      };
+    });
+
+    return { rows };
+  });
