@@ -1,0 +1,16 @@
+# Tires & More UAE
+
+> Dubai tyre specialists. Premium tyres, rims and suspension upgrades with free fitting at our Al Quoz workshop.
+
+Tires & More is a Dubai-based tyre and wheel shop carrying 14+ premium brands including Michelin, Bridgestone, Continental, Pirelli, Goodyear, Dunlop, Hankook, Falken, Cooper and more. Services include wheel alignment, brake service, oil service, mobile tyre fitting and mobile battery service across the UAE.
+
+## Pages
+
+- [Home](/): Dual search by tyre size or vehicle, featured tyres, brands.
+- [Shop tyres](/shop): All tyres with filters by brand, size, vehicle and season.
+- [Brands](/brands): All tyre and wheel brands we carry.
+- [Rims](/rims): Premium rims and alloy wheels.
+- [Performance shocks](/shocks): Fox, Dobinsons, Radflo and Falcon suspension.
+- [Services](/services): Wheel alignment, brakes, oil, mobile tyre and battery.
+- [About](/about): Our Dubai workshop and story.
+- [Contact](/contact): Phone, WhatsApp, address and message form.
