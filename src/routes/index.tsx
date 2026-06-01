@@ -79,9 +79,6 @@ function Home() {
         <div className="absolute inset-0 bg-gradient-to-b from-navy/50 via-navy/70 to-navy" />
         <div className="relative container mx-auto px-4 py-16 md:py-24">
           <div className="max-w-3xl mx-auto text-center">
-            <span className="inline-block bg-brand/15 text-brand text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-full">
-              Dubai's Tyre Specialists Since 2008
-            </span>
             <h1 className="mt-5 text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
               The right tyres. <span className="text-brand">Right now.</span>
             </h1>
