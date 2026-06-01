@@ -501,6 +501,67 @@ function ServicesPage() {
         </div>
       </section>
 
+      {/* 4x4 & Overlanding deep dive */}
+      <section className="bg-muted/40 py-14">
+        <div className="container mx-auto px-4 max-w-5xl">
+          <p className="text-xs uppercase tracking-widest text-brand font-bold">Adventure Ready</p>
+          <h2 className="mt-2 text-3xl md:text-4xl font-bold">4x4 & Overlanding Solutions</h2>
+          <p className="mt-4 text-muted-foreground leading-relaxed">
+            Transform your vehicle into the ultimate adventure machine with our complete 4x4 and overlanding
+            solutions. Whether you're preparing for desert expeditions, mountain trails, camping trips, or
+            long-distance travel, our team provides professional installations and premium products to ensure
+            your vehicle is ready for every journey.
+          </p>
+          <p className="mt-3 text-muted-foreground leading-relaxed">
+            We specialize in customizing Toyota Land Cruiser, Nissan Patrol, Jeep Wrangler, Ford Ranger,
+            Toyota Hilux, and other 4x4 vehicles with industry-leading brands and equipment.
+          </p>
+
+          <div className="mt-6 rounded-xl border border-border bg-background p-6">
+            <h3 className="font-bold flex items-center gap-2">
+              <Compass className="h-5 w-5 text-brand" /> What's included
+            </h3>
+            <ul className="mt-3 grid sm:grid-cols-2 gap-2 text-sm text-muted-foreground">
+              {[
+                "Suspension lift kits and performance shock absorbers",
+                "Off-road wheel and tire packages",
+                "Snorkel installation",
+                "On-board air compressor systems",
+                "Recovery equipment and accessories",
+                "Roof racks and cargo solutions",
+                "Camping and overlanding accessories",
+                "Underbody protection and skid plates",
+                "Vehicle setup for off-road and expedition travel",
+                "Professional installation and testing",
+              ].map((p) => (
+                <li key={p} className="flex items-start gap-2">
+                  <Check className="h-4 w-4 text-brand mt-0.5 shrink-0" /> {p}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="mt-6 grid md:grid-cols-2 gap-5">
+            <div className="rounded-xl bg-navy text-navy-foreground p-6">
+              <h3 className="font-bold">Why upgrade your 4x4?</h3>
+              <p className="mt-2 text-sm text-navy-foreground/80 leading-relaxed">
+                A professionally equipped 4x4 provides improved ground clearance, enhanced suspension
+                performance, greater carrying capacity, better traction, and increased reliability during
+                off-road adventures.
+              </p>
+            </div>
+            <div className="rounded-xl border border-border bg-background p-6">
+              <h3 className="font-bold">Our expertise</h3>
+              <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
+                Our experienced technicians work with premium off-road brands and proven products to deliver
+                reliable upgrades that improve both performance and durability. Every installation is
+                performed to the highest standards — keeping your vehicle safe, capable, and adventure-ready.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA */}
       <section className="container mx-auto px-4 pb-14">
         <div className="rounded-2xl bg-gradient-to-br from-brand to-brand/70 text-brand-foreground p-8 md:p-12 text-center">
