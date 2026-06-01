@@ -63,7 +63,7 @@ function ContactPage() {
       <div className="w-full h-[420px] md:h-[500px]">
         <iframe
           title="Tires and More Location"
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3609.823!2d55.248!3d25.18!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e5f682829c85c07%3A0xa5aaaa5aaaa5aaaa!2sTires%20and%20More!5e0!3m2!1sen!2sae!4v1"
+          src="https://maps.google.com/maps?q=Tires%20and%20More%2C%2019A%20Street%2C%20Al%20Quoz%20Industrial%20Area%204%2C%20Dubai&t=m&z=17&output=embed&iwloc=near"
           width="100%"
           height="100%"
           style={{ border: 0, display: "block" }}
