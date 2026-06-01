@@ -72,19 +72,39 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "Tires & More UAE — Premium Tyres in Dubai" },
+      {
+        name: "description",
+        content:
+          "Dubai's tyre specialists. Michelin, Bridgestone, Continental, Pirelli, Goodyear and more — free fitting, balancing & alignment in Al Quoz.",
+      },
+      { name: "author", content: "Tires & More UAE" },
+      { property: "og:site_name", content: "Tires & More UAE" },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
       {
         rel: "stylesheet",
         href: appCss,
+      },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "Tires & More UAE",
+          url: "/",
+          telephone: "+971-4-232-6666",
+          address: {
+            "@type": "PostalAddress",
+            streetAddress: "19A Street, Al Quoz Industrial Area 4",
+            addressLocality: "Dubai",
+            addressCountry: "AE",
+          },
+        }),
       },
     ],
   }),
