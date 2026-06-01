@@ -9,6 +9,7 @@ import { BrandLogo } from "@/components/BrandLogo";
 import { FeaturedSlider } from "@/components/FeaturedSlider";
 import { getBrands, getFeaturedTires } from "@/lib/catalog.functions";
 import hero from "@/assets/hero-dubai.jpg";
+import heroVideo from "@/assets/hero-video.mp4.asset.json";
 import wheelsImg from "@/assets/home-wheels.jpg";
 import shocksImg from "@/assets/home-shocks.jpg";
 
