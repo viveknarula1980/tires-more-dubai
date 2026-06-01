@@ -85,6 +85,7 @@ const BRANDS = [
 function ShocksPage() {
   return (
     <div>
+      <h1 className="sr-only">Performance Shocks — Fox, Dobinsons, Radflo and Falcon in Dubai</h1>
       <HeroSlider />
       <IntroStrip />
       <BrandSections />
