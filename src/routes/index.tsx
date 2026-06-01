@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 
-import { Wrench, ShieldCheck, Truck, Clock, Star, ChevronRight, MessageCircle, Phone, Users } from "lucide-react";
+import { Wrench, ShieldCheck, Truck, Clock, Star, ChevronRight, MessageCircle, Phone, Users, Gauge, Disc3, Droplets, BatteryCharging, Check } from "lucide-react";
 import { SearchWidget } from "@/components/SearchWidget";
 import { TireCard } from "@/components/TireCard";
 import { BrandLogo } from "@/components/BrandLogo";
