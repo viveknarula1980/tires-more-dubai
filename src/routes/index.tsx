@@ -15,10 +15,41 @@ import shocksImg from "@/assets/home-shocks.jpg";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Tires & More UAE — Premium Tyres in Dubai with Free Fitting" },
+      { title: "Tires & More UAE — Premium Tyres in Dubai" },
       { name: "description", content: "Shop Michelin, Bridgestone, Continental, Pirelli, Goodyear and more at competitive Dubai prices. Free fitting, balancing, alignment. Open 7 days, Al Quoz 4." },
       { property: "og:title", content: "Tires & More UAE — Premium Tyres in Dubai" },
       { property: "og:description", content: "Premium tyres at competitive Dubai prices. Free fitting on most orders." },
+      { property: "og:url", content: "/" },
+    ],
+    links: [{ rel: "canonical", href: "/" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "LocalBusiness",
+          name: "Tires & More UAE",
+          image: "/brands/hires/michelin.svg",
+          telephone: "+971-4-232-6666",
+          email: "support@tiresandmore.ae",
+          url: "/",
+          address: {
+            "@type": "PostalAddress",
+            streetAddress: "19A Street, Al Quoz Industrial Area 4",
+            addressLocality: "Dubai",
+            addressCountry: "AE",
+          },
+          openingHoursSpecification: [
+            {
+              "@type": "OpeningHoursSpecification",
+              dayOfWeek: ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+              opens: "08:00",
+              closes: "21:00",
+            },
+          ],
+          priceRange: "AED",
+        }),
+      },
     ],
   }),
   component: Home,
