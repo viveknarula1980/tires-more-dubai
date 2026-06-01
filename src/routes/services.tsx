@@ -15,6 +15,14 @@ import {
   Clock,
   Check,
   AlertTriangle,
+  Mountain,
+  Compass,
+  CircleDot,
+  Zap,
+  Settings,
+  Wind,
+  Gauge as GaugeIcon,
+  Car,
 } from "lucide-react";
 
 export const Route = createFileRoute("/services")({
