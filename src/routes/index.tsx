@@ -208,7 +208,7 @@ function Home() {
           <p className="text-xs uppercase tracking-widest text-brand font-bold">Workshop services</p>
           <h2 className="mt-1 text-3xl font-bold">More than just tyres</h2>
           <p className="mt-3 text-muted-foreground">
-            Our certified technicians handle everything that keeps your wheels turning — from precision wheel alignment to instant mobile battery replacement.
+            Our certified technicians handle everything that keeps your wheels turning — from precision wheel alignment and brake service to suspension upgrades and off-road modifications.
           </p>
         </div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 max-w-6xl mx-auto">
