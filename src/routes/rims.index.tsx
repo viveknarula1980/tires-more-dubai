@@ -29,7 +29,9 @@ export const Route = createFileRoute("/rims/")({
       { name: "description", content: "Premium rims from KMC, RRW, Dakar Forged and Baja Rim. Off-road, luxury and performance wheels — request a quote or chat on WhatsApp." },
       { property: "og:title", content: "Shop Rims & Alloy Wheels — Tires & More UAE" },
       { property: "og:description", content: "Premium off-road, forged and performance rims. Quote on request." },
+      { property: "og:url", content: "/rims" },
     ],
+    links: [{ rel: "canonical", href: "/rims" }],
   }),
   component: RimsPage,
 });

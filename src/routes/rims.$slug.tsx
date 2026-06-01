@@ -12,7 +12,11 @@ export const Route = createFileRoute("/rims/$slug")({
     meta: [
       { title: `${params.slug.replace(/-/g, " ")} — Rims | Tires & More UAE` },
       { name: "description", content: "Premium rim with full specs. Request a price quote or chat with our sales team on WhatsApp." },
+      { property: "og:title", content: `${params.slug.replace(/-/g, " ")} — Rims | Tires & More UAE` },
+      { property: "og:description", content: "Premium rim with full specs. Request a price quote on WhatsApp." },
+      { property: "og:url", content: `/rims/${params.slug}` },
     ],
+    links: [{ rel: "canonical", href: `/rims/${params.slug}` }],
   }),
   component: RimDetail,
 });

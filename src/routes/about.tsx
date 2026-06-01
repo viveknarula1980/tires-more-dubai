@@ -8,7 +8,9 @@ export const Route = createFileRoute("/about")({
       { name: "description", content: "Tires & More is Dubai's trusted tyre specialist — premium brands, certified technicians, free fitting. Serving the UAE for over a decade from Al Quoz 4." },
       { property: "og:title", content: "About Tires & More UAE" },
       { property: "og:description", content: "Dubai's trusted tyre specialist. Premium brands, free fitting, expert advice." },
+      { property: "og:url", content: "/about" },
     ],
+    links: [{ rel: "canonical", href: "/about" }],
   }),
   component: AboutPage,
 });

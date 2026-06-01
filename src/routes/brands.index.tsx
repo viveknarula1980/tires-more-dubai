@@ -24,7 +24,9 @@ export const Route = createFileRoute("/brands/")({
       { name: "description", content: "Browse all tyre and wheel brands we carry — Michelin, Bridgestone, Pirelli, KMC, Baja Rim, Dakar Forged and more." },
       { property: "og:title", content: "Tyre & Wheel Brands — Tires & More UAE" },
       { property: "og:description", content: "All premium tyre and wheel brands available in Dubai." },
+      { property: "og:url", content: "/brands" },
     ],
+    links: [{ rel: "canonical", href: "/brands" }],
   }),
   component: BrandsPage,
 });

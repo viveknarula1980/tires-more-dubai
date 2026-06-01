@@ -23,11 +23,12 @@ export function BrandLogo({ name, logoUrl, className, textClassName }: Props) {
       {showImage ? (
         <img
           src={logoUrl!}
-          alt={name}
+          alt={`${name} logo`}
           loading="lazy"
           onError={() => setFailed(true)}
           className="max-h-full max-w-full object-contain"
         />
+
       ) : (
         <span
           className={cn(

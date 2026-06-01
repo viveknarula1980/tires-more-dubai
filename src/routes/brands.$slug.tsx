@@ -40,7 +40,7 @@ export const Route = createFileRoute("/brands/$slug")({
     if (!brand) throw notFound();
     return { brand };
   },
-  head: ({ loaderData }) => {
+  head: ({ loaderData, params }) => {
     const b = loaderData?.brand;
     const title = b ? `${b.name} Tyres in Dubai — Tires & More UAE` : "Brand — Tires & More UAE";
     const desc = b?.description ?? `Shop ${b?.name ?? ""} tyres at the best Dubai prices.`;
@@ -50,8 +50,10 @@ export const Route = createFileRoute("/brands/$slug")({
         { name: "description", content: desc },
         { property: "og:title", content: title },
         { property: "og:description", content: desc },
+        { property: "og:url", content: `/brands/${params.slug}` },
         ...(b?.logo_url ? [{ property: "og:image", content: b.logo_url }] : []),
       ],
+      links: [{ rel: "canonical", href: `/brands/${params.slug}` }],
     };
   },
   errorComponent: ({ error, reset }) => {

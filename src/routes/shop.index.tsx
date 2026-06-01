@@ -41,7 +41,9 @@ export const Route = createFileRoute("/shop/")({
       { name: "description", content: "Browse premium tyres from Michelin, Bridgestone, Continental, Pirelli and more. Filter by brand, size and vehicle type. Best prices in Dubai." },
       { property: "og:title", content: "Shop Tyres in Dubai — Tires & More UAE" },
       { property: "og:description", content: "Premium tyres at competitive Dubai prices. Free fitting on most orders." },
+      { property: "og:url", content: "/shop" },
     ],
+    links: [{ rel: "canonical", href: "/shop" }],
   }),
   component: ShopPage,
 });

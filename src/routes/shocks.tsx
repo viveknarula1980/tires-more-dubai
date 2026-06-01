@@ -28,7 +28,9 @@ export const Route = createFileRoute("/shocks")({
         content: "Fox, Dobinsons, Radflo and Falcon shocks — coming soon to our Dubai showroom.",
       },
       { property: "og:image", content: foxBanner },
+      { property: "og:url", content: "/shocks" },
     ],
+    links: [{ rel: "canonical", href: "/shocks" }],
   }),
   component: ShocksPage,
 });
@@ -83,6 +85,7 @@ const BRANDS = [
 function ShocksPage() {
   return (
     <div>
+      <h1 className="sr-only">Performance Shocks — Fox, Dobinsons, Radflo and Falcon in Dubai</h1>
       <HeroSlider />
       <IntroStrip />
       <BrandSections />
@@ -129,16 +132,16 @@ function HeroSlider() {
                     <div className="bg-white/95 rounded-xl px-5 py-3 inline-flex mb-5 shadow-2xl">
                       <img src={b.logo} alt={b.name} className="h-10 md:h-14 w-auto object-contain" />
                     </div>
-                    <h1 className="text-4xl md:text-6xl font-extrabold text-white tracking-tight leading-[0.95]">
+                    <p className="text-4xl md:text-6xl font-extrabold text-white tracking-tight leading-[0.95]">
                       {b.name} <span className="text-white/70">Shocks</span>
-                    </h1>
+                    </p>
                     <p className="mt-3 text-base md:text-lg text-white/85 max-w-xl">{b.tagline}</p>
                     <div className="mt-6 flex flex-wrap gap-3">
                       <a
                         href={`#${b.slug}`}
                         className="inline-flex items-center justify-center rounded-md bg-brand px-5 py-3 text-sm font-bold text-brand-foreground hover:brightness-110 transition"
                       >
-                        Learn more
+                        View {b.name} details
                       </a>
                       <a
                         href="https://wa.me/97142326666?text=Hi%2C%20I%27d%20like%20info%20on%20performance%20shocks"
@@ -181,21 +184,21 @@ function IntroStrip() {
         <div className="flex items-start gap-4">
           <div className="rounded-lg bg-brand/15 text-brand p-3"><Wrench className="h-6 w-6" /></div>
           <div>
-            <h3 className="font-bold text-lg">Expert installation</h3>
+            <h2 className="font-bold text-lg">Expert installation</h2>
             <p className="text-sm opacity-80 mt-1">Suspension specialists with 15+ years of Dubai off-road experience.</p>
           </div>
         </div>
         <div className="flex items-start gap-4">
           <div className="rounded-lg bg-brand/15 text-brand p-3"><ShieldCheck className="h-6 w-6" /></div>
           <div>
-            <h3 className="font-bold text-lg">Genuine products</h3>
+            <h2 className="font-bold text-lg">Genuine products</h2>
             <p className="text-sm opacity-80 mt-1">Sourced direct from manufacturers and authorized distributors — full warranty.</p>
           </div>
         </div>
         <div className="flex items-start gap-4">
           <div className="rounded-lg bg-brand/15 text-brand p-3"><Sparkles className="h-6 w-6" /></div>
           <div>
-            <h3 className="font-bold text-lg">More brands coming</h3>
+            <h2 className="font-bold text-lg">More brands coming</h2>
             <p className="text-sm opacity-80 mt-1">Adding Bilstein, King, ICON and OME — let us know what you ride.</p>
           </div>
         </div>
