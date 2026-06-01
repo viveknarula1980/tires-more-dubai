@@ -131,16 +131,16 @@ function HeroSlider() {
                     <div className="bg-white/95 rounded-xl px-5 py-3 inline-flex mb-5 shadow-2xl">
                       <img src={b.logo} alt={b.name} className="h-10 md:h-14 w-auto object-contain" />
                     </div>
-                    <h1 className="text-4xl md:text-6xl font-extrabold text-white tracking-tight leading-[0.95]">
+                    <p className="text-4xl md:text-6xl font-extrabold text-white tracking-tight leading-[0.95]">
                       {b.name} <span className="text-white/70">Shocks</span>
-                    </h1>
+                    </p>
                     <p className="mt-3 text-base md:text-lg text-white/85 max-w-xl">{b.tagline}</p>
                     <div className="mt-6 flex flex-wrap gap-3">
                       <a
                         href={`#${b.slug}`}
                         className="inline-flex items-center justify-center rounded-md bg-brand px-5 py-3 text-sm font-bold text-brand-foreground hover:brightness-110 transition"
                       >
-                        Learn more
+                        View {b.name} details
                       </a>
                       <a
                         href="https://wa.me/97142326666?text=Hi%2C%20I%27d%20like%20info%20on%20performance%20shocks"
