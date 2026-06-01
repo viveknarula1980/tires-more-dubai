@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ShocksRouteImport } from './routes/shocks'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
@@ -26,6 +27,11 @@ import { Route as RimsSlugRouteImport } from './routes/rims.$slug'
 import { Route as BrandsSlugRouteImport } from './routes/brands.$slug'
 import { Route as AdminImportRouteImport } from './routes/admin.import'
 
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ShocksRoute = ShocksRouteImport.update({
   id: '/shocks',
   path: '/shocks',
@@ -117,6 +123,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/services': typeof ServicesRoute
   '/shocks': typeof ShocksRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/import': typeof AdminImportRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/rims/$slug': typeof RimsSlugRoute
@@ -135,6 +142,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/services': typeof ServicesRoute
   '/shocks': typeof ShocksRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/import': typeof AdminImportRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/rims/$slug': typeof RimsSlugRoute
@@ -154,6 +162,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/services': typeof ServicesRoute
   '/shocks': typeof ShocksRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/import': typeof AdminImportRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/rims/$slug': typeof RimsSlugRoute
@@ -174,6 +183,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/services'
     | '/shocks'
+    | '/sitemap.xml'
     | '/admin/import'
     | '/brands/$slug'
     | '/rims/$slug'
@@ -192,6 +202,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/services'
     | '/shocks'
+    | '/sitemap.xml'
     | '/admin/import'
     | '/brands/$slug'
     | '/rims/$slug'
@@ -210,6 +221,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/services'
     | '/shocks'
+    | '/sitemap.xml'
     | '/admin/import'
     | '/brands/$slug'
     | '/rims/$slug'
@@ -229,6 +241,7 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   ServicesRoute: typeof ServicesRoute
   ShocksRoute: typeof ShocksRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   AdminImportRoute: typeof AdminImportRoute
   BrandsSlugRoute: typeof BrandsSlugRoute
   RimsSlugRoute: typeof RimsSlugRoute
@@ -240,6 +253,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/shocks': {
       id: '/shocks'
       path: '/shocks'
@@ -365,6 +385,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   ServicesRoute: ServicesRoute,
   ShocksRoute: ShocksRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   AdminImportRoute: AdminImportRoute,
   BrandsSlugRoute: BrandsSlugRoute,
   RimsSlugRoute: RimsSlugRoute,
