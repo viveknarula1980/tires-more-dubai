@@ -15,12 +15,38 @@ import { BrandLogo } from "@/components/BrandLogo";
 import { StickyBottomSearch } from "@/components/StickyBottomSearch";
 
 export const Route = createFileRoute("/shop/$slug")({
-  head: ({ params }) => ({
-    meta: [
-      { title: `${params.slug.replace(/-/g, " ")} — Tires & More UAE` },
-      { name: "description", content: "Premium tyre with free fitting in Dubai. Genuine product, latest production year, full warranty." },
-    ],
-  }),
+  head: ({ params }) => {
+    const name = params.slug.replace(/-/g, " ");
+    return {
+      meta: [
+        { title: `${name} — Tires & More UAE` },
+        { name: "description", content: "Premium tyre with free fitting in Dubai. Genuine product, latest production year, full warranty." },
+        { property: "og:title", content: `${name} — Tires & More UAE` },
+        { property: "og:description", content: "Premium tyre with free fitting in Dubai." },
+        { property: "og:type", content: "product" },
+        { property: "og:url", content: `/shop/${params.slug}` },
+      ],
+      links: [{ rel: "canonical", href: `/shop/${params.slug}` }],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Product",
+            name,
+            url: `/shop/${params.slug}`,
+            brand: { "@type": "Brand", name: "Tires & More UAE" },
+            offers: {
+              "@type": "Offer",
+              priceCurrency: "AED",
+              availability: "https://schema.org/InStock",
+              url: `/shop/${params.slug}`,
+            },
+          }),
+        },
+      ],
+    };
+  },
   component: TireDetail,
 });
 
