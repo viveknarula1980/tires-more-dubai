@@ -214,6 +214,39 @@ function Home() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 max-w-6xl mx-auto">
           {[
             {
+              icon: Mountain,
+              title: "Suspension Upgrades",
+              desc: "Premium shocks, lift kits and coil springs from leading global brands for improved off-road capability and on-road comfort.",
+              points: [
+                "Suspension inspection & consultation",
+                "Performance shocks & struts installation",
+                "Lift kit & coil spring upgrades",
+                "Post-installation alignment & testing",
+              ],
+            },
+            {
+              icon: Compass,
+              title: "Off-Road & 4×4 Modifications",
+              desc: "Build the ultimate adventure vehicle with desert-ready upgrades — snorkels, recovery gear, lift kits and more.",
+              points: [
+                "Off-road wheel & tire packages",
+                "Snorkel & air compressor installation",
+                "Recovery & protection equipment",
+                "Lift kits & suspension modifications",
+              ],
+            },
+            {
+              icon: Zap,
+              title: "Performance Accessories",
+              desc: "High-quality accessories to improve power, functionality and driving enjoyment.",
+              points: [
+                "Performance air intake systems",
+                "On-board air compressor installation",
+                "Off-road equipment integration",
+                "Professional installation & testing",
+              ],
+            },
+            {
               icon: Gauge,
               title: "Wheel Alignment",
               desc: "State-of-the-art equipment and skilled technicians for optimal handling and tyre longevity.",
@@ -241,26 +274,6 @@ function Home() {
                 "Premium oil & filter (meets warranty standards)",
                 "Certified automotive technicians",
                 "Free inspection report card",
-              ],
-            },
-            {
-              icon: Truck,
-              title: "Mobile Tyre Services",
-              desc: "Tyre installation, repair and replacement brought to your doorstep anywhere in the UAE.",
-              points: [
-                "Mount & balance on-site",
-                "Puncture & damage repair",
-                "Tyre pressure check",
-              ],
-            },
-            {
-              icon: BatteryCharging,
-              title: "Mobile Battery Services",
-              desc: "Battery diagnostic, delivery and professional installation so you never get stranded.",
-              points: [
-                "Battery diagnostic test",
-                "New battery delivered to you",
-                "Charging system inspection",
               ],
             },
           ].map((s) => (
