@@ -15,6 +15,14 @@ import {
   Clock,
   Check,
   AlertTriangle,
+  Mountain,
+  Compass,
+  CircleDot,
+  Zap,
+  Settings,
+  Wind,
+  
+  Car,
 } from "lucide-react";
 
 export const Route = createFileRoute("/services")({
@@ -96,6 +104,179 @@ const services = [
       "New, reliable battery delivered directly to your location when replacement is needed",
       "Professional installation by our experts",
       "Testing and charging system inspection",
+    ],
+  },
+  {
+    icon: Mountain,
+    title: "Suspension Upgrades",
+    intro:
+      "Take your vehicle's performance and comfort to the next level with our professional suspension upgrade solutions. Whether you're looking for improved off-road capability, increased ground clearance, or better on-road handling, we provide premium suspension systems from leading global brands.",
+    points: [
+      "Suspension inspection and consultation",
+      "Installation of performance shocks and struts",
+      "Lift kit installation",
+      "Coil spring upgrades",
+      "Suspension tuning and adjustment",
+      "Post-installation alignment and testing",
+    ],
+  },
+  {
+    icon: Compass,
+    title: "Off-Road & 4x4 Modifications",
+    intro:
+      "Build the ultimate adventure vehicle with our complete range of off-road upgrades. From desert driving to mountain trails, we customize your vehicle to handle the toughest conditions while maintaining reliability and safety.",
+    points: [
+      "Off-road wheel and tire packages",
+      "Snorkel installation",
+      "Air compressor installation",
+      "Recovery and protection equipment",
+      "Lift kits and suspension modifications",
+      "Vehicle setup for overlanding and off-road use",
+    ],
+  },
+  {
+    icon: CircleDot,
+    title: "Alloy Wheels & Tire Packages",
+    intro:
+      "Enhance your vehicle's appearance and performance with premium alloy wheels and tire combinations. Our experts help you choose the ideal setup based on your driving style and vehicle requirements.",
+    points: [
+      "Wheel selection and fitment consultation",
+      "Premium alloy wheel installation",
+      "Tire mounting and balancing",
+      "TPMS service and programming",
+      "Performance and off-road tire options",
+      "Wheel alignment after installation",
+    ],
+  },
+  {
+    icon: Zap,
+    title: "Performance Accessories",
+    intro:
+      "Upgrade your vehicle with high-quality accessories designed to improve performance, functionality, and driving enjoyment.",
+    points: [
+      "Performance air intake systems",
+      "On-board air compressor installation",
+      "Vehicle accessories installation",
+      "Off-road equipment integration",
+      "Performance enhancement consultation",
+      "Professional installation and testing",
+    ],
+  },
+  {
+    icon: Settings,
+    title: "Custom Vehicle Builds",
+    intro:
+      "From simple upgrades to complete transformations, we specialize in building customized vehicles tailored to your vision. Our team works closely with you to create a unique vehicle that stands out both on and off the road.",
+    points: [
+      "Vehicle customization planning",
+      "Suspension and wheel upgrades",
+      "Off-road equipment installation",
+      "Exterior modifications",
+      "Performance accessories",
+      "Final inspection and quality control",
+    ],
+  },
+  {
+    icon: Mountain,
+    title: "Suspension Lift Kits",
+    intro:
+      "Improve your vehicle's ground clearance, off-road capability, and overall appearance with professional suspension lift kit installations. We offer complete lift solutions designed to enhance performance while maintaining comfort and reliability.",
+    points: [
+      "Suspension system inspection",
+      "Lift kit consultation and selection",
+      "Shock absorber upgrades",
+      "Coil spring installation",
+      "Suspension component adjustments",
+      "Wheel alignment and testing",
+      "Post-installation inspection",
+    ],
+  },
+  {
+    icon: CircleDot,
+    title: "Off-Road Wheels & Tires",
+    intro:
+      "Equip your vehicle with the perfect wheel and tire combination for both on-road comfort and off-road performance. Our specialists help you choose the ideal setup based on your driving needs and terrain requirements.",
+    points: [
+      "Wheel and tire fitment consultation",
+      "Alloy wheel installation",
+      "Off-road tire installation",
+      "Tire balancing",
+      "TPMS service",
+      "Wheel alignment",
+      "Performance and safety inspection",
+    ],
+  },
+  {
+    icon: Wind,
+    title: "Snorkel Installation",
+    intro:
+      "Protect your engine and improve air intake performance with a professionally installed snorkel system. Ideal for off-road driving, dusty environments, and water crossings.",
+    points: [
+      "Snorkel system installation",
+      "Air intake inspection",
+      "Sealing and waterproofing checks",
+      "Mounting hardware installation",
+      "System testing",
+      "Final quality inspection",
+    ],
+  },
+  {
+    icon: Gauge,
+    title: "Air Compressor Installation",
+    intro:
+      "Stay prepared for every adventure with a reliable onboard air compressor system. Perfect for inflating tires, powering air tools, and supporting off-road equipment.",
+    points: [
+      "Compressor system installation",
+      "Electrical wiring and connections",
+      "Air hose setup",
+      "Pressure testing",
+      "Operational testing",
+      "User guidance and support",
+    ],
+  },
+  {
+    icon: Car,
+    title: "Jeep Wrangler Upgrades",
+    intro:
+      "Customize your Jeep Wrangler with premium performance and off-road accessories. From suspension upgrades to wheels, tires, and recovery equipment, we help build a Jeep ready for any challenge.",
+    points: [
+      "Suspension upgrades",
+      "Lift kit installation",
+      "Off-road wheel and tire packages",
+      "Air intake systems",
+      "Recovery accessories",
+      "Performance upgrades",
+      "Complete vehicle inspection",
+    ],
+  },
+  {
+    icon: Car,
+    title: "Toyota Land Cruiser Upgrades",
+    intro:
+      "Enhance the capability, durability, and appearance of your Toyota Land Cruiser with professional upgrades designed for adventure and everyday driving.",
+    points: [
+      "Suspension and lift kits",
+      "Premium wheels and tires",
+      "Snorkel installation",
+      "Air compressor systems",
+      "Off-road accessories",
+      "Performance enhancements",
+      "Vehicle setup and testing",
+    ],
+  },
+  {
+    icon: Car,
+    title: "Nissan Patrol Upgrades",
+    intro:
+      "Unlock the full potential of your Nissan Patrol with premium off-road and performance modifications. Our expert team delivers reliable upgrades tailored to your driving style and adventure goals.",
+    points: [
+      "Suspension upgrades",
+      "Lift kit installation",
+      "Wheel and tire packages",
+      "Snorkel systems",
+      "Recovery equipment",
+      "Performance accessories",
+      "Professional installation and testing",
     ],
   },
 ];
@@ -317,6 +498,67 @@ function ServicesPage() {
               <p className="mt-1 text-sm text-muted-foreground leading-relaxed">{b.d}</p>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* 4x4 & Overlanding deep dive */}
+      <section className="bg-muted/40 py-14">
+        <div className="container mx-auto px-4 max-w-5xl">
+          <p className="text-xs uppercase tracking-widest text-brand font-bold">Adventure Ready</p>
+          <h2 className="mt-2 text-3xl md:text-4xl font-bold">4x4 & Overlanding Solutions</h2>
+          <p className="mt-4 text-muted-foreground leading-relaxed">
+            Transform your vehicle into the ultimate adventure machine with our complete 4x4 and overlanding
+            solutions. Whether you're preparing for desert expeditions, mountain trails, camping trips, or
+            long-distance travel, our team provides professional installations and premium products to ensure
+            your vehicle is ready for every journey.
+          </p>
+          <p className="mt-3 text-muted-foreground leading-relaxed">
+            We specialize in customizing Toyota Land Cruiser, Nissan Patrol, Jeep Wrangler, Ford Ranger,
+            Toyota Hilux, and other 4x4 vehicles with industry-leading brands and equipment.
+          </p>
+
+          <div className="mt-6 rounded-xl border border-border bg-background p-6">
+            <h3 className="font-bold flex items-center gap-2">
+              <Compass className="h-5 w-5 text-brand" /> What's included
+            </h3>
+            <ul className="mt-3 grid sm:grid-cols-2 gap-2 text-sm text-muted-foreground">
+              {[
+                "Suspension lift kits and performance shock absorbers",
+                "Off-road wheel and tire packages",
+                "Snorkel installation",
+                "On-board air compressor systems",
+                "Recovery equipment and accessories",
+                "Roof racks and cargo solutions",
+                "Camping and overlanding accessories",
+                "Underbody protection and skid plates",
+                "Vehicle setup for off-road and expedition travel",
+                "Professional installation and testing",
+              ].map((p) => (
+                <li key={p} className="flex items-start gap-2">
+                  <Check className="h-4 w-4 text-brand mt-0.5 shrink-0" /> {p}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="mt-6 grid md:grid-cols-2 gap-5">
+            <div className="rounded-xl bg-navy text-navy-foreground p-6">
+              <h3 className="font-bold">Why upgrade your 4x4?</h3>
+              <p className="mt-2 text-sm text-navy-foreground/80 leading-relaxed">
+                A professionally equipped 4x4 provides improved ground clearance, enhanced suspension
+                performance, greater carrying capacity, better traction, and increased reliability during
+                off-road adventures.
+              </p>
+            </div>
+            <div className="rounded-xl border border-border bg-background p-6">
+              <h3 className="font-bold">Our expertise</h3>
+              <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
+                Our experienced technicians work with premium off-road brands and proven products to deliver
+                reliable upgrades that improve both performance and durability. Every installation is
+                performed to the highest standards — keeping your vehicle safe, capable, and adventure-ready.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
