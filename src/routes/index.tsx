@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 
-import { Wrench, ShieldCheck, Truck, Clock, Star, ChevronRight, MessageCircle, Phone, Users } from "lucide-react";
+import { Wrench, ShieldCheck, Truck, Clock, Star, ChevronRight, MessageCircle, Phone, Users, Gauge, Disc3, Droplets, BatteryCharging, Check } from "lucide-react";
 import { SearchWidget } from "@/components/SearchWidget";
 import { TireCard } from "@/components/TireCard";
 import { BrandLogo } from "@/components/BrandLogo";
@@ -204,57 +204,86 @@ function Home() {
 
       {/* Services */}
       <section className="container mx-auto px-4 py-14">
-        <div className="grid lg:grid-cols-2 gap-10 items-center">
-          <div>
-            <p className="text-xs uppercase tracking-widest text-brand font-bold">Workshop services</p>
-            <h2 className="mt-1 text-3xl font-bold">More than just tyres</h2>
-            <p className="mt-3 text-muted-foreground">
-              Our certified technicians handle everything that keeps your wheels turning — from precision wheel alignment to instant puncture repair.
-            </p>
-            <ul className="mt-5 space-y-3">
-              {[
-                ["Tyre fitting & balancing", "Free with every set we sell"],
-                ["3D wheel alignment", "Hunter Hawkeye system"],
-                ["Puncture repair", "Patched in 15 minutes"],
-                ["Nitrogen inflation", "Maintains pressure longer"],
-              ].map(([t, s]) => (
-                <li key={t} className="flex gap-3">
-                  <div className="h-6 w-6 rounded-full bg-brand/10 text-brand flex items-center justify-center shrink-0">
-                    <ChevronRight className="h-4 w-4" />
-                  </div>
-                  <div>
-                    <p className="font-semibold">{t}</p>
-                    <p className="text-sm text-muted-foreground">{s}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-            <Link to="/services" className="mt-6 inline-flex items-center gap-1 text-brand font-semibold hover:underline">
-              All services <ChevronRight className="h-4 w-4" />
-            </Link>
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div className="aspect-square bg-navy text-navy-foreground rounded-xl p-6 flex flex-col justify-end">
-              <Wrench className="h-8 w-8 text-brand mb-2" />
-              <p className="font-bold">Fitting & balancing</p>
-              <p className="text-xs opacity-70">From AED 0 with purchase</p>
+        <div className="text-center max-w-2xl mx-auto mb-10">
+          <p className="text-xs uppercase tracking-widest text-brand font-bold">Workshop services</p>
+          <h2 className="mt-1 text-3xl font-bold">More than just tyres</h2>
+          <p className="mt-3 text-muted-foreground">
+            Our certified technicians handle everything that keeps your wheels turning — from precision wheel alignment to instant mobile battery replacement.
+          </p>
+        </div>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 max-w-6xl mx-auto">
+          {[
+            {
+              icon: Gauge,
+              title: "Wheel Alignment",
+              desc: "State-of-the-art equipment and skilled technicians for optimal handling and tyre longevity.",
+              points: [
+                "Thorough inspection & precise adjustments",
+                "Camber, caster & toe calibration",
+                "Test drive to verify smooth handling",
+              ],
+            },
+            {
+              icon: Disc3,
+              title: "Brakes",
+              desc: "Inspect, repair or replace brakes with high-quality components for your safety on the road.",
+              points: [
+                "New brake rotors & pads",
+                "Caliper servicing & lubrication",
+                "Brake fluid system bleeding",
+              ],
+            },
+            {
+              icon: Droplets,
+              title: "Oil Services",
+              desc: "Fast, efficient oil changes with premium Pennzoil and a free True Service Inspection.",
+              points: [
+                "Premium oil & filter (meets warranty standards)",
+                "Certified automotive technicians",
+                "Free inspection report card",
+              ],
+            },
+            {
+              icon: Truck,
+              title: "Mobile Tyre Services",
+              desc: "Tyre installation, repair and replacement brought to your doorstep anywhere in the UAE.",
+              points: [
+                "Mount & balance on-site",
+                "Puncture & damage repair",
+                "Tyre pressure check",
+              ],
+            },
+            {
+              icon: BatteryCharging,
+              title: "Mobile Battery Services",
+              desc: "Battery diagnostic, delivery and professional installation so you never get stranded.",
+              points: [
+                "Battery diagnostic test",
+                "New battery delivered to you",
+                "Charging system inspection",
+              ],
+            },
+          ].map((s) => (
+            <div key={s.title} className="rounded-xl border border-border bg-background p-6 hover:border-brand hover:shadow-md transition-all">
+              <div className="h-10 w-10 rounded-lg bg-brand/10 text-brand flex items-center justify-center">
+                <s.icon className="h-5 w-5" />
+              </div>
+              <h3 className="mt-3 font-bold">{s.title}</h3>
+              <p className="mt-1 text-sm text-muted-foreground leading-relaxed">{s.desc}</p>
+              <ul className="mt-3 space-y-1">
+                {s.points.map((p) => (
+                  <li key={p} className="flex items-start gap-2 text-sm text-muted-foreground">
+                    <Check className="h-4 w-4 text-brand mt-0.5 shrink-0" /> {p}
+                  </li>
+                ))}
+              </ul>
             </div>
-            <div className="aspect-square bg-brand text-brand-foreground rounded-xl p-6 flex flex-col justify-end mt-8">
-              <ShieldCheck className="h-8 w-8 mb-2" />
-              <p className="font-bold">Wheel alignment</p>
-              <p className="text-xs opacity-90">From AED 100</p>
-            </div>
-            <div className="aspect-square bg-muted rounded-xl p-6 flex flex-col justify-end -mt-8">
-              <Clock className="h-8 w-8 text-brand mb-2" />
-              <p className="font-bold">Puncture repair</p>
-              <p className="text-xs text-muted-foreground">From AED 30</p>
-            </div>
-            <div className="aspect-square bg-background border border-border rounded-xl p-6 flex flex-col justify-end">
-              <Truck className="h-8 w-8 text-brand mb-2" />
-              <p className="font-bold">Mobile fitting</p>
-              <p className="text-xs text-muted-foreground">At your location</p>
-            </div>
-          </div>
+          ))}
+        </div>
+        <div className="mt-8 text-center">
+          <Link to="/services" className="inline-flex items-center gap-1 text-brand font-semibold hover:underline">
+            All services <ChevronRight className="h-4 w-4" />
+          </Link>
         </div>
       </section>
 
