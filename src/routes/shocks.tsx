@@ -183,21 +183,21 @@ function IntroStrip() {
         <div className="flex items-start gap-4">
           <div className="rounded-lg bg-brand/15 text-brand p-3"><Wrench className="h-6 w-6" /></div>
           <div>
-            <h3 className="font-bold text-lg">Expert installation</h3>
+            <h2 className="font-bold text-lg">Expert installation</h2>
             <p className="text-sm opacity-80 mt-1">Suspension specialists with 15+ years of Dubai off-road experience.</p>
           </div>
         </div>
         <div className="flex items-start gap-4">
           <div className="rounded-lg bg-brand/15 text-brand p-3"><ShieldCheck className="h-6 w-6" /></div>
           <div>
-            <h3 className="font-bold text-lg">Genuine products</h3>
+            <h2 className="font-bold text-lg">Genuine products</h2>
             <p className="text-sm opacity-80 mt-1">Sourced direct from manufacturers and authorized distributors — full warranty.</p>
           </div>
         </div>
         <div className="flex items-start gap-4">
           <div className="rounded-lg bg-brand/15 text-brand p-3"><Sparkles className="h-6 w-6" /></div>
           <div>
-            <h3 className="font-bold text-lg">More brands coming</h3>
+            <h2 className="font-bold text-lg">More brands coming</h2>
             <p className="text-sm opacity-80 mt-1">Adding Bilstein, King, ICON and OME — let us know what you ride.</p>
           </div>
         </div>
