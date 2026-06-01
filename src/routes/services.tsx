@@ -28,17 +28,34 @@ import {
 export const Route = createFileRoute("/services")({
   head: () => ({
     meta: [
-      { title: "Our Services — Wheel Alignment, Brakes, Oil & Mobile Tyre in UAE" },
+      { title: "Tyre Services in UAE — Alignment, Brakes & Oil" },
       {
         name: "description",
         content:
           "Tires and More offers wheel alignment, brake service, oil service, mobile tyre fitting and mobile battery service across the UAE. Trusted technicians, premium parts.",
       },
-      { property: "og:title", content: "Our Services — Tires and More UAE" },
+      { property: "og:title", content: "Tyre Services in UAE — Tires & More" },
       {
         property: "og:description",
         content:
           "Wheel alignment, brakes, oil service, mobile tyre and mobile battery service across the UAE.",
+      },
+      { property: "og:url", content: "/services" },
+    ],
+    links: [{ rel: "canonical", href: "/services" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@graph": [
+            { "@type": "Service", name: "Wheel Alignment", provider: { "@type": "LocalBusiness", name: "Tires & More UAE" }, areaServed: "AE" },
+            { "@type": "Service", name: "Brake Service", provider: { "@type": "LocalBusiness", name: "Tires & More UAE" }, areaServed: "AE" },
+            { "@type": "Service", name: "Oil Service", provider: { "@type": "LocalBusiness", name: "Tires & More UAE" }, areaServed: "AE" },
+            { "@type": "Service", name: "Mobile Tyre Fitting", provider: { "@type": "LocalBusiness", name: "Tires & More UAE" }, areaServed: "AE" },
+            { "@type": "Service", name: "Mobile Battery Service", provider: { "@type": "LocalBusiness", name: "Tires & More UAE" }, areaServed: "AE" },
+          ],
+        }),
       },
     ],
   }),
