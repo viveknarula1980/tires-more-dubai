@@ -59,11 +59,24 @@ function ContactPage() {
         </div>
       </section>
 
+      {/* Full-width Map */}
+      <div className="w-full h-[420px] md:h-[500px]">
+        <iframe
+          title="Tires and More Location"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3609.823!2d55.248!3d25.18!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e5f682829c85c07%3A0xa5aaaa5aaaa5aaaa!2sTires%20and%20More!5e0!3m2!1sen!2sae!4v1"
+          width="100%"
+          height="100%"
+          style={{ border: 0, display: "block" }}
+          allowFullScreen
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+        />
+      </div>
+
       <div className="container mx-auto px-4 py-12">
         <div className="grid lg:grid-cols-2 gap-10">
-          {/* Info & Map */}
-          <div className="space-y-8">
-            {/* Contact Cards */}
+          {/* Info Cards */}
+          <div className="space-y-4">
             <div className="grid sm:grid-cols-2 gap-4">
               <div className="rounded-xl border border-border bg-background p-5">
                 <div className="h-9 w-9 rounded-lg bg-brand/10 text-brand flex items-center justify-center">
@@ -133,20 +146,6 @@ function ContactPage() {
                   <Mail className="h-4 w-4" /> Send email
                 </a>
               </div>
-            </div>
-
-            {/* Map */}
-            <div className="rounded-xl border border-border overflow-hidden">
-              <iframe
-                title="Tires and More Location"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3609.8!2d55.248!3d25.18!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e5f682829c85c07%3A0xa5aaaa5aaaa5aaaa!2sTires%20and%20More!5e0!3m2!1sen!2sae!4v1"
-                width="100%"
-                height="360"
-                style={{ border: 0 }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              />
             </div>
           </div>
 
