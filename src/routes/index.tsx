@@ -67,8 +67,16 @@ function Home() {
     <>
       {/* Hero */}
       <section className="relative bg-navy text-navy-foreground overflow-hidden">
-        <img src={hero} alt="" className="absolute inset-0 h-full w-full object-cover opacity-25" />
-        <div className="absolute inset-0 bg-gradient-to-b from-navy/40 via-navy/70 to-navy" />
+        <video
+          src={heroVideo.url}
+          autoPlay
+          muted
+          loop
+          playsInline
+          poster={hero}
+          className="absolute inset-0 h-full w-full object-cover opacity-40"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-navy/50 via-navy/70 to-navy" />
         <div className="relative container mx-auto px-4 py-16 md:py-24">
           <div className="max-w-3xl mx-auto text-center">
             <span className="inline-block bg-brand/15 text-brand text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-full">
