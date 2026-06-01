@@ -1,13 +1,37 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Wrench, Gauge, Disc3, Wind, Droplets, ShieldCheck, MessageCircle, Phone, Clock, Check } from "lucide-react";
+import {
+  Gauge,
+  Disc3,
+  Droplets,
+  Truck,
+  BatteryCharging,
+  ShieldCheck,
+  Award,
+  Wrench,
+  DollarSign,
+  Smile,
+  MessageCircle,
+  Phone,
+  Clock,
+  Check,
+  AlertTriangle,
+} from "lucide-react";
 
 export const Route = createFileRoute("/services")({
   head: () => ({
     meta: [
-      { title: "Services — Tyre Fitting, Alignment & Repair in Dubai" },
-      { name: "description", content: "Tyre fitting, balancing, 3D wheel alignment, puncture repair, nitrogen inflation and mobile fitting at Tires & More UAE, Al Quoz 4. Open 7 days." },
-      { property: "og:title", content: "Workshop Services — Tires & More UAE" },
-      { property: "og:description", content: "Tyre fitting, balancing, alignment & repair at our Al Quoz workshop." },
+      { title: "Our Services — Wheel Alignment, Brakes, Oil & Mobile Tyre in UAE" },
+      {
+        name: "description",
+        content:
+          "Tires and More offers wheel alignment, brake service, oil service, mobile tyre fitting and mobile battery service across the UAE. Trusted technicians, premium parts.",
+      },
+      { property: "og:title", content: "Our Services — Tires and More UAE" },
+      {
+        property: "og:description",
+        content:
+          "Wheel alignment, brakes, oil service, mobile tyre and mobile battery service across the UAE.",
+      },
     ],
   }),
   component: ServicesPage,
@@ -15,132 +39,311 @@ export const Route = createFileRoute("/services")({
 
 const services = [
   {
-    icon: Wrench,
-    title: "Tyre fitting & balancing",
-    price: "FREE",
-    note: "with every set we sell",
-    points: ["Touchless fitting machines", "Computerised wheel balancing", "Old tyres disposed responsibly"],
-  },
-  {
     icon: Gauge,
-    title: "3D wheel alignment",
-    price: "From AED 100",
-    note: "Hunter Hawkeye system",
-    points: ["Camera-based precision", "Front & 4-wheel options", "Printed before/after report"],
+    title: "Wheel Alignment",
+    intro:
+      "Ensure your vehicle's wheels are properly aligned for optimal handling and tire longevity. Our state-of-the-art equipment and skilled technicians will get you back on the road with precision alignment.",
+    points: [
+      "Thorough inspection of your vehicle's wheel alignment, checking for misalignment issues",
+      "Advanced alignment equipment for precise adjustments — camber, caster and toe",
+      "Adjustments made to bring your wheels back into proper alignment when needed",
+      "Test drive to verify smooth handling and responsive steering",
+    ],
   },
   {
     icon: Disc3,
-    title: "Puncture repair",
-    price: "From AED 30",
-    note: "Most repairs in 15 min",
-    points: ["Mushroom plug repairs", "Run-flat assessment", "Honest go/no-go advice"],
-  },
-  {
-    icon: Wind,
-    title: "Nitrogen inflation",
-    price: "From AED 20",
-    note: "per set of 4",
-    points: ["More stable pressure", "Reduced rim corrosion", "Cooler running tyres"],
+    title: "Brakes",
+    intro:
+      "Trust our experts to inspect, repair or replace your brakes to ensure your safety on the road. We use high-quality brake components and provide professional brake services.",
+    points: [
+      "New brake rotors",
+      "New brake pads",
+      "Installation of parts by skilled mechanics",
+      "Caliper servicing — cleaning & lubricating of caliper slides",
+      "Bleeding of brake fluid system",
+    ],
   },
   {
     icon: Droplets,
-    title: "TPMS service",
-    price: "From AED 50",
-    note: "diagnosis & sensor reset",
-    points: ["Sensor battery testing", "Replacement & programming", "Warning light reset"],
+    title: "Oil Services",
+    intro:
+      "Regular oil changes are vital for engine health. We offer fast and efficient oil change services with a selection of top-grade oils to suit your vehicle's needs.",
+    points: [
+      "Premium Pennzoil oil & new premium filter that meets or exceeds your car warranty standards",
+      "Service performed by our certified automotive technicians",
+      "True Service Inspection report card on the condition of key components",
+    ],
   },
   {
-    icon: ShieldCheck,
-    title: "Mobile fitting",
-    price: "On request",
-    note: "we come to you",
-    points: ["Office & home service", "Same-day in Dubai", "All tools brought on site"],
+    icon: Truck,
+    title: "Mobile Tyre Services",
+    intro:
+      "Convenience at your doorstep! Our mobile tyre service brings tyre installation, repair and replacement to you wherever you are. No more hassles with flat tyres or worn treads.",
+    points: [
+      "Mount and balance new tyres on your vehicle with proper fitment",
+      "Puncture and damaged tyre repair when possible",
+      "Tyre replacement on site",
+      "Tyre pressure check",
+    ],
   },
+  {
+    icon: BatteryCharging,
+    title: "Mobile Battery Services",
+    intro:
+      "Don't get stranded due to a dead battery. Our mobile battery service delivers and installs reliable batteries, ensuring your vehicle starts when you need it to.",
+    points: [
+      "Battery diagnostic test to determine the condition of your current battery",
+      "New, reliable battery delivered directly to your location when replacement is needed",
+      "Professional installation by our experts",
+      "Testing and charging system inspection",
+    ],
+  },
+];
+
+const whyChoose = [
+  { icon: Wrench, title: "Experienced Technicians", desc: "Certified, trained and trusted by thousands of UAE drivers." },
+  { icon: Award, title: "Quality Products & Parts", desc: "Only parts that meet or exceed OE (original equipment) specifications." },
+  { icon: Truck, title: "Convenient Mobile Services", desc: "Tyre and battery service that comes to your home, office or roadside." },
+  { icon: DollarSign, title: "Competitive Pricing", desc: "Honest, all-inclusive packages with no surprise costs." },
+  { icon: Smile, title: "Customer Satisfaction Guaranteed", desc: "We're not done until you drive away happy." },
 ];
 
 function ServicesPage() {
   return (
     <>
+      {/* Hero */}
       <section className="bg-navy text-navy-foreground py-16">
         <div className="container mx-auto px-4 text-center max-w-3xl">
-          <p className="text-xs uppercase tracking-widest text-brand font-bold">Workshop services</p>
+          <p className="text-xs uppercase tracking-widest text-brand font-bold">Our Services</p>
           <h1 className="mt-2 text-4xl md:text-5xl font-bold tracking-tight">
-            Everything for your wheels, under one roof
+            A trusted tyre shop in the UAE
           </h1>
           <p className="mt-4 text-lg text-navy-foreground/80">
-            From a quick puncture patch to a full set of premium tyres with 3D alignment — our Al Quoz workshop handles it all, usually while you wait.
+            Welcome to Tires and More. We offer the largest collection of branded tyres in the country and an
+            extensive range of automobile services — from precision wheel alignment to mobile tyre and battery
+            assistance anywhere in the UAE.
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-2 text-sm">
             <span className="inline-flex items-center gap-1 bg-navy-foreground/10 px-3 py-1.5 rounded-full">
               <Clock className="h-3.5 w-3.5 text-brand" /> Open 7 days, 9am–9pm
             </span>
             <span className="inline-flex items-center gap-1 bg-navy-foreground/10 px-3 py-1.5 rounded-full">
-              <Check className="h-3.5 w-3.5 text-brand" /> No appointment needed
+              <Check className="h-3.5 w-3.5 text-brand" /> Walk-ins welcome
             </span>
           </div>
         </div>
       </section>
 
+      {/* Service cards */}
       <section className="container mx-auto px-4 py-14">
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {services.map((s) => (
-            <article key={s.title} className="rounded-xl border border-border bg-background p-6 hover:border-brand hover:shadow-md transition-all">
-              <div className="flex items-start justify-between">
-                <div className="h-12 w-12 rounded-lg bg-brand/10 text-brand flex items-center justify-center">
+        <div className="grid md:grid-cols-2 gap-6">
+          {services.map((s, i) => (
+            <article
+              key={s.title}
+              className="rounded-xl border border-border bg-background p-6 md:p-7 hover:border-brand hover:shadow-md transition-all"
+            >
+              <div className="flex items-start gap-4">
+                <div className="h-12 w-12 shrink-0 rounded-lg bg-brand/10 text-brand flex items-center justify-center">
                   <s.icon className="h-6 w-6" />
                 </div>
-                <div className="text-right">
-                  <p className="font-bold text-brand">{s.price}</p>
-                  <p className="text-[11px] text-muted-foreground">{s.note}</p>
+                <div>
+                  <p className="text-xs font-bold text-brand">0{i + 1}</p>
+                  <h2 className="text-xl font-bold leading-tight">{s.title}</h2>
                 </div>
               </div>
-              <h3 className="mt-4 text-lg font-bold">{s.title}</h3>
-              <ul className="mt-3 space-y-1.5">
-                {s.points.map((p) => (
-                  <li key={p} className="flex items-start gap-2 text-sm text-muted-foreground">
-                    <Check className="h-4 w-4 text-brand mt-0.5 shrink-0" /> {p}
-                  </li>
-                ))}
-              </ul>
+              <p className="mt-4 text-sm text-muted-foreground leading-relaxed">{s.intro}</p>
+              <div className="mt-4">
+                <p className="text-xs uppercase tracking-wider font-bold text-navy">What's included</p>
+                <ul className="mt-2 space-y-1.5">
+                  {s.points.map((p) => (
+                    <li key={p} className="flex items-start gap-2 text-sm text-muted-foreground">
+                      <Check className="h-4 w-4 text-brand mt-0.5 shrink-0" /> {p}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </article>
           ))}
         </div>
       </section>
 
+      {/* Why choose */}
       <section className="bg-muted/40 py-14">
-        <div className="container mx-auto px-4 max-w-4xl">
-          <h2 className="text-3xl font-bold text-center">How a service visit works</h2>
-          <ol className="mt-8 grid md:grid-cols-4 gap-5">
-            {[
-              ["Drop in or book", "Walk-in welcome, or WhatsApp us a slot."],
-              ["Quick inspection", "We confirm tread, age & alignment."],
-              ["Service in 30 min", "Most jobs done while you wait."],
-              ["Drive away", "Pay on collection — cash, card, transfer."],
-            ].map(([t, d], i) => (
-              <li key={t} className="bg-background rounded-xl border border-border p-5">
-                <div className="h-8 w-8 rounded-full bg-brand text-brand-foreground flex items-center justify-center font-bold text-sm">
-                  {i + 1}
-                </div>
-                <p className="mt-3 font-bold">{t}</p>
-                <p className="mt-1 text-sm text-muted-foreground">{d}</p>
-              </li>
+        <div className="container mx-auto px-4">
+          <div className="text-center max-w-2xl mx-auto">
+            <h2 className="text-3xl font-bold">Why choose Tires and More?</h2>
+            <p className="mt-2 text-muted-foreground">
+              Five reasons drivers across the UAE keep coming back.
+            </p>
+          </div>
+          <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-5 gap-4 max-w-6xl mx-auto">
+            {whyChoose.map((w) => (
+              <div key={w.title} className="bg-background border border-border rounded-xl p-5">
+                <w.icon className="h-7 w-7 text-brand" />
+                <h3 className="mt-3 font-bold text-sm">{w.title}</h3>
+                <p className="mt-1 text-xs text-muted-foreground leading-relaxed">{w.desc}</p>
+              </div>
             ))}
-          </ol>
+          </div>
         </div>
       </section>
 
-      <section className="container mx-auto px-4 py-14">
+      {/* Mechanical — Wheel alignment deep dive */}
+      <section className="container mx-auto px-4 py-14 max-w-5xl">
+        <p className="text-xs uppercase tracking-widest text-brand font-bold">Mechanical</p>
+        <h2 className="mt-2 text-3xl md:text-4xl font-bold">Do I need a wheel alignment?</h2>
+        <p className="mt-4 text-muted-foreground leading-relaxed">
+          If potholes, gravel roads and other harsh conditions have taken a toll on your vehicle, a wheel
+          alignment can ensure you're driving straight and reducing tyre wear.
+        </p>
+        <p className="mt-3 text-muted-foreground leading-relaxed">
+          It doesn't take much to knock a vehicle out of alignment: potholes, curbs and even regular everyday
+          driving can affect your suspension system and steering components. Adjusting your wheels back to
+          factory spec helps your tyres wear evenly and gives you the best fuel economy possible.
+        </p>
+
+        <div className="mt-8 grid md:grid-cols-2 gap-5">
+          <div className="rounded-xl border border-border bg-background p-6">
+            <div className="flex items-center gap-2">
+              <Gauge className="h-5 w-5 text-brand" />
+              <h3 className="font-bold">A wheel alignment is recommended when</h3>
+            </div>
+            <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
+              {[
+                "New tyres are installed",
+                "You experience uneven tyre wear, steering pull or an off-center steering wheel",
+                "Your vehicle has had an accident or a hard impact with a curb, pothole or road debris",
+                "You lower or lift your vehicle",
+                "You drive on all-season tyres year-round and it's been 1–2 years since your last alignment",
+              ].map((p) => (
+                <li key={p} className="flex items-start gap-2">
+                  <Check className="h-4 w-4 text-brand mt-0.5 shrink-0" /> {p}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="rounded-xl border border-border bg-background p-6">
+            <div className="flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-brand" />
+              <h3 className="font-bold">Most common signs of misalignment</h3>
+            </div>
+            <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
+              {[
+                "Your vehicle feels like it's pulling to one side while driving",
+                "Uneven tread wear on your tyres",
+                "Your front-end shimmies or vibrates after hitting a bump",
+                "Your steering wheel is off-centered when driving straight",
+              ].map((p) => (
+                <li key={p} className="flex items-start gap-2">
+                  <Check className="h-4 w-4 text-brand mt-0.5 shrink-0" /> {p}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        <div className="mt-6 rounded-xl bg-navy text-navy-foreground p-6">
+          <h3 className="font-bold">What's included in a wheel alignment service?</h3>
+          <p className="mt-2 text-sm text-navy-foreground/80 leading-relaxed">
+            Our certified technicians inspect your tyres for uneven wear and perform a precision alignment
+            using state-of-the-art computerized technology. This ensures all four wheels are parallel and
+            sitting flat on the road, and that your steering wheel is properly centered.
+          </p>
+        </div>
+      </section>
+
+      {/* Brakes deep dive */}
+      <section className="bg-muted/40 py-14">
+        <div className="container mx-auto px-4 max-w-5xl">
+          <p className="text-xs uppercase tracking-widest text-brand font-bold">Brakes</p>
+          <h2 className="mt-2 text-3xl md:text-4xl font-bold">Trust us with your brakes</h2>
+          <p className="mt-4 text-muted-foreground leading-relaxed">
+            When you need brake work, trust our trained technicians to do the best job at the best price. We
+            offer highly competitive pricing, only use parts that meet or exceed OE (original equipment)
+            specifications, and provide an industry leading warranty. With easy-to-understand, all-inclusive
+            packages, you'll have peace of mind knowing the work being performed without any surprise costs.
+            Contact us for a fast, no-obligation estimate for your vehicle.
+          </p>
+
+          <div className="mt-6 rounded-xl border border-border bg-background p-6">
+            <h3 className="font-bold flex items-center gap-2">
+              <Disc3 className="h-5 w-5 text-brand" /> What's included in our brake packages
+            </h3>
+            <ul className="mt-3 grid sm:grid-cols-2 gap-2 text-sm text-muted-foreground">
+              {[
+                "New brake pads",
+                "New brake rotors",
+                "Installation of parts by trained technicians",
+                "Caliper servicing — cleaning & lubricating of caliper slides",
+                "Bleeding of brake fluid system",
+              ].map((p) => (
+                <li key={p} className="flex items-start gap-2">
+                  <Check className="h-4 w-4 text-brand mt-0.5 shrink-0" /> {p}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* Oil service deep dive */}
+      <section className="container mx-auto px-4 py-14 max-w-5xl">
+        <p className="text-xs uppercase tracking-widest text-brand font-bold">Oil Service</p>
+        <h2 className="mt-2 text-3xl md:text-4xl font-bold">What makes our oil changes better?</h2>
+        <p className="mt-4 text-muted-foreground leading-relaxed">
+          Well, it isn't just an oil change — it's an oil service. First, our certified technicians install
+          premium oil and a premium filter. Then we perform our free True Service Inspection and give you a
+          report card on the condition of your vehicle's key components.
+        </p>
+
+        <div className="mt-6 grid md:grid-cols-3 gap-4">
+          {[
+            {
+              t: "Premium oil & filter",
+              d: "Premium Pennzoil oil & new premium filter that meets or exceeds your car warranty standards.",
+            },
+            {
+              t: "Certified technicians",
+              d: "Service performed by our certified automotive technicians, every time.",
+            },
+            {
+              t: "True Service Inspection",
+              d: "A free inspection report card on the condition of your vehicle's key components.",
+            },
+          ].map((b) => (
+            <div key={b.t} className="rounded-xl border border-border bg-background p-5">
+              <ShieldCheck className="h-6 w-6 text-brand" />
+              <h3 className="mt-3 font-bold">{b.t}</h3>
+              <p className="mt-1 text-sm text-muted-foreground leading-relaxed">{b.d}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="container mx-auto px-4 pb-14">
         <div className="rounded-2xl bg-gradient-to-br from-brand to-brand/70 text-brand-foreground p-8 md:p-12 text-center">
           <h2 className="text-3xl md:text-4xl font-bold">Need a service today?</h2>
           <p className="mt-2 opacity-90">Reach us in seconds — most issues solved the same day.</p>
           <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
-            <a href="https://wa.me/97142326666" target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 bg-white text-navy rounded-md px-6 py-3 font-bold hover:opacity-90">
+            <a
+              href="https://wa.me/97142326666"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center justify-center gap-2 bg-white text-navy rounded-md px-6 py-3 font-bold hover:opacity-90"
+            >
               <MessageCircle className="h-5 w-5" /> WhatsApp us
             </a>
-            <a href="tel:+97142326666" className="inline-flex items-center justify-center gap-2 border-2 border-white/30 rounded-md px-6 py-3 font-bold hover:bg-white/10">
+            <a
+              href="tel:+97142326666"
+              className="inline-flex items-center justify-center gap-2 border-2 border-white/30 rounded-md px-6 py-3 font-bold hover:bg-white/10"
+            >
               <Phone className="h-5 w-5" /> +971 4 232 6666
             </a>
-            <Link to="/shop" className="inline-flex items-center justify-center gap-2 border-2 border-white/30 rounded-md px-6 py-3 font-bold hover:bg-white/10">
+            <Link
+              to="/shop"
+              className="inline-flex items-center justify-center gap-2 border-2 border-white/30 rounded-md px-6 py-3 font-bold hover:bg-white/10"
+            >
               Browse tyres
             </Link>
           </div>
