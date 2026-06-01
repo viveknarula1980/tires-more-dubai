@@ -251,12 +251,21 @@ export const listTiresForBulkImage = createServerFn({ method: "GET" })
       .select("id, name, slug")
       .order("name");
     if (bErr) throw new Error(bErr.message);
-    const { data: tires, error: tErr } = await supabaseAdmin
-      .from("tires")
-      .select("id, name, slug, brand_id, main_image, width, profile, rim")
-      .order("name");
-    if (tErr) throw new Error(tErr.message);
-    return { brands: brands ?? [], tires: tires ?? [] };
+    // Paginate to bypass the default 1000-row PostgREST limit
+    const pageSize = 1000;
+    const allTires: any[] = [];
+    for (let from = 0; ; from += pageSize) {
+      const { data: page, error: tErr } = await supabaseAdmin
+        .from("tires")
+        .select("id, name, slug, brand_id, main_image, width, profile, rim")
+        .order("name")
+        .range(from, from + pageSize - 1);
+      if (tErr) throw new Error(tErr.message);
+      if (!page || page.length === 0) break;
+      allTires.push(...page);
+      if (page.length < pageSize) break;
+    }
+    return { brands: brands ?? [], tires: allTires };
   });
 
 export const bulkSetTireImage = createServerFn({ method: "POST" })
