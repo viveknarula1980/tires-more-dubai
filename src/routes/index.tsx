@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 
-import { Wrench, ShieldCheck, Truck, Clock, Star, ChevronRight, MessageCircle, Phone, Users, Gauge, Disc3, Droplets, BatteryCharging, Check } from "lucide-react";
+import { Wrench, ShieldCheck, Truck, Clock, Star, ChevronRight, MessageCircle, Phone, Users, Gauge, Disc3, Droplets, BatteryCharging, Check, Mountain, Compass, Zap } from "lucide-react";
 import { SearchWidget } from "@/components/SearchWidget";
 import { TireCard } from "@/components/TireCard";
 import { BrandLogo } from "@/components/BrandLogo";
@@ -208,11 +208,44 @@ function Home() {
           <p className="text-xs uppercase tracking-widest text-brand font-bold">Workshop services</p>
           <h2 className="mt-1 text-3xl font-bold">More than just tyres</h2>
           <p className="mt-3 text-muted-foreground">
-            Our certified technicians handle everything that keeps your wheels turning — from precision wheel alignment to instant mobile battery replacement.
+            Our certified technicians handle everything that keeps your wheels turning — from precision wheel alignment and brake service to suspension upgrades and off-road modifications.
           </p>
         </div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 max-w-6xl mx-auto">
           {[
+            {
+              icon: Mountain,
+              title: "Suspension Upgrades",
+              desc: "Premium shocks, lift kits and coil springs from leading global brands for improved off-road capability and on-road comfort.",
+              points: [
+                "Suspension inspection & consultation",
+                "Performance shocks & struts installation",
+                "Lift kit & coil spring upgrades",
+                "Post-installation alignment & testing",
+              ],
+            },
+            {
+              icon: Compass,
+              title: "Off-Road & 4×4 Modifications",
+              desc: "Build the ultimate adventure vehicle with desert-ready upgrades — snorkels, recovery gear, lift kits and more.",
+              points: [
+                "Off-road wheel & tire packages",
+                "Snorkel & air compressor installation",
+                "Recovery & protection equipment",
+                "Lift kits & suspension modifications",
+              ],
+            },
+            {
+              icon: Zap,
+              title: "Performance Accessories",
+              desc: "High-quality accessories to improve power, functionality and driving enjoyment.",
+              points: [
+                "Performance air intake systems",
+                "On-board air compressor installation",
+                "Off-road equipment integration",
+                "Professional installation & testing",
+              ],
+            },
             {
               icon: Gauge,
               title: "Wheel Alignment",
@@ -241,26 +274,6 @@ function Home() {
                 "Premium oil & filter (meets warranty standards)",
                 "Certified automotive technicians",
                 "Free inspection report card",
-              ],
-            },
-            {
-              icon: Truck,
-              title: "Mobile Tyre Services",
-              desc: "Tyre installation, repair and replacement brought to your doorstep anywhere in the UAE.",
-              points: [
-                "Mount & balance on-site",
-                "Puncture & damage repair",
-                "Tyre pressure check",
-              ],
-            },
-            {
-              icon: BatteryCharging,
-              title: "Mobile Battery Services",
-              desc: "Battery diagnostic, delivery and professional installation so you never get stranded.",
-              points: [
-                "Battery diagnostic test",
-                "New battery delivered to you",
-                "Charging system inspection",
               ],
             },
           ].map((s) => (
