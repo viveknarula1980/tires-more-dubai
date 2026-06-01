@@ -13,7 +13,9 @@ export const Route = createFileRoute("/cart")({
       { name: "description", content: "Review your selected tyres and request a no-obligation quote. Our team in Dubai responds within 1 business hour." },
       { property: "og:title", content: "Request a Tyre Quote — Tires & More UAE" },
       { property: "og:description", content: "Submit your tyre selection and get a quote within the hour." },
+      { property: "og:url", content: "/cart" },
     ],
+    links: [{ rel: "canonical", href: "/cart" }],
   }),
   component: CartPage,
 });
