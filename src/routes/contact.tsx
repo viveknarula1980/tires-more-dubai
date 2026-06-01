@@ -9,7 +9,11 @@ export const Route = createFileRoute("/contact")({
     meta: [
       { title: "Contact — Tires & More UAE" },
       { name: "description", content: "Contact Tires and More in Al Quoz, Dubai. Call +971 4 232 6666, WhatsApp, or send us a message." },
+      { property: "og:title", content: "Contact Tires & More UAE" },
+      { property: "og:description", content: "Reach our Al Quoz, Dubai workshop by phone, WhatsApp or email." },
+      { property: "og:url", content: "/contact" },
     ],
+    links: [{ rel: "canonical", href: "/contact" }],
   }),
   component: ContactPage,
 });
