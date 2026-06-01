@@ -28,7 +28,9 @@ export const Route = createFileRoute("/shocks")({
         content: "Fox, Dobinsons, Radflo and Falcon shocks — coming soon to our Dubai showroom.",
       },
       { property: "og:image", content: foxBanner },
+      { property: "og:url", content: "/shocks" },
     ],
+    links: [{ rel: "canonical", href: "/shocks" }],
   }),
   component: ShocksPage,
 });
