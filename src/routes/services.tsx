@@ -21,7 +21,7 @@ import {
   Zap,
   Settings,
   Wind,
-  Gauge as GaugeIcon,
+  
   Car,
 } from "lucide-react";
 
@@ -221,7 +221,7 @@ const services = [
     ],
   },
   {
-    icon: GaugeIcon,
+    icon: Gauge,
     title: "Air Compressor Installation",
     intro:
       "Stay prepared for every adventure with a reliable onboard air compressor system. Perfect for inflating tires, powering air tools, and supporting off-road equipment.",
