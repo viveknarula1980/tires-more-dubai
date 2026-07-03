@@ -26,6 +26,7 @@ import { Route as ShopSlugRouteImport } from './routes/shop.$slug'
 import { Route as RimsSlugRouteImport } from './routes/rims.$slug'
 import { Route as BrandsSlugRouteImport } from './routes/brands.$slug'
 import { Route as AdminImportRouteImport } from './routes/admin.import'
+import { Route as AdminComparePricingRouteImport } from './routes/admin.compare-pricing'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -112,6 +113,11 @@ const AdminImportRoute = AdminImportRouteImport.update({
   path: '/admin/import',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminComparePricingRoute = AdminComparePricingRouteImport.update({
+  id: '/admin/compare-pricing',
+  path: '/admin/compare-pricing',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -124,6 +130,7 @@ export interface FileRoutesByFullPath {
   '/services': typeof ServicesRoute
   '/shocks': typeof ShocksRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin/compare-pricing': typeof AdminComparePricingRoute
   '/admin/import': typeof AdminImportRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/rims/$slug': typeof RimsSlugRoute
@@ -143,6 +150,7 @@ export interface FileRoutesByTo {
   '/services': typeof ServicesRoute
   '/shocks': typeof ShocksRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin/compare-pricing': typeof AdminComparePricingRoute
   '/admin/import': typeof AdminImportRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/rims/$slug': typeof RimsSlugRoute
@@ -163,6 +171,7 @@ export interface FileRoutesById {
   '/services': typeof ServicesRoute
   '/shocks': typeof ShocksRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin/compare-pricing': typeof AdminComparePricingRoute
   '/admin/import': typeof AdminImportRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/rims/$slug': typeof RimsSlugRoute
@@ -184,6 +193,7 @@ export interface FileRouteTypes {
     | '/services'
     | '/shocks'
     | '/sitemap.xml'
+    | '/admin/compare-pricing'
     | '/admin/import'
     | '/brands/$slug'
     | '/rims/$slug'
@@ -203,6 +213,7 @@ export interface FileRouteTypes {
     | '/services'
     | '/shocks'
     | '/sitemap.xml'
+    | '/admin/compare-pricing'
     | '/admin/import'
     | '/brands/$slug'
     | '/rims/$slug'
@@ -222,6 +233,7 @@ export interface FileRouteTypes {
     | '/services'
     | '/shocks'
     | '/sitemap.xml'
+    | '/admin/compare-pricing'
     | '/admin/import'
     | '/brands/$slug'
     | '/rims/$slug'
@@ -242,6 +254,7 @@ export interface RootRouteChildren {
   ServicesRoute: typeof ServicesRoute
   ShocksRoute: typeof ShocksRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  AdminComparePricingRoute: typeof AdminComparePricingRoute
   AdminImportRoute: typeof AdminImportRoute
   BrandsSlugRoute: typeof BrandsSlugRoute
   RimsSlugRoute: typeof RimsSlugRoute
@@ -372,6 +385,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminImportRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/compare-pricing': {
+      id: '/admin/compare-pricing'
+      path: '/admin/compare-pricing'
+      fullPath: '/admin/compare-pricing'
+      preLoaderRoute: typeof AdminComparePricingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -386,6 +406,7 @@ const rootRouteChildren: RootRouteChildren = {
   ServicesRoute: ServicesRoute,
   ShocksRoute: ShocksRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  AdminComparePricingRoute: AdminComparePricingRoute,
   AdminImportRoute: AdminImportRoute,
   BrandsSlugRoute: BrandsSlugRoute,
   RimsSlugRoute: RimsSlugRoute,
