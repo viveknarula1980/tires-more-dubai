@@ -1,4 +1,4 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute, redirect, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
@@ -151,11 +151,21 @@ function AdminImportPage() {
 
   return (
     <div className="container mx-auto max-w-5xl px-4 py-12">
-      <h1 className="text-3xl font-semibold tracking-tight">Tire price import</h1>
-      <p className="mt-2 text-sm text-muted-foreground">
-        Pulls live pricing from pitstoparabia.com, applies a 15% discount, and upserts into your
-        catalog. Existing tires (matched by slug) get price + spec updates; new sizes are inserted.
-      </p>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-semibold tracking-tight">Tire price import</h1>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Pulls live pricing from pitstoparabia.com, applies a 15% discount, and upserts into your
+            catalog. Existing tires (matched by slug) get price + spec updates; new sizes are inserted.
+          </p>
+        </div>
+        <Link
+          to="/admin/compare-pricing"
+          className="shrink-0 rounded-md border px-3 py-2 text-sm hover:bg-muted"
+        >
+          Compare pricing →
+        </Link>
+      </div>
 
       {/* SYNC REPORT */}
       <Card className="mt-6 p-6">
