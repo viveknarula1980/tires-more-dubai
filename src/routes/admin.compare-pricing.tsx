@@ -128,9 +128,14 @@ function ComparePricingPage() {
             captured during import.
           </p>
         </div>
-        <Link to="/admin/import" className="text-sm underline text-muted-foreground">
-          ← Back to import
-        </Link>
+        <div className="flex items-center gap-4 text-sm">
+          <Link to="/admin/tireae-compare" className="underline">
+            Compare vs tire.ae →
+          </Link>
+          <Link to="/admin/import" className="underline text-muted-foreground">
+            ← Back to import
+          </Link>
+        </div>
       </div>
 
       <Card className="mt-6 p-4">

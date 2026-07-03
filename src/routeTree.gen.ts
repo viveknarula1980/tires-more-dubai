@@ -25,6 +25,7 @@ import { Route as BrandsIndexRouteImport } from './routes/brands.index'
 import { Route as ShopSlugRouteImport } from './routes/shop.$slug'
 import { Route as RimsSlugRouteImport } from './routes/rims.$slug'
 import { Route as BrandsSlugRouteImport } from './routes/brands.$slug'
+import { Route as AdminTireaeCompareRouteImport } from './routes/admin.tireae-compare'
 import { Route as AdminImportRouteImport } from './routes/admin.import'
 import { Route as AdminComparePricingRouteImport } from './routes/admin.compare-pricing'
 
@@ -108,6 +109,11 @@ const BrandsSlugRoute = BrandsSlugRouteImport.update({
   path: '/brands/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminTireaeCompareRoute = AdminTireaeCompareRouteImport.update({
+  id: '/admin/tireae-compare',
+  path: '/admin/tireae-compare',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminImportRoute = AdminImportRouteImport.update({
   id: '/admin/import',
   path: '/admin/import',
@@ -132,6 +138,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/compare-pricing': typeof AdminComparePricingRoute
   '/admin/import': typeof AdminImportRoute
+  '/admin/tireae-compare': typeof AdminTireaeCompareRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/rims/$slug': typeof RimsSlugRoute
   '/shop/$slug': typeof ShopSlugRoute
@@ -152,6 +159,7 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/compare-pricing': typeof AdminComparePricingRoute
   '/admin/import': typeof AdminImportRoute
+  '/admin/tireae-compare': typeof AdminTireaeCompareRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/rims/$slug': typeof RimsSlugRoute
   '/shop/$slug': typeof ShopSlugRoute
@@ -173,6 +181,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/compare-pricing': typeof AdminComparePricingRoute
   '/admin/import': typeof AdminImportRoute
+  '/admin/tireae-compare': typeof AdminTireaeCompareRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/rims/$slug': typeof RimsSlugRoute
   '/shop/$slug': typeof ShopSlugRoute
@@ -195,6 +204,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/admin/compare-pricing'
     | '/admin/import'
+    | '/admin/tireae-compare'
     | '/brands/$slug'
     | '/rims/$slug'
     | '/shop/$slug'
@@ -215,6 +225,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/admin/compare-pricing'
     | '/admin/import'
+    | '/admin/tireae-compare'
     | '/brands/$slug'
     | '/rims/$slug'
     | '/shop/$slug'
@@ -235,6 +246,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/admin/compare-pricing'
     | '/admin/import'
+    | '/admin/tireae-compare'
     | '/brands/$slug'
     | '/rims/$slug'
     | '/shop/$slug'
@@ -256,6 +268,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   AdminComparePricingRoute: typeof AdminComparePricingRoute
   AdminImportRoute: typeof AdminImportRoute
+  AdminTireaeCompareRoute: typeof AdminTireaeCompareRoute
   BrandsSlugRoute: typeof BrandsSlugRoute
   RimsSlugRoute: typeof RimsSlugRoute
   ShopSlugRoute: typeof ShopSlugRoute
@@ -378,6 +391,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BrandsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/tireae-compare': {
+      id: '/admin/tireae-compare'
+      path: '/admin/tireae-compare'
+      fullPath: '/admin/tireae-compare'
+      preLoaderRoute: typeof AdminTireaeCompareRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/import': {
       id: '/admin/import'
       path: '/admin/import'
@@ -408,6 +428,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   AdminComparePricingRoute: AdminComparePricingRoute,
   AdminImportRoute: AdminImportRoute,
+  AdminTireaeCompareRoute: AdminTireaeCompareRoute,
   BrandsSlugRoute: BrandsSlugRoute,
   RimsSlugRoute: RimsSlugRoute,
   ShopSlugRoute: ShopSlugRoute,
