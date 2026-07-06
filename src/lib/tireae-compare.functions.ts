@@ -118,13 +118,22 @@ function parseTireSize(name: string): Pick<TireAeListing, "size" | "width" | "pr
   return null;
 }
 
+function extractYearOrigin(segment: string): { year: string | null; origin: string | null } {
+  const y = segment.match(/"production_year"\s*:\s*"?([^",}]+)"?/);
+  const o = segment.match(/"origin"\s*:\s*"([^"]*)"/);
+  return {
+    year: y ? cleanTireAeText(y[1]) || null : null,
+    origin: o ? cleanTireAeText(o[1]) || null : null,
+  };
+}
+
 function parseListingsFromHtml(
   html: string,
   seen: Set<string>,
   listings: TireAeListing[]
 ): number {
   const itemRe =
-    /\{"item_name":"([^"]+)","affiliation":"[^"]*","item_id":"([^"]+)","price":([\d.]+)/g;
+    /\{"item_name":"([^"]+)","affiliation":"[^"]*","item_id":"([^"]+)","price":([\d.]+)[^}]*\}/g;
   let m: RegExpExecArray | null;
   let foundOnPage = 0;
   while ((m = itemRe.exec(html)) !== null) {
@@ -133,11 +142,14 @@ function parseListingsFromHtml(
     const price = Number(m[3]);
     const parsedSize = parseTireSize(rawName);
     if (!parsedSize) continue;
+    const { year, origin } = extractYearOrigin(m[0]);
     const added = addListing({
       itemId,
       name: rawName,
       price,
       ...parsedSize,
+      year,
+      origin,
     }, seen, listings);
     if (added) foundOnPage++;
   }
