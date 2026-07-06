@@ -245,14 +245,13 @@ function TireAeComparePage() {
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-          <label className="inline-flex items-center gap-2 text-xs">
-            <input
-              type="checkbox"
-              checked={onlyMatched}
-              onChange={(e) => setOnlyMatched(e.target.checked)}
-            />
-            Only rows matched on tire.ae
-          </label>
+          <Button
+            variant="secondary"
+            onClick={() => brandSlug && exportBrandMut.mutate(brandSlug)}
+            disabled={!brandSlug || exportBrandMut.isPending}
+          >
+            {exportBrandMut.isPending ? "Downloading…" : "Download CSV"}
+          </Button>
           <Button
             onClick={() => brandSlug && mut.mutate(brandSlug)}
             disabled={!brandSlug || mut.isPending}
