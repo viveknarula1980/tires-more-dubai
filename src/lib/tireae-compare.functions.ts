@@ -92,7 +92,16 @@ function addListing(
 ): boolean {
   const idKey = `id:${listing.itemId}`;
   const productKey = `product:${listingKey(listing)}`;
-  if (seen.has(idKey) || seen.has(productKey)) return false;
+  if (seen.has(idKey) || seen.has(productKey)) {
+    const existing = listings.find(
+      (item) => item.itemId === listing.itemId || listingKey(item) === listingKey(listing)
+    );
+    if (existing) {
+      existing.year = existing.year ?? listing.year;
+      existing.origin = existing.origin ?? listing.origin;
+    }
+    return false;
+  }
   seen.add(idKey);
   seen.add(productKey);
   listings.push(listing);
@@ -118,12 +127,35 @@ function parseTireSize(name: string): Pick<TireAeListing, "size" | "width" | "pr
   return null;
 }
 
+function extractJsonishValue(segment: string, key: string): string | null {
+  const match = segment.match(
+    new RegExp(`\\\\?"${key}\\\\?"\\s*:\\s*\\\\?"?([^"\\\\,}]+)\\\\?"?`, "i")
+  );
+  return match ? cleanTireAeText(match[1]) || null : null;
+}
+
+function extractYearFromText(value: string): string | null {
+  const match = value.match(/\b(20\d{2})\b/);
+  return match ? match[1] : null;
+}
+
+function extractHtmlText(segment: string, pattern: RegExp): string | null {
+  const match = segment.match(pattern);
+  return match ? cleanTireAeText(match[1].replace(/<[^>]*>/g, " ")) || null : null;
+}
+
 function extractYearOrigin(segment: string): { year: string | null; origin: string | null } {
-  const y = segment.match(/"production_year"\s*:\s*"?([^",}]+)"?/);
-  const o = segment.match(/"origin"\s*:\s*"([^"]*)"/);
+  const year =
+    extractJsonishValue(segment, "production_year") ??
+    extractHtmlText(segment, /<span[^>]*class="mfyear"[^>]*>\s*\(?(20\d{2})\)?\s*<\/span>/i) ??
+    extractYearFromText(segment);
+  const origin =
+    extractJsonishValue(segment, "origin") ??
+    extractHtmlText(segment, /<li>\s*<span>\s*Country\s*<\/span>\s*<strong>([^<]+)<\/strong>\s*<\/li>/i) ??
+    extractHtmlText(segment, /<span[^>]*class="country"[^>]*>([^<]+)<\/span>/i);
   return {
-    year: y ? cleanTireAeText(y[1]) || null : null,
-    origin: o ? cleanTireAeText(o[1]) || null : null,
+    year,
+    origin,
   };
 }
 

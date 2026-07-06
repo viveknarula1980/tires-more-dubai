@@ -195,7 +195,7 @@ function TireAeComparePage() {
           <div className="font-medium">Export tire.ae listings to CSV</div>
           <div className="text-xs text-muted-foreground">
             Scrapes every brand in your catalog from tire.ae and downloads a CSV
-            (brand, name, price AED, size, item id).
+            (brand, name, price AED, size, item id, year, country of origin).
           </div>
         </div>
         <div className="flex items-center gap-3">
