@@ -46,55 +46,116 @@ export type TireAeCompareRow = {
 
 const SIZE_RE = /(\d{3})\/(\d{2})\s*R?(\d{2})/i;
 
+const BROWSER_HEADERS: Record<string, string> = {
+  "User-Agent":
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+  Accept:
+    "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+  "Accept-Language": "en-US,en;q=0.9",
+  "Upgrade-Insecure-Requests": "1",
+  "sec-ch-ua":
+    '"Chromium";v="122", "Not(A:Brand";v="24", "Google Chrome";v="122"',
+  "sec-ch-ua-mobile": "?0",
+  "sec-ch-ua-platform": '"Windows"',
+  "sec-fetch-dest": "document",
+  "sec-fetch-mode": "navigate",
+  "sec-fetch-site": "same-origin",
+  "sec-fetch-user": "?1",
+};
+
+function parseListingsFromHtml(
+  html: string,
+  seen: Set<string>,
+  listings: TireAeListing[]
+): number {
+  const itemRe =
+    /\{"item_name":"([^"]+)","affiliation":"[^"]*","item_id":"([^"]+)","price":([\d.]+)/g;
+  let m: RegExpExecArray | null;
+  let foundOnPage = 0;
+  while ((m = itemRe.exec(html)) !== null) {
+    const rawName = m[1].replace(/\\\//g, "/");
+    const itemId = m[2];
+    const price = Number(m[3]);
+    if (seen.has(itemId)) continue;
+    const sm = rawName.match(SIZE_RE);
+    if (!sm) continue;
+    const width = Number(sm[1]);
+    const profile = Number(sm[2]);
+    const rim = Number(sm[3]);
+    seen.add(itemId);
+    foundOnPage++;
+    listings.push({
+      itemId,
+      name: rawName,
+      price,
+      size: `${width}/${profile} R${rim}`,
+      width,
+      profile,
+      rim,
+    });
+  }
+  return foundOnPage;
+}
+
 async function fetchTireAeBrand(brandSlug: string): Promise<TireAeListing[]> {
   const base = `https://www.tire.ae/en/tyres/${encodeURIComponent(brandSlug)}`;
   const listings: TireAeListing[] = [];
   const seen = new Set<string>();
 
-  for (let page = 1; page <= 20; page++) {
-    const url = page === 1 ? base : `${base}?p=${page}`;
-    const res = await fetch(url, {
-      headers: { "User-Agent": "Mozilla/5.0 (compatible; PriceCompareBot/1.0)" },
-      redirect: "follow",
-    });
-    if (!res.ok) break;
-    const html = await res.text();
+  // Fetch page 1 to seed the session and compute total pages.
+  const firstRes = await fetch(base, { headers: BROWSER_HEADERS, redirect: "follow" });
+  if (!firstRes.ok) {
+    throw new Error(`tire.ae returned ${firstRes.status} for ${brandSlug}`);
+  }
+  const firstHtml = await firstRes.text();
+  parseListingsFromHtml(firstHtml, seen, listings);
 
-    // dl4Objects contains a GA4 items array with item_id, item_name, price, item_brand.
-    const itemRe =
-      /\{"item_name":"([^"]+)","affiliation":"[^"]*","item_id":"([^"]+)","price":([\d.]+)/g;
-    let m: RegExpExecArray | null;
-    let foundOnPage = 0;
-    while ((m = itemRe.exec(html)) !== null) {
-      const rawName = m[1].replace(/\\\//g, "/");
-      const itemId = m[2];
-      const price = Number(m[3]);
-      if (seen.has(itemId)) continue;
-      const sm = rawName.match(SIZE_RE);
-      if (!sm) continue;
-      const width = Number(sm[1]);
-      const profile = Number(sm[2]);
-      const rim = Number(sm[3]);
-      seen.add(itemId);
-      foundOnPage++;
-      listings.push({
-        itemId,
-        name: rawName,
-        price,
-        size: `${width}/${profile} R${rim}`,
-        width,
-        profile,
-        rim,
+  // Compute total pages from the "showing X of Y" toolbar.
+  // e.g. <span class="toolbar-number">1</span> <span class="toolbar-number">12</span> <span class="toolbar-number">204</span>
+  const nums = Array.from(
+    firstHtml.matchAll(/toolbar-number">\s*(\d+)\s*</g)
+  ).map((x) => Number(x[1]));
+  let perPage = 12;
+  let total = 0;
+  if (nums.length >= 3) {
+    perPage = Math.max(1, nums[1] - nums[0] + 1);
+    total = nums[2];
+  }
+  // Also honor explicit ?p=N links if present.
+  const maxPageFromLinks = Math.max(
+    1,
+    ...Array.from(firstHtml.matchAll(/[?&]p=(\d+)/g)).map((x) => Number(x[1]))
+  );
+  const totalPages = total > 0 ? Math.ceil(total / perPage) : maxPageFromLinks;
+
+  const cookies = firstRes.headers
+    .getSetCookie?.()
+    ?.map((c) => c.split(";")[0])
+    .join("; ");
+
+  for (let page = 2; page <= Math.max(totalPages, 1); page++) {
+    const url = `${base}?p=${page}`;
+    let res: Response | null = null;
+    for (let attempt = 0; attempt < 3; attempt++) {
+      res = await fetch(url, {
+        headers: {
+          ...BROWSER_HEADERS,
+          Referer: page === 2 ? base : `${base}?p=${page - 1}`,
+          ...(cookies ? { Cookie: cookies } : {}),
+        },
+        redirect: "follow",
       });
+      if (res.ok) break;
+      // brief backoff on CF challenges
+      await new Promise((r) => setTimeout(r, 400 * (attempt + 1)));
     }
-
-    // Detect if there's a next page. The pager has ?p=N links.
-    const maxPage = Math.max(
-      1,
-      ...Array.from(html.matchAll(/\?p=(\d+)/g)).map((x) => Number(x[1]))
-    );
-    if (page >= maxPage) break;
-    if (foundOnPage === 0) break;
+    if (!res || !res.ok) {
+      // Skip this page but keep going; other pages may still succeed.
+      continue;
+    }
+    const html = await res.text();
+    const found = parseListingsFromHtml(html, seen, listings);
+    if (found === 0 && page > totalPages / 2) break;
   }
 
   return listings;
