@@ -26,6 +26,8 @@ export type TireAeListing = {
   width: number;
   profile: number;
   rim: number;
+  year: string | null;
+  origin: string | null;
 };
 
 export type TireAeCompareRow = {
@@ -116,13 +118,22 @@ function parseTireSize(name: string): Pick<TireAeListing, "size" | "width" | "pr
   return null;
 }
 
+function extractYearOrigin(segment: string): { year: string | null; origin: string | null } {
+  const y = segment.match(/"production_year"\s*:\s*"?([^",}]+)"?/);
+  const o = segment.match(/"origin"\s*:\s*"([^"]*)"/);
+  return {
+    year: y ? cleanTireAeText(y[1]) || null : null,
+    origin: o ? cleanTireAeText(o[1]) || null : null,
+  };
+}
+
 function parseListingsFromHtml(
   html: string,
   seen: Set<string>,
   listings: TireAeListing[]
 ): number {
   const itemRe =
-    /\{"item_name":"([^"]+)","affiliation":"[^"]*","item_id":"([^"]+)","price":([\d.]+)/g;
+    /\{"item_name":"([^"]+)","affiliation":"[^"]*","item_id":"([^"]+)","price":([\d.]+)[^}]*\}/g;
   let m: RegExpExecArray | null;
   let foundOnPage = 0;
   while ((m = itemRe.exec(html)) !== null) {
@@ -131,11 +142,14 @@ function parseListingsFromHtml(
     const price = Number(m[3]);
     const parsedSize = parseTireSize(rawName);
     if (!parsedSize) continue;
+    const { year, origin } = extractYearOrigin(m[0]);
     const added = addListing({
       itemId,
       name: rawName,
       price,
       ...parsedSize,
+      year,
+      origin,
     }, seen, listings);
     if (added) foundOnPage++;
   }
@@ -158,11 +172,14 @@ function parseProductPageListing(html: string, fallbackUrl: string): TireAeListi
   const price = Number(itemMatch?.[3] ?? jsonLdPriceMatch?.[1]);
   if (!Number.isFinite(price)) return null;
 
+  const { year, origin } = extractYearOrigin(html);
   return {
     itemId: skuMatch?.[1] ?? itemMatch?.[2] ?? fallbackUrl,
     name,
     price,
     ...parsedSize,
+    year,
+    origin,
   };
 }
 
@@ -413,6 +430,8 @@ export const exportTireAeCsvForBrand = createServerFn({ method: "POST" })
       "width",
       "profile",
       "rim",
+      "year",
+      "country_of_origin",
     ];
     const lines: string[] = [header.join(",")];
     let total = 0;
@@ -431,6 +450,8 @@ export const exportTireAeCsvForBrand = createServerFn({ method: "POST" })
           l.width,
           l.profile,
           l.rim,
+          l.year,
+          l.origin,
         ]
           .map(csvEscape)
           .join(",")
@@ -459,6 +480,8 @@ export const exportTireAeCsv = createServerFn({ method: "POST" })
       "width",
       "profile",
       "rim",
+      "year",
+      "country_of_origin",
     ];
     const lines: string[] = [header.join(",")];
     const errors: { brand: string; error: string }[] = [];
@@ -480,6 +503,8 @@ export const exportTireAeCsv = createServerFn({ method: "POST" })
               l.width,
               l.profile,
               l.rim,
+              l.year,
+              l.origin,
             ]
               .map(csvEscape)
               .join(",")
