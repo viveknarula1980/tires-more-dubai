@@ -4,6 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 import {
   compareBrandWithTireAe,
+  exportTireAeCsv,
   type TireAeCompareRow,
 } from "@/lib/tireae-compare.functions";
 import { Card } from "@/components/ui/card";
@@ -86,6 +87,27 @@ function TireAeComparePage() {
 
   const rows: TireAeCompareRow[] = mut.data?.rows ?? [];
 
+  const exportFn = useServerFn(exportTireAeCsv);
+  const exportMut = useMutation({
+    mutationFn: async () => {
+      const { data: session } = await supabase.auth.getSession();
+      const token = session.session?.access_token;
+      if (!token) throw new Error("Please sign in again.");
+      const res = await exportFn({ headers: { Authorization: `Bearer ${token}` } });
+      const blob = new Blob([res.csv], { type: "text/csv;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      const date = new Date().toISOString().slice(0, 10);
+      a.download = `tire-ae-export-${date}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      return res;
+    },
+  });
+
   const filtered = useMemo(() => {
     let list = rows;
     if (onlyMatched) list = list.filter((r) => r.tireAeCount > 0);
@@ -140,6 +162,59 @@ function TireAeComparePage() {
           ← Internal price compare
         </Link>
       </div>
+
+      <Card className="mt-6 p-4">
+        <div className="grid gap-3 sm:grid-cols-[220px_1fr_auto_auto] items-end">
+          <div>
+            <label className="text-xs font-medium block mb-1">Brand</label>
+            <select
+              value={brandSlug}
+              onChange={(e) => setBrandSlug(e.target.value)}
+              className="h-9 w-full rounded-md border border-input bg-background px-2 text-sm"
+            >
+              {brands.map((b) => (
+                <option key={b.slug} value={b.slug}>
+                  {b.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <Link to="/admin/compare-pricing" className="text-sm underline text-muted-foreground">
+            ← Internal price compare
+          </Link>
+        </div>
+      </div>
+
+      <Card className="mt-4 p-4 flex flex-wrap items-center gap-3 justify-between">
+        <div className="text-sm">
+          <div className="font-medium">Export tire.ae listings to CSV</div>
+          <div className="text-xs text-muted-foreground">
+            Scrapes every brand in your catalog from tire.ae and downloads a CSV
+            (brand, name, price AED, size, item id).
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          {exportMut.data && (
+            <span className="text-xs text-muted-foreground">
+              {exportMut.data.total} rows · {exportMut.data.brandCount} brands
+              {exportMut.data.errors.length > 0 &&
+                ` · ${exportMut.data.errors.length} brand error(s)`}
+            </span>
+          )}
+          <Button
+            variant="secondary"
+            onClick={() => exportMut.mutate()}
+            disabled={exportMut.isPending}
+          >
+            {exportMut.isPending ? "Scraping tire.ae…" : "Download CSV"}
+          </Button>
+        </div>
+      </Card>
+      {exportMut.error && (
+        <div className="mt-2 rounded-md border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive">
+          {(exportMut.error as Error).message}
+        </div>
+      )}
 
       <Card className="mt-6 p-4">
         <div className="grid gap-3 sm:grid-cols-[220px_1fr_auto_auto] items-end">
