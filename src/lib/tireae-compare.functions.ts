@@ -139,9 +139,20 @@ function extractYearFromText(value: string): string | null {
   return match ? match[1] : null;
 }
 
+function extractHtmlText(segment: string, pattern: RegExp): string | null {
+  const match = segment.match(pattern);
+  return match ? cleanTireAeText(match[1].replace(/<[^>]*>/g, " ")) || null : null;
+}
+
 function extractYearOrigin(segment: string): { year: string | null; origin: string | null } {
-  const year = extractJsonishValue(segment, "production_year") ?? extractYearFromText(segment);
-  const origin = extractJsonishValue(segment, "origin");
+  const year =
+    extractJsonishValue(segment, "production_year") ??
+    extractHtmlText(segment, /<span[^>]*class="mfyear"[^>]*>\s*\(?(20\d{2})\)?\s*<\/span>/i) ??
+    extractYearFromText(segment);
+  const origin =
+    extractJsonishValue(segment, "origin") ??
+    extractHtmlText(segment, /<li>\s*<span>\s*Country\s*<\/span>\s*<strong>([^<]+)<\/strong>\s*<\/li>/i) ??
+    extractHtmlText(segment, /<span[^>]*class="country"[^>]*>([^<]+)<\/span>/i);
   return {
     year,
     origin,
