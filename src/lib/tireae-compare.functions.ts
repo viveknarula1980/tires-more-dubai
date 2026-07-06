@@ -177,3 +177,62 @@ export const compareBrandWithTireAe = createServerFn({ method: "POST" })
       scrapeError,
     };
   });
+
+function csvEscape(v: string | number | null | undefined): string {
+  if (v == null) return "";
+  const s = String(v);
+  return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+}
+
+export const exportTireAeCsv = createServerFn({ method: "POST" })
+  .middleware([requireAdmin])
+  .handler(async () => {
+    const { data: brands, error: brandsErr } = await supabaseAdmin
+      .from("brands")
+      .select("name, slug")
+      .order("name");
+    if (brandsErr) throw new Error(brandsErr.message);
+
+    const header = [
+      "brand_slug",
+      "brand_name",
+      "tireae_item_id",
+      "tireae_name",
+      "price_aed",
+      "size",
+      "width",
+      "profile",
+      "rim",
+    ];
+    const lines: string[] = [header.join(",")];
+    const errors: { brand: string; error: string }[] = [];
+    let total = 0;
+
+    for (const b of brands ?? []) {
+      try {
+        const listings = await fetchTireAeBrand(b.slug);
+        for (const l of listings) {
+          total++;
+          lines.push(
+            [
+              b.slug,
+              b.name,
+              l.itemId,
+              l.name,
+              l.price,
+              l.size,
+              l.width,
+              l.profile,
+              l.rim,
+            ]
+              .map(csvEscape)
+              .join(",")
+          );
+        }
+      } catch (e) {
+        errors.push({ brand: b.slug, error: e instanceof Error ? e.message : String(e) });
+      }
+    }
+
+    return { csv: lines.join("\n"), total, brandCount: brands?.length ?? 0, errors };
+  });
