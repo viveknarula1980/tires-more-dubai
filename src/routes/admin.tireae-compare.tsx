@@ -260,6 +260,11 @@ function TireAeComparePage() {
           </Button>
         </div>
       </Card>
+      {exportBrandMut.error && (
+        <div className="mt-2 rounded-md border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive">
+          {(exportBrandMut.error as Error).message}
+        </div>
+      )}
 
       {mut.error && (
         <div className="mt-4 rounded-md border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive">
