@@ -163,27 +163,6 @@ function TireAeComparePage() {
         </Link>
       </div>
 
-      <Card className="mt-6 p-4">
-        <div className="grid gap-3 sm:grid-cols-[220px_1fr_auto_auto] items-end">
-          <div>
-            <label className="text-xs font-medium block mb-1">Brand</label>
-            <select
-              value={brandSlug}
-              onChange={(e) => setBrandSlug(e.target.value)}
-              className="h-9 w-full rounded-md border border-input bg-background px-2 text-sm"
-            >
-              {brands.map((b) => (
-                <option key={b.slug} value={b.slug}>
-                  {b.name}
-                </option>
-              ))}
-            </select>
-          </div>
-          <Link to="/admin/compare-pricing" className="text-sm underline text-muted-foreground">
-            ← Internal price compare
-          </Link>
-        </div>
-      </div>
 
       <Card className="mt-4 p-4 flex flex-wrap items-center gap-3 justify-between">
         <div className="text-sm">
