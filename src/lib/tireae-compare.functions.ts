@@ -480,6 +480,8 @@ export const exportTireAeCsv = createServerFn({ method: "POST" })
       "width",
       "profile",
       "rim",
+      "year",
+      "country_of_origin",
     ];
     const lines: string[] = [header.join(",")];
     const errors: { brand: string; error: string }[] = [];
@@ -501,6 +503,8 @@ export const exportTireAeCsv = createServerFn({ method: "POST" })
               l.width,
               l.profile,
               l.rim,
+              l.year,
+              l.origin,
             ]
               .map(csvEscape)
               .join(",")
