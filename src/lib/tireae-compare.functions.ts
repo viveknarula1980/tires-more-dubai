@@ -172,11 +172,14 @@ function parseProductPageListing(html: string, fallbackUrl: string): TireAeListi
   const price = Number(itemMatch?.[3] ?? jsonLdPriceMatch?.[1]);
   if (!Number.isFinite(price)) return null;
 
+  const { year, origin } = extractYearOrigin(html);
   return {
     itemId: skuMatch?.[1] ?? itemMatch?.[2] ?? fallbackUrl,
     name,
     price,
     ...parsedSize,
+    year,
+    origin,
   };
 }
 
