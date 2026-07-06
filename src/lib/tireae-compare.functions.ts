@@ -45,6 +45,7 @@ export type TireAeCompareRow = {
 };
 
 const SIZE_RE = /(\d{3})\/(\d{2})\s*R?(\d{2})/i;
+const COMMERCIAL_SIZE_RE = /(\d{3,4})\s*R(\d{2})C?/i;
 
 const BROWSER_HEADERS: Record<string, string> = {
   "User-Agent":
@@ -96,6 +97,25 @@ function addListing(
   return true;
 }
 
+function parseTireSize(name: string): Pick<TireAeListing, "size" | "width" | "profile" | "rim"> | null {
+  const standard = name.match(SIZE_RE);
+  if (standard) {
+    const width = Number(standard[1]);
+    const profile = Number(standard[2]);
+    const rim = Number(standard[3]);
+    return { size: `${width}/${profile} R${rim}`, width, profile, rim };
+  }
+
+  const commercial = name.match(COMMERCIAL_SIZE_RE);
+  if (commercial) {
+    const width = Number(commercial[1]);
+    const rim = Number(commercial[2]);
+    return { size: `${width} R${rim}`, width, profile: 0, rim };
+  }
+
+  return null;
+}
+
 function parseListingsFromHtml(
   html: string,
   seen: Set<string>,
@@ -109,19 +129,13 @@ function parseListingsFromHtml(
     const rawName = cleanTireAeText(m[1]);
     const itemId = m[2];
     const price = Number(m[3]);
-    const sm = rawName.match(SIZE_RE);
-    if (!sm) continue;
-    const width = Number(sm[1]);
-    const profile = Number(sm[2]);
-    const rim = Number(sm[3]);
+    const parsedSize = parseTireSize(rawName);
+    if (!parsedSize) continue;
     const added = addListing({
       itemId,
       name: rawName,
       price,
-      size: `${width}/${profile} R${rim}`,
-      width,
-      profile,
-      rim,
+      ...parsedSize,
     }, seen, listings);
     if (added) foundOnPage++;
   }
@@ -138,24 +152,17 @@ function parseProductPageListing(html: string, fallbackUrl: string): TireAeListi
 
   const rawName = itemMatch?.[1] ?? nameMatch?.[1] ?? fallbackUrl.split("/").pop() ?? "";
   const name = cleanTireAeText(rawName.replace(/-/g, " "));
-  const sm = name.match(SIZE_RE);
-  if (!sm) return null;
+  const parsedSize = parseTireSize(name);
+  if (!parsedSize) return null;
 
   const price = Number(itemMatch?.[3] ?? jsonLdPriceMatch?.[1]);
   if (!Number.isFinite(price)) return null;
-
-  const width = Number(sm[1]);
-  const profile = Number(sm[2]);
-  const rim = Number(sm[3]);
 
   return {
     itemId: skuMatch?.[1] ?? itemMatch?.[2] ?? fallbackUrl,
     name,
     price,
-    size: `${width}/${profile} R${rim}`,
-    width,
-    profile,
-    rim,
+    ...parsedSize,
   };
 }
 
@@ -187,7 +194,7 @@ async function fetchTireAeBrandFromSitemap(
         const { pathname } = new URL(url);
         return (
           pathname.startsWith(`/en/${brandSlug}-`) &&
-          /\d{3}-\d{2}-r\d{2}/i.test(pathname)
+          /(\d{3}-\d{2}-r\d{2}|\d{3,4}-r\d{2})/i.test(pathname)
         );
       } catch {
         return false;
