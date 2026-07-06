@@ -221,9 +221,14 @@ function TireAeComparePage() {
         </div>
       )}
 
-      <Card className="mt-6 p-4">
-        <div className="grid gap-3 sm:grid-cols-[220px_1fr_auto_auto] items-end">
-          <div>
+      <Card className="mt-4 p-4">
+        <div className="text-sm font-medium">Download CSV for a single brand</div>
+        <div className="text-xs text-muted-foreground mt-1">
+          Pick a brand — the CSV includes every model and every size listed on tire.ae
+          for that brand. No model or size selection needed.
+        </div>
+        <div className="mt-3 flex flex-wrap items-end gap-3">
+          <div className="min-w-[220px]">
             <label className="text-xs font-medium block mb-1">Brand</label>
             <select
               value={brandSlug}
@@ -237,21 +242,35 @@ function TireAeComparePage() {
               ))}
             </select>
           </div>
+          <Button
+            onClick={() => brandSlug && exportBrandMut.mutate(brandSlug)}
+            disabled={!brandSlug || exportBrandMut.isPending}
+          >
+            {exportBrandMut.isPending ? "Downloading…" : "Download brand CSV"}
+          </Button>
+        </div>
+        {exportBrandMut.error && (
+          <div className="mt-3 rounded-md border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive">
+            {(exportBrandMut.error as Error).message}
+          </div>
+        )}
+      </Card>
+
+      <Card className="mt-6 p-4">
+        <div className="text-sm font-medium">Compare vs your catalog (optional)</div>
+        <div className="text-xs text-muted-foreground mt-1">
+          Runs the price comparison table below. Search filters rows after the fetch —
+          it isn't required.
+        </div>
+        <div className="mt-3 grid gap-3 sm:grid-cols-[1fr_auto] items-end">
           <div>
-            <label className="text-xs font-medium block mb-1">Search</label>
+            <label className="text-xs font-medium block mb-1">Search (optional)</label>
             <Input
               placeholder="Model or size…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-          <Button
-            variant="secondary"
-            onClick={() => brandSlug && exportBrandMut.mutate(brandSlug)}
-            disabled={!brandSlug || exportBrandMut.isPending}
-          >
-            {exportBrandMut.isPending ? "Downloading…" : "Download CSV"}
-          </Button>
           <Button
             onClick={() => brandSlug && mut.mutate(brandSlug)}
             disabled={!brandSlug || mut.isPending}
@@ -260,11 +279,7 @@ function TireAeComparePage() {
           </Button>
         </div>
       </Card>
-      {exportBrandMut.error && (
-        <div className="mt-2 rounded-md border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive">
-          {(exportBrandMut.error as Error).message}
-        </div>
-      )}
+
 
       {mut.error && (
         <div className="mt-4 rounded-md border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive">
