@@ -26,6 +26,8 @@ export type TireAeListing = {
   width: number;
   profile: number;
   rim: number;
+  year: string | null;
+  origin: string | null;
 };
 
 export type TireAeCompareRow = {
