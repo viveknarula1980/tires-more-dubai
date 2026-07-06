@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import {
   compareBrandWithTireAe,
   exportTireAeCsv,
+  exportTireAeCsvForBrand,
   type TireAeCompareRow,
 } from "@/lib/tireae-compare.functions";
 import { Card } from "@/components/ui/card";
