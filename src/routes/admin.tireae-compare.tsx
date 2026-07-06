@@ -109,6 +109,31 @@ function TireAeComparePage() {
     },
   });
 
+  const exportBrandFn = useServerFn(exportTireAeCsvForBrand);
+  const exportBrandMut = useMutation({
+    mutationFn: async (slug: string) => {
+      const { data: session } = await supabase.auth.getSession();
+      const token = session.session?.access_token;
+      if (!token) throw new Error("Please sign in again.");
+      const res = await exportBrandFn({
+        data: { brandSlug: slug },
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const blob = new Blob([res.csv], { type: "text/csv;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      const date = new Date().toISOString().slice(0, 10);
+      const brandName = (res.brand ?? slug).replace(/\s+/g, "_").toLowerCase();
+      a.download = `tire-ae-${brandName}-${date}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      return res;
+    },
+  });
+
   const filtered = useMemo(() => {
     let list = rows;
     if (onlyMatched) list = list.filter((r) => r.tireAeCount > 0);
