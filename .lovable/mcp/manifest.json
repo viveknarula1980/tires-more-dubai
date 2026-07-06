@@ -1,0 +1,158 @@
+{
+  "version": 1,
+  "sdk_version": "0.20.0",
+  "path": "/mcp",
+  "auth": {
+    "type": "none"
+  },
+  "mcp": {
+    "server": {
+      "name": "tires-more-uae-mcp",
+      "version": "0.1.0",
+      "title": "Tires & More UAE"
+    },
+    "tools": [
+      {
+        "name": "search_tires",
+        "title": "Search tires",
+        "description": "Search the tire catalog by brand slug, tire size (width/profile/rim), vehicle type, season, or a free-text query. Returns matching tires with price in AED.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "brand": {
+              "description": "Brand slug, e.g. 'michelin'",
+              "type": "string",
+              "maxLength": 80
+            },
+            "width": {
+              "type": "integer",
+              "minimum": 100,
+              "maximum": 400
+            },
+            "profile": {
+              "type": "integer",
+              "minimum": 20,
+              "maximum": 90
+            },
+            "rim": {
+              "type": "integer",
+              "minimum": 10,
+              "maximum": 26
+            },
+            "vehicle_type": {
+              "type": "string",
+              "enum": [
+                "passenger",
+                "suv"
+              ]
+            },
+            "season": {
+              "type": "string",
+              "enum": [
+                "summer",
+                "all-season",
+                "winter"
+              ]
+            },
+            "q": {
+              "description": "Free-text search on tire name",
+              "type": "string",
+              "maxLength": 120
+            },
+            "limit": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_tire",
+        "title": "Get tire details",
+        "description": "Fetch full details for a single tire by its slug.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "slug": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120,
+              "description": "Tire slug from search_tires results"
+            }
+          },
+          "required": [
+            "slug"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_brands",
+        "title": "List tire brands",
+        "description": "List all tire brands available in the catalog with their slugs.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "lookup_vehicle_tire_size",
+        "title": "Lookup tire size for a vehicle",
+        "description": "Given a vehicle make, model and year, return the recommended OEM tire size.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "make": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 80
+            },
+            "model": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 80
+            },
+            "year": {
+              "type": "integer",
+              "minimum": 1990,
+              "maximum": 2030
+            }
+          },
+          "required": [
+            "make",
+            "model",
+            "year"
+          ]
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
