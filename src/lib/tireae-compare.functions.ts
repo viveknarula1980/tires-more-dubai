@@ -45,6 +45,7 @@ export type TireAeCompareRow = {
 };
 
 const SIZE_RE = /(\d{3})\/(\d{2})\s*R?(\d{2})/i;
+const COMMERCIAL_SIZE_RE = /(\d{3,4})\s*R(\d{2})C?/i;
 
 const BROWSER_HEADERS: Record<string, string> = {
   "User-Agent":
@@ -61,7 +62,59 @@ const BROWSER_HEADERS: Record<string, string> = {
   "sec-fetch-mode": "navigate",
   "sec-fetch-site": "same-origin",
   "sec-fetch-user": "?1",
+  "Cache-Control": "no-cache",
+  Pragma: "no-cache",
 };
+
+const TIRE_AE_SITEMAP_URL = "https://www.tire.ae/sitemap_en.xml";
+
+function cleanTireAeText(value: string): string {
+  return value
+    .replace(/\\\//g, "/")
+    .replace(/\\u0026/g, "&")
+    .replace(/&amp;/g, "&")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function listingKey(listing: TireAeListing): string {
+  return `${listing.width}/${listing.profile}/${listing.rim}:${listing.name}`
+    .toLowerCase()
+    .replace(/[^a-z0-9/]+/g, "");
+}
+
+function addListing(
+  listing: TireAeListing,
+  seen: Set<string>,
+  listings: TireAeListing[]
+): boolean {
+  const idKey = `id:${listing.itemId}`;
+  const productKey = `product:${listingKey(listing)}`;
+  if (seen.has(idKey) || seen.has(productKey)) return false;
+  seen.add(idKey);
+  seen.add(productKey);
+  listings.push(listing);
+  return true;
+}
+
+function parseTireSize(name: string): Pick<TireAeListing, "size" | "width" | "profile" | "rim"> | null {
+  const standard = name.match(SIZE_RE);
+  if (standard) {
+    const width = Number(standard[1]);
+    const profile = Number(standard[2]);
+    const rim = Number(standard[3]);
+    return { size: `${width}/${profile} R${rim}`, width, profile, rim };
+  }
+
+  const commercial = name.match(COMMERCIAL_SIZE_RE);
+  if (commercial) {
+    const width = Number(commercial[1]);
+    const rim = Number(commercial[2]);
+    return { size: `${width} R${rim}`, width, profile: 0, rim };
+  }
+
+  return null;
+}
 
 function parseListingsFromHtml(
   html: string,
@@ -73,28 +126,106 @@ function parseListingsFromHtml(
   let m: RegExpExecArray | null;
   let foundOnPage = 0;
   while ((m = itemRe.exec(html)) !== null) {
-    const rawName = m[1].replace(/\\\//g, "/");
+    const rawName = cleanTireAeText(m[1]);
     const itemId = m[2];
     const price = Number(m[3]);
-    if (seen.has(itemId)) continue;
-    const sm = rawName.match(SIZE_RE);
-    if (!sm) continue;
-    const width = Number(sm[1]);
-    const profile = Number(sm[2]);
-    const rim = Number(sm[3]);
-    seen.add(itemId);
-    foundOnPage++;
-    listings.push({
+    const parsedSize = parseTireSize(rawName);
+    if (!parsedSize) continue;
+    const added = addListing({
       itemId,
       name: rawName,
       price,
-      size: `${width}/${profile} R${rim}`,
-      width,
-      profile,
-      rim,
-    });
+      ...parsedSize,
+    }, seen, listings);
+    if (added) foundOnPage++;
   }
   return foundOnPage;
+}
+
+function parseProductPageListing(html: string, fallbackUrl: string): TireAeListing | null {
+  const itemMatch = html.match(
+    /\{"item_name":"([^"]+)","affiliation":"[^"]*","item_id":"([^"]+)","price":([\d.]+)/
+  );
+  const skuMatch = html.match(/"sku"\s*:\s*"([^"]+)"/);
+  const jsonLdPriceMatch = html.match(/"price"\s*:\s*"?([\d.]+)/);
+  const nameMatch = html.match(/"name"\s*:\s*"([^"]+)"/);
+
+  const rawName = itemMatch?.[1] ?? nameMatch?.[1] ?? fallbackUrl.split("/").pop() ?? "";
+  const name = cleanTireAeText(rawName.replace(/-/g, " "));
+  const parsedSize = parseTireSize(name);
+  if (!parsedSize) return null;
+
+  const price = Number(itemMatch?.[3] ?? jsonLdPriceMatch?.[1]);
+  if (!Number.isFinite(price)) return null;
+
+  return {
+    itemId: skuMatch?.[1] ?? itemMatch?.[2] ?? fallbackUrl,
+    name,
+    price,
+    ...parsedSize,
+  };
+}
+
+async function fetchFreshHtml(url: string, headers: Record<string, string>): Promise<Response> {
+  return fetch(url, {
+    headers: {
+      ...headers,
+      "Cache-Control": "no-cache, no-store, max-age=0",
+      Pragma: "no-cache",
+    },
+    cache: "no-store",
+    redirect: "follow",
+  });
+}
+
+async function fetchTireAeBrandFromSitemap(
+  brandSlug: string,
+  seen: Set<string>,
+  listings: TireAeListing[]
+): Promise<number> {
+  const sitemapRes = await fetchFreshHtml(TIRE_AE_SITEMAP_URL, BROWSER_HEADERS);
+  if (!sitemapRes.ok) return 0;
+
+  const sitemap = await sitemapRes.text();
+  const productUrls = Array.from(sitemap.matchAll(/<loc>(.*?)<\/loc>/g))
+    .map((match) => cleanTireAeText(match[1]))
+    .filter((url) => {
+      try {
+        const { pathname } = new URL(url);
+        return (
+          pathname.startsWith(`/en/${brandSlug}-`) &&
+          /(\d{3}-\d{2}-r\d{2}|\d{3,4}-r\d{2})/i.test(pathname)
+        );
+      } catch {
+        return false;
+      }
+    });
+
+  let added = 0;
+  const concurrency = 8;
+  for (let index = 0; index < productUrls.length; index += concurrency) {
+    const batch = productUrls.slice(index, index + concurrency);
+    const results = await Promise.all(
+      batch.map(async (url) => {
+        try {
+          const res = await fetchFreshHtml(url, {
+            ...BROWSER_HEADERS,
+            Referer: `https://www.tire.ae/en/tyres/${encodeURIComponent(brandSlug)}`,
+          });
+          if (!res.ok) return null;
+          return parseProductPageListing(await res.text(), url);
+        } catch {
+          return null;
+        }
+      })
+    );
+
+    for (const listing of results) {
+      if (listing && addListing(listing, seen, listings)) added++;
+    }
+  }
+
+  return added;
 }
 
 async function fetchTireAeBrand(brandSlug: string): Promise<TireAeListing[]> {
@@ -103,7 +234,7 @@ async function fetchTireAeBrand(brandSlug: string): Promise<TireAeListing[]> {
   const seen = new Set<string>();
 
   // Fetch page 1 to seed the session and compute total pages.
-  const firstRes = await fetch(base, { headers: BROWSER_HEADERS, redirect: "follow" });
+  const firstRes = await fetchFreshHtml(base, BROWSER_HEADERS);
   if (!firstRes.ok) {
     throw new Error(`tire.ae returned ${firstRes.status} for ${brandSlug}`);
   }
@@ -140,9 +271,12 @@ async function fetchTireAeBrand(brandSlug: string): Promise<TireAeListing[]> {
       res = await fetch(url, {
         headers: {
           ...BROWSER_HEADERS,
+          "Cache-Control": "no-cache, no-store, max-age=0",
+          Pragma: "no-cache",
           Referer: page === 2 ? base : `${base}?p=${page - 1}`,
           ...(cookies ? { Cookie: cookies } : {}),
         },
+        cache: "no-store",
         redirect: "follow",
       });
       if (res.ok) break;
@@ -157,6 +291,11 @@ async function fetchTireAeBrand(brandSlug: string): Promise<TireAeListing[]> {
     const found = parseListingsFromHtml(html, seen, listings);
     if (found === 0 && page > totalPages / 2) break;
   }
+
+  // tire.ae blocks direct pagination in some server environments. The sitemap
+  // exposes the product detail URLs, so use it as a fresh fallback to collect
+  // every product under the brand instead of returning only page 1.
+  await fetchTireAeBrandFromSitemap(brandSlug, seen, listings);
 
   return listings;
 }
