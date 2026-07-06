@@ -205,9 +205,7 @@ function parseProductPageListing(html: string, fallbackUrl: string): TireAeListi
 }
 
 async function fetchFreshHtml(url: string, headers: Record<string, string>): Promise<Response> {
-  const freshUrl = new URL(url);
-  freshUrl.searchParams.set("_lovable_nocache", `${Date.now()}-${Math.random().toString(36).slice(2)}`);
-  return fetch(freshUrl.toString(), {
+  return fetch(url, {
     headers: {
       ...headers,
       "Cache-Control": "no-cache, no-store, max-age=0",
