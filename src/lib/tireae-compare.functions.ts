@@ -184,6 +184,62 @@ function csvEscape(v: string | number | null | undefined): string {
   return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
 }
 
+export const exportTireAeCsvForBrand = createServerFn({ method: "POST" })
+  .middleware([requireAdmin])
+  .inputValidator((input: { brandSlug: string }) => {
+    if (!input?.brandSlug || typeof input.brandSlug !== "string") {
+      throw new Error("brandSlug is required");
+    }
+    return input;
+  })
+  .handler(async ({ data }) => {
+    const brandSlug = data.brandSlug.trim().toLowerCase();
+
+    const { data: brand, error: brandErr } = await supabaseAdmin
+      .from("brands")
+      .select("name, slug")
+      .eq("slug", brandSlug)
+      .maybeSingle();
+    if (brandErr) throw new Error(brandErr.message);
+    if (!brand) throw new Error(`Brand not found: ${brandSlug}`);
+
+    const header = [
+      "brand_slug",
+      "brand_name",
+      "tireae_item_id",
+      "tireae_name",
+      "price_aed",
+      "size",
+      "width",
+      "profile",
+      "rim",
+    ];
+    const lines: string[] = [header.join(",")];
+    let total = 0;
+
+    const listings = await fetchTireAeBrand(brand.slug);
+    for (const l of listings) {
+      total++;
+      lines.push(
+        [
+          brand.slug,
+          brand.name,
+          l.itemId,
+          l.name,
+          l.price,
+          l.size,
+          l.width,
+          l.profile,
+          l.rim,
+        ]
+          .map(csvEscape)
+          .join(",")
+      );
+    }
+
+    return { csv: lines.join("\n"), total, brand: brand.name };
+  });
+
 export const exportTireAeCsv = createServerFn({ method: "POST" })
   .middleware([requireAdmin])
   .handler(async () => {
