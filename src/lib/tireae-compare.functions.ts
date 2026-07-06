@@ -147,7 +147,7 @@ export const compareBrandWithTireAe = createServerFn({ method: "POST" })
 
     const rows: TireAeCompareRow[] = (tires ?? []).map((t) => {
       const key = `${t.width}/${t.profile}/${t.rim}`;
- tooltip      const matches = bySize.get(key) ?? [];
+      const matches = bySize.get(key) ?? [];
       const prices = matches.map((m) => m.price).filter((p) => Number.isFinite(p));
       const min = prices.length ? Math.min(...prices) : null;
       const max = prices.length ? Math.max(...prices) : null;
